@@ -6,12 +6,44 @@ module.exports = {
   getAllData: async (req, res) => {
     try {
       const productTypes = await ProductType.find();
-      sendSuccessResponse(
-        res,
-        200,
-        "Get all product types success",
-        productTypes
-      );
+
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+
+      if (!page || !limit) {
+        sendSuccessResponse(
+          res,
+          200,
+          "Get all product types success",
+          productTypes
+        );
+      } else {
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const result = {};
+
+        if (endIndex < productTypes.length) {
+          result.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+        result.productTypes = productTypes.slice(startIndex, endIndex);
+
+        sendSuccessResponse(
+          res,
+          200,
+          "Get all product types page " + page,
+          result
+        );
+      }
     } catch (error) {
       sendErrorResponse(res, 500, "Error get all product types", error);
     }
