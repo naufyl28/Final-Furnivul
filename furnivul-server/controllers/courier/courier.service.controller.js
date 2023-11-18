@@ -6,12 +6,44 @@ module.exports = {
   getAllData: async (req, res) => {
     try {
       const courierServices = await CourierServices.find();
-      sendSuccessResponse(
-        res,
-        200,
-        "Get all courier services success",
-        courierServices
-      );
+
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+
+      if (!page || !limit) {
+        sendSuccessResponse(
+          res,
+          200,
+          "Get all courier services success",
+          courierServices
+        );
+      } else {
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const result = {};
+
+        if (endIndex < courierServices.length) {
+          result.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+        result.courierServices = courierServices.slice(startIndex, endIndex);
+
+        sendSuccessResponse(
+          res,
+          200,
+          "Get all courier services page " + page,
+          result
+        );
+      }
     } catch (error) {
       sendErrorResponse(res, 500, "Error get all courier services", error);
     }
@@ -126,12 +158,10 @@ module.exports = {
         etd,
         cost,
       });
-      sendSuccessResponse(
-        res,
-        200,
-        "Add courier service success",
-        {_id: newCourierService.id, ...newCourierService._doc}
-      );
+      sendSuccessResponse(res, 200, "Add courier service success", {
+        _id: newCourierService.id,
+        ...newCourierService._doc,
+      });
     } catch (error) {
       sendErrorResponse(res, 500, "Error add courier service", error);
     }
