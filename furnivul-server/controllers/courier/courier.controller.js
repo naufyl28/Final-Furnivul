@@ -6,7 +6,34 @@ module.exports = {
   getAllData: async (req, res) => {
     try {
       const couriers = await Courier.find().populate("_idCourierService");
-      sendSuccessResponse(res, 200, "Get all couriers success", couriers);
+
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+
+      if (!page || !limit) {
+        sendSuccessResponse(res, 200, "Get all couriers success", couriers);
+      } else {
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const result = {};
+
+        if (endIndex < couriers.length) {
+          result.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+        result.couriers = couriers.slice(startIndex, endIndex);
+
+        sendSuccessResponse(res, 200, "Get all couriers page " + page, result);
+      }
     } catch (error) {
       sendErrorResponse(res, 500, "Error get all couriers", error);
     }
@@ -107,7 +134,10 @@ module.exports = {
         courier,
         _idCourierService,
       });
-      sendSuccessResponse(res, 200, "Add courier success", {_id : newCourier._id, ...newCourier._doc});
+      sendSuccessResponse(res, 200, "Add courier success", {
+        _id: newCourier._id,
+        ...newCourier._doc,
+      });
     } catch (error) {
       sendErrorResponse(res, 500, "Error add courier", error);
     }
