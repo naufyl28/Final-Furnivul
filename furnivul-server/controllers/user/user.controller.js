@@ -30,7 +30,7 @@ module.exports = {
         }
         result.users = users.slice(startIndex, endIndex);
 
-        sendSuccessResponse(res, 200, "Get all users success", result);
+        sendSuccessResponse(res, 200, "Get all users page " + page, result);
       }
     } catch (error) {
       sendErrorResponse(res, 500, "Error get all users", error);

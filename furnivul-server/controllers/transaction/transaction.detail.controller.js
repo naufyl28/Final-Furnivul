@@ -12,6 +12,8 @@ module.exports = {
   getAllData: async (req, res) => {
     try {
       let userId = req.payload.id;
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
 
       if (!userId) {
         return sendErrorResponse(
@@ -58,12 +60,40 @@ module.exports = {
         );
       }
 
-      return sendSuccessResponse(
-        res,
-        200,
-        "Get all transaction data success",
-        transactionsDetail
-      );
+      if (!page || !limit) {
+        return sendSuccessResponse(
+          res,
+          200,
+          "Get all transaction data success",
+          transactionsDetail
+        );
+      } else {
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const result = {};
+
+        if (endIndex < transactionsDetail.length) {
+          result.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+        result.transactions = transactionsDetail.slice(startIndex, endIndex);
+
+        return sendSuccessResponse(
+          res,
+          200,
+          "Get all transaction data page " + page,
+          result
+        );
+      }
     } catch (error) {
       return sendErrorResponse(
         res,

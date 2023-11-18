@@ -64,7 +64,7 @@ module.exports = {
         return sendSuccessResponse(
           res,
           200,
-          "Get all transaction data success",
+          "Get all transaction data page " + page,
           result
         );
       }
