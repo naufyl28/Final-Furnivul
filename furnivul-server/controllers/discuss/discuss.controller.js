@@ -10,7 +10,34 @@ module.exports = {
       })
         .populate("_userId")
         .populate("_productId");
-      sendSuccessResponse(res, 200, "Get all discusses success", discusses);
+
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+
+      if (!page || !limit) {
+        sendSuccessResponse(res, 200, "Get all discusses success", discusses);
+      } else {
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const result = {};
+
+        if (endIndex < discusses.length) {
+          result.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+        result.discusses = discusses.slice(startIndex, endIndex);
+
+        sendSuccessResponse(res, 200, "Get all discusses page " + page, result);
+      }
     } catch (error) {
       sendErrorResponse(res, 500, "Error get all discusses", error);
     }
@@ -121,7 +148,10 @@ module.exports = {
         comment,
       });
       await newDiscuss.save();
-      sendSuccessResponse(res, 200, "Add discuss success", {_id : newDiscuss._id, ...newDiscuss._doc});
+      sendSuccessResponse(res, 200, "Add discuss success", {
+        _id: newDiscuss._id,
+        ...newDiscuss._doc,
+      });
     } catch (error) {
       sendErrorResponse(res, 500, "Error add discuss", error);
     }
