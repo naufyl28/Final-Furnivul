@@ -5,7 +5,33 @@ module.exports = {
   getAllData: async (req, res) => {
     try {
       const users = await User.find();
-      sendSuccessResponse(res, 200, "Get all users success", users);
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+
+      if (!page || !limit) {
+        sendSuccessResponse(res, 200, "Get all users success", users);
+      } else {
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const result = {};
+
+        if (endIndex < users.length) {
+          result.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+        result.users = users.slice(startIndex, endIndex);
+
+        sendSuccessResponse(res, 200, "Get all users success", result);
+      }
     } catch (error) {
       sendErrorResponse(res, 500, "Error get all users", error);
     }
@@ -33,21 +59,9 @@ module.exports = {
     try {
       const { id } = req.payload; // get by id from token, change to req.params if you want to get by id from params
 
-      let {
-        phone,
-        province,
-        district,
-        subdistrict,
-        zipcode,
-      } = req.body;
+      let { phone, province, district, subdistrict, zipcode } = req.body;
 
-      if (
-        !phone ||
-        !province ||
-        !district ||
-        !subdistrict ||
-        !zipcode
-      ) {
+      if (!phone || !province || !district || !subdistrict || !zipcode) {
         return sendErrorResponse(
           res,
           400,
