@@ -8,6 +8,10 @@ module.exports = {
     try {
       const userId = req.payload.id;
 
+      // Pagination
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+
       if (!userId) {
         return sendErrorResponse(
           res,
@@ -30,12 +34,40 @@ module.exports = {
         );
       }
 
-      return sendSuccessResponse(
-        res,
-        200,
-        "Get all transaction data success",
-        transactions
-      );
+      if (!page || !limit) {
+        return sendSuccessResponse(
+          res,
+          200,
+          "Get all transaction data success",
+          transactions
+        );
+      } else {
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const result = {};
+
+        if (endIndex < transactions.length) {
+          result.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+        result.transactions = transactions.slice(startIndex, endIndex);
+
+        return sendSuccessResponse(
+          res,
+          200,
+          "Get all transaction data page " + page,
+          result
+        );
+      }
     } catch (error) {
       return sendErrorResponse(
         res,
@@ -248,7 +280,7 @@ module.exports = {
       const newTransaction = await Transaction.create({
         date,
         _userId: userId,
-        total: 0
+        total: 0,
       });
 
       return sendSuccessResponse(

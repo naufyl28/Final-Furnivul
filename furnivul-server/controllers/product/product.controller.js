@@ -8,7 +8,34 @@ module.exports = {
       const products = await Product.find()
         .populate("_categoryId")
         .populate("_typeId");
-      sendSuccessResponse(res, 200, "Get all products success", products);
+
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+
+      if (!page || !limit) {
+        sendSuccessResponse(res, 200, "Get all products success", products);
+      } else {
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const result = {};
+
+        if (endIndex < products.length) {
+          result.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+        result.products = products.slice(startIndex, endIndex);
+
+        sendSuccessResponse(res, 200, "Get all products page " + page, result);
+      }
     } catch (error) {
       sendErrorResponse(res, 500, "Error get all products", error);
     }

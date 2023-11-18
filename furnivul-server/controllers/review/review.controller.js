@@ -10,7 +10,33 @@ module.exports = {
       })
         .populate("_userId")
         .populate("_productId");
-      sendSuccessResponse(res, 200, "Get all reviews success", reviews);
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+
+      if (!page || !limit) {
+        sendSuccessResponse(res, 200, "Get all reviews success", reviews);
+      } else {
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const result = {};
+
+        if (endIndex < reviews.length) {
+          result.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+        result.reviews = reviews.slice(startIndex, endIndex);
+
+        sendSuccessResponse(res, 200, "Get all reviews page " + page, result);
+      }
     } catch (error) {
       sendErrorResponse(res, 500, "Error get all reviews", error);
     }
@@ -29,7 +55,9 @@ module.exports = {
         );
       }
 
-      const review = await Review.findById(id).populate("_userId").populate("_productId");
+      const review = await Review.findById(id)
+        .populate("_userId")
+        .populate("_productId");
       sendSuccessResponse(res, 200, "Get review by id success", review);
     } catch (error) {
       sendErrorResponse(res, 500, "Error get review by id", error);
