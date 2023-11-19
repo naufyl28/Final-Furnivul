@@ -5,9 +5,9 @@ import Footer from "./components/Footer";
 function App() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar />
       <h1>Furnivul</h1>
-      <Footer />
+      <Footer /> */}
     </>
   );
 }
