@@ -1,4 +1,5 @@
 const Courier = require("../../models/courier/courier");
+const CourierService = require("../../models/courier/courier.service");
 const sendErrorResponse = require("../../handlers/error.handler");
 const sendSuccessResponse = require("../../handlers/success.handler");
 
@@ -113,6 +114,20 @@ module.exports = {
           new Error("Courier not found")
         );
       }
+
+      const courierservice = await CourierService.deleteMany(
+        { _id: { $in: courier._idCourierService } }
+      );
+
+      if (!courierservice) {
+        return sendErrorResponse(
+          res,
+          400,
+          "Courier service not found",
+          new Error("Courier service not found")
+        );
+      }
+
       sendSuccessResponse(res, 200, "Delete courier success");
     } catch (error) {
       sendErrorResponse(res, 500, "Error delete courier", error);
