@@ -4,9 +4,9 @@ import { Form } from "react-router-dom";
 
 const Login = () => {
   return (
-    <section className="bg-cyan-800 dark:bg-gray-900 pt-8 h-[100%] justify-center bg-background bg-no-repeat bg-cover bg-center">
-      <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:gap-8 lg:gap-16 justify-center mt-8">
-        <div className="mt-8 pt-8">
+    <section className="bg-cyan-800 dark:bg-gray-900 pt-8 h-[100%] justify-center bg-background bg-no-repeat bg-cover bg-center ">
+      <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:gap-8 lg:gap-16 justify-center ">
+        <div className="mt-2 pt-4 mb-6">
           <div className="w-full lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800 mt-8 pt-8 justify-center">
             <div className="flex gap-4 mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white text-center justify-center">
               <img src="../assets/logo-login.svg" alt="" />
@@ -49,6 +49,7 @@ const Login = () => {
                 >
                   Remember this device
                 </Label>
+
                 <a
                   href="#"
                   className="ml-auto text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
