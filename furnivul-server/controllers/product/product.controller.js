@@ -92,16 +92,13 @@ module.exports = {
         !product_description ||
         !_typeId ||
         !product_material ||
-        !product_rate ||
-        !product_sold ||
-        !product_review ||
         !product_price ||
         !product_image
       ) {
         return sendErrorResponse(
           res,
           400,
-          "Product name, category, description, type, material, rate, sold, review, price, image required",
+          "All fields are required",
           new Error(
             "Product name, category, description, type, material, rate, sold, review, price, image must be not empty"
           )
@@ -177,9 +174,6 @@ module.exports = {
         !product_description ||
         !_typeId ||
         !product_material ||
-        !product_rate ||
-        !product_sold ||
-        !product_review ||
         !product_price ||
         !product_image
       ) {

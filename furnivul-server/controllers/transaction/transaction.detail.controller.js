@@ -267,8 +267,19 @@ module.exports = {
         );
       }
 
-      const total =
-        transaction.total - oldTransactionDetail.subtotal + subtotal;
+      // const total =
+      //   transaction.total - oldTransactionDetail.subtotal + subtotal;
+
+      // Find all transaction details for the given transaction
+      const allTransactionDetails = await TransactionDetail.find({
+        _transactionId,
+      });
+
+      // Calculate the new total by summing up all subtotals
+      const total = allTransactionDetails.reduce(
+        (total, detail) => total + detail.subtotal,
+        0
+      );
 
       const updatedTransaction = await Transaction.findByIdAndUpdate(
         _transactionId,
