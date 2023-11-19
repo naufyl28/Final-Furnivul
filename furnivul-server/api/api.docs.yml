@@ -1316,14 +1316,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TransactionDetails"
+              $ref: "#/components/schemas/TransactionDetailsEdit"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TransactionDetails"
+                $ref: "#/components/schemas/TransactionDetailsEdit"
         "400":
           description: Bad Request
           content:
