@@ -2,7 +2,7 @@ function LandingPage() {
   return (
     <>
       <div className="mx-auto">
-        <nav className="bg-[#023047]">
+        <nav className="">
           <div className="container flex items-center justify-between mx-auto px-6 py-5">
             {/* <!-- Desktop --> */}
             <div className="flex items-center">

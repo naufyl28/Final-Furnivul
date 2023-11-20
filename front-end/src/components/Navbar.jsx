@@ -6,7 +6,7 @@ import Logo from "../assets/images/logo.png";
 function navbar() {
   return (
     <Navbar fluid rounded>
-      <Navbar.Brand href="https://flowbite-react.com">
+      <Navbar.Brand>
         <img
           src={Logo}
           className="mr-3 mt-8 h-6 sm:h-9"
