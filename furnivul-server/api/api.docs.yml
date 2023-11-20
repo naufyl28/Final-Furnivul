@@ -702,8 +702,6 @@ paths:
     get:
       tags:
         - Product
-      security:
-        - bearerAuth: []
       summary: Get Products
       description: Get Products
       responses:
@@ -722,8 +720,6 @@ paths:
     post:
       tags:
         - Product
-      security:
-        - bearerAuth: []
       summary: Create Product
       description: Create Product
       requestBody:
@@ -750,8 +746,6 @@ paths:
     get:
       tags:
         - Product
-      security:
-        - bearerAuth: []
       summary: Get Product
       description: Get Product
       parameters:
@@ -776,8 +770,6 @@ paths:
     put:
       tags:
         - Product
-      security:
-        - bearerAuth: []
       summary: Update Product
       description: Update Product
       parameters:
