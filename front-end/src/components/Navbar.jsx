@@ -1,5 +1,5 @@
 import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import logo from '../assets/images/logo-text.png'
 function navbar() {
   return (

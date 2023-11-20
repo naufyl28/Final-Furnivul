@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from "swiper/modules";
+
 import "swiper/css";
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import 'swiper/css/autoplay';
+
 import axios from "axios";
 import arrowright from "../assets/svg/arrow-right.svg";
 export default () => {
@@ -12,7 +19,6 @@ export default () => {
       .then((response) => {
         const data = response.data.data;
         setData(data);
-        console.log(data); // Log the data to check its structure
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -23,10 +29,35 @@ export default () => {
     data &&
     data.length > 0 && (
       <Swiper
+        modules={[Navigation, Pagination, Scrollbar, A11y , Autoplay]}
         spaceBetween={10}
-        slidesPerView={5} // Adjust slidesPerView based on the number of slides
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => console.log(swiper)}
+        slidesPerView={1}
+        loop={true}
+        navigation
+        // pagination={{ clickable: true }}
+        scrollbar={{ draggable: true }}
+        autoplay={{
+          delay: 1000,
+          disableOnInteraction: false,
+        }}
+        breakpoints={{
+          320: {
+            slidesPerView: 1,
+            spaceBetween: 50,
+          },
+          640: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 30,
+          },
+          1024: {
+            slidesPerView: 5,
+            spaceBetween: 10,
+          },
+        }}
       >
         {data.map((item, index) => {
           let price = item.product_price;
@@ -37,7 +68,7 @@ export default () => {
           return (
             <SwiperSlide key={index}>
               <div className="swiper-slide">
-                <div className="flex lg:flex-col flex-col p-4 bg-[#023047] border border-black rounded-xl mx-auto w-[400px]">
+                <div className="flex lg:flex-col flex-col p-4 bg-[#023047] border border-black rounded-xl mx-auto my-2 w-[300px] lg:w-[350px]">
                   <img
                     src={item.product_image}
                     alt="living room"

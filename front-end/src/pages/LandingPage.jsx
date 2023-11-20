@@ -1,4 +1,3 @@
-import { useState } from "react";
 import index1 from "../assets/images/index1.png";
 import lowfi1 from "../assets/images/Low-Fi Placeholder.png";
 import vector from "../assets/svg/Vector.svg";
