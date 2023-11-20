@@ -21,7 +21,7 @@ router.use("/courier-services", auth, courierServiceRouter)
 router.use("/couriers", auth, courierRouter);
 router.use("/product-categories", auth, productCategoryRouter);
 router.use("/product-types", auth, productTypeRouter);
-router.use("/products", auth, productRouter);
+router.use("/products", productRouter);
 router.use("/reviews", auth, reviewRouter);
 router.use("/discusses", auth, discussRouter);
 router.use("/transactions", auth, transactionRouter);

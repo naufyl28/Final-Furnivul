@@ -1,12 +1,12 @@
 import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
 import { NavLink, useNavigate } from "react-router-dom";
-
+import logo from '../assets/images/logo-text.png'
 function navbar() {
   return (
     <Navbar fluid rounded>
       <Navbar.Brand href="https://flowbite-react.com">
         <img
-          src="/favicon.svg"
+          src={logo}
           className="mr-3 h-6 sm:h-9"
           alt="Flowbite React Logo"
         />
