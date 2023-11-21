@@ -7,29 +7,29 @@ const Login = () => {
   return (
     <section className="bg-cyan-800 dark:bg-gray-900 pt-8 h-[100%] justify-center bg-background bg-no-repeat bg-cover bg-center ">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:gap-8 justify-center ">
-        <div className="mt-2 pt-4 mb-6">
-          <div className="w-full lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800 mt-8 pt-8 justify-center">
+        <div className=" pt-4 mb-8">
+          <div className="w-full lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800  pt-8 justify-center">
             <div className="">
               <div className="flex w-full h-full  justify-center text-center mr-2">
                 <img src={Logo} alt="" className="h-10 w-10 mr-2" />
                 <div>
-                  <p className="font-bold text-2xl justify-center  allign-center text-white mt-1">
+                  <p className="font-bold text-4xl justify-center  allign-center dark:text-white mt-1">
                     Furnivul
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="flex mt-4 mb-4 text-xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+            <div className="flex text-xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
               <img src="../assets/logo-login.svg" alt="" />
               <Label
                 htmlFor="name"
-                className="block mb-2 text-3xl font-bold text-gray-900 dark:text-white "
+                className="block text-2xl font-bold text-gray-900 dark:text-white "
               >
                 Log In
               </Label>
             </div>
-            <Form id="login-form" className="mt-8 space-y-6" action="#">
+            <Form id="login-form" className="space-y-6" action="#">
               <div>
                 <Label
                   htmlFor="email1"
