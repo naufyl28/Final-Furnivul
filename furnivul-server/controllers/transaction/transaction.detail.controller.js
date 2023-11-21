@@ -1,10 +1,8 @@
 const Transaction = require("../../models/transaction/transaction");
 const TransactionDetail = require("../../models/transaction/transaction.detail");
 const Product = require("../../models/product/product");
-const Courier = require("../../models/courier/courier");
 const CourierService = require("../../models/courier/courier.service");
 const Voucher = require("../../models/voucher/voucher");
-const User = require("../../models/user");
 
 const {
   sendErrorResponse,
@@ -13,7 +11,25 @@ const {
 
 const validateRequest = (req, res) => {
   let { id } = req.params;
+  if (!id) {
+    return sendErrorResponse(
+      res,
+      400,
+      "Id not found",
+      new Error("Id not found or empty")
+    );
+  }
+
   const userId = req.payload.id;
+  if (!userId) {
+    return sendErrorResponse(
+      res,
+      400,
+      "Failed to update transaction data",
+      new Error("You must login first to access this page(s).")
+    );
+  }
+
   let {
     _transactionId,
     _productId,
@@ -22,24 +38,6 @@ const validateRequest = (req, res) => {
     _voucherId,
     qty,
   } = req.body;
-
-  if (!id) {
-    return sendErrorResponse(
-      res,
-      400,
-      "Failed to get transaction data",
-      new Error("Id not found or empty")
-    );
-  }
-
-  if (!userId) {
-    return sendErrorResponse(
-      res,
-      400,
-      "Failed to get transaction data",
-      new Error("You must login first to access this page(s).")
-    );
-  }
 
   if (
     !_transactionId ||
@@ -55,6 +53,7 @@ const validateRequest = (req, res) => {
       new Error("All fields must be not empty")
     );
   }
+
   return {
     id,
     userId,
@@ -65,6 +64,93 @@ const validateRequest = (req, res) => {
     _voucherId,
     qty,
   };
+};
+
+const fetchDataForUpdate = async (
+  _productId,
+  _courierServiceId,
+  id,
+  _transactionId
+) => {
+  const product = await Product.findById(_productId);
+  const courierService = await CourierService.findById(_courierServiceId);
+  const oldTransactionDetail = await TransactionDetail.findById(id);
+  const transaction = await Transaction.findById(
+    oldTransactionDetail._transactionId
+  );
+  const allTransactionDetails = await TransactionDetail.find({
+    _transactionId: _transactionId,
+  });
+
+  if (!product) {
+    return sendErrorResponse(
+      res,
+      400,
+      "Failed to update transaction data",
+      new Error("Product not found")
+    );
+  }
+
+  if (!courierService) {
+    return sendErrorResponse(
+      res,
+      400,
+      "Failed to update transaction data",
+      new Error("Courier service not found")
+    );
+  }
+
+  if (!oldTransactionDetail) {
+    return sendErrorResponse(
+      res,
+      400,
+      "Failed to update transaction data",
+      new Error("Transaction detail not found")
+    );
+  }
+
+  if (!transaction) {
+    return sendErrorResponse(
+      res,
+      400,
+      "Failed to update transaction data",
+      new Error("Transaction not found")
+    );
+  }
+
+  if (!allTransactionDetails) {
+    return sendErrorResponse(
+      res,
+      400,
+      "Failed to update transaction data",
+      new Error("Transaction details not found")
+    );
+  }
+
+  return { product, courierService, transaction, allTransactionDetails };
+};
+
+const calculateTotal = async (
+  _voucherId,
+  courierService,
+  allTransactionDetails
+) => {
+  
+  let total = allTransactionDetails.reduce(
+    (total, detail) => total + detail.subtotal,
+    0
+  );
+
+  if (_voucherId) {
+    const discount = await Voucher.findById(_voucherId);
+    if (discount) {
+      total = total + courierService.cost - discount.discount;
+    }
+  } else {
+    total = total + courierService.cost;
+  }
+
+  return total;
 };
 
 module.exports = {
@@ -215,99 +301,18 @@ module.exports = {
   },
   updateData: async (req, res) => {
     try {
-      let { id } = req.params;
-
-      if (!id) {
-        return sendErrorResponse(
-          res,
-          400,
-          "Id not found",
-          new Error("Id not found or empty")
-        );
-      }
-
-      const userId = req.payload.id;
-
-      if (!userId) {
-        return sendErrorResponse(
-          res,
-          400,
-          "Failed to update transaction data",
-          new Error("You must login first to access this page(s).")
-        );
-      }
-
       let {
+        id,
+        userId,
         _transactionId,
         _productId,
         _courierId,
         _courierServiceId,
         _voucherId,
         qty,
-      } = req.body;
-
-      if (
-        !_transactionId ||
-        !_productId ||
-        !_courierId ||
-        !_courierServiceId ||
-        !qty
-      ) {
-        return sendErrorResponse(
-          res,
-          400,
-          "All fields required",
-          new Error("All fields must be not empty")
-        );
-      }
-
-      const product = await Product.findById(_productId);
-
-      if (!product) {
-        return sendErrorResponse(
-          res,
-          400,
-          "Failed to update transaction data",
-          new Error("Product not found")
-        );
-      }
-
-      const courierService = await CourierService.findById(_courierServiceId);
-
-      if (!courierService) {
-        return sendErrorResponse(
-          res,
-          400,
-          "Failed to update transaction data",
-          new Error("Courier service not found")
-        );
-      }
-
-      const oldTransactionDetail = await TransactionDetail.findById(id);
-
-      if (!oldTransactionDetail) {
-        return sendErrorResponse(
-          res,
-          400,
-          "Failed to update transaction data",
-          new Error("Transaction detail not found")
-        );
-      }
-
-      const subtotal = product.product_price * qty;
-
-      const transaction = await Transaction.findById(
-        oldTransactionDetail._transactionId
-      );
-
-      if (!transaction) {
-        return sendErrorResponse(
-          res,
-          400,
-          "Failed to update transaction data",
-          new Error("Transaction not found")
-        );
-      }
+      } = validateRequest(req, res);
+      const { product, courierService, transaction, allTransactionDetails } =
+        await fetchDataForUpdate(_productId, _courierServiceId, id);
 
       console.log(transaction._userId.toString(), userId);
       if (transaction._userId.toString() !== userId) {
@@ -319,23 +324,13 @@ module.exports = {
         );
       }
 
-      const allTransactionDetails = await TransactionDetail.find({
-        _transactionId,
-      });
+      const subtotal = product.product_price * qty;
 
-      let total = allTransactionDetails.reduce(
-        (total, detail) => total + detail.subtotal,
-        0
+      const total = await calculateTotal(
+        _voucherId,
+        courierService,
+        allTransactionDetails
       );
-
-      if (_voucherId) {
-        const discount = await Voucher.findById(_voucherId);
-        if (discount) {
-          total = total + courierService.cost - discount.discount;
-        }
-      } else {
-        total = total + courierService.cost;
-      }
 
       const transactionExists = await Transaction.findById(_transactionId);
 
