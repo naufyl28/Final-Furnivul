@@ -446,6 +446,7 @@ module.exports = {
           _productId: productData._productId,
           _courierId,
           _courierServiceId,
+          _voucherId,
           qty: productData.qty,
           subtotal,
         });
