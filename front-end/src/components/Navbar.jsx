@@ -4,13 +4,16 @@ import Logo from "../assets/images/logo.png";
 
 function navbar() {
   return (
-    <div className="mt-2 mb-2">
+    <div className="mt-2 mb-2 mx-4">
       <Navbar fluid rounded>
         <Navbar.Brand>
-          <img src={Logo} className="mr-3  sm:h-9" alt="Flowbite React Logo" />
-          <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-            Furnivul
-          </span>
+          <img
+            src={Logo}
+            className="mr-3  sm:h-9"
+            style={{ height: 35, width: 38 }}
+            alt="Flowbite React Logo"
+          />
+          <span className="text-2xl font-bold dark:text-white">Furnivul</span>
         </Navbar.Brand>
         <div className="flex md:order-2"></div>
         <Navbar.Collapse>
