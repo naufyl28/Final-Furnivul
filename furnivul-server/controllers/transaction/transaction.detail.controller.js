@@ -11,6 +11,62 @@ const {
   sendSuccessResponse,
 } = require("../../helpers/response.helper");
 
+const validateRequest = (req, res) => {
+  let { id } = req.params;
+  const userId = req.payload.id;
+  let {
+    _transactionId,
+    _productId,
+    _courierId,
+    _courierServiceId,
+    _voucherId,
+    qty,
+  } = req.body;
+
+  if (!id) {
+    return sendErrorResponse(
+      res,
+      400,
+      "Failed to get transaction data",
+      new Error("Id not found or empty")
+    );
+  }
+
+  if (!userId) {
+    return sendErrorResponse(
+      res,
+      400,
+      "Failed to get transaction data",
+      new Error("You must login first to access this page(s).")
+    );
+  }
+
+  if (
+    !_transactionId ||
+    !_productId ||
+    !_courierId ||
+    !_courierServiceId ||
+    !qty
+  ) {
+    return sendErrorResponse(
+      res,
+      400,
+      "All fields required",
+      new Error("All fields must be not empty")
+    );
+  }
+  return {
+    id,
+    userId,
+    _transactionId,
+    _productId,
+    _courierId,
+    _courierServiceId,
+    _voucherId,
+    qty,
+  };
+};
+
 module.exports = {
   getAllData: async (req, res) => {
     try {
@@ -27,9 +83,7 @@ module.exports = {
         );
       }
 
-      let transactions = await Transaction.find({ _userId: userId }).populate(
-        "_userId"
-      );
+      let transactions = await Transaction.find().populate("_userId");
 
       if (!transactions) {
         return sendErrorResponse(
@@ -49,8 +103,7 @@ module.exports = {
           .populate("_transactionId")
           .populate("_productId")
           .populate("_courierId")
-          .populate("_courierServiceId")
-          .populate("_voucherId");
+          .populate("_courierServiceId");
 
         transactionsDetail.push(...detail);
       }
@@ -268,11 +321,9 @@ module.exports = {
       }
 
       const updatedTransactionDetail =
-        await TransactionDetail.findByIdAndUpdate(
-          id,
-          updateObject,
-          { new: true }
-        );
+        await TransactionDetail.findByIdAndUpdate(id, updateObject, {
+          new: true,
+        });
 
       if (!updatedTransactionDetail) {
         return sendErrorResponse(
@@ -283,7 +334,7 @@ module.exports = {
         );
       }
 
-      const transaction = await Transaction.findById(_transactionId);
+      const transaction = await Transaction.findById(oldTransactionDetail._transactionId);
 
       if (!transaction) {
         return sendErrorResponse(
@@ -291,6 +342,15 @@ module.exports = {
           400,
           "Failed to update transaction data",
           new Error("Transaction not found")
+        );
+      }
+
+      if (transaction._userId.toString() !== userId) {
+        return sendErrorResponse(
+          res,
+          403,
+          "Unauthorized",
+          new Error("You are not authorized to access this page(s).")
         );
       }
 
@@ -501,8 +561,7 @@ module.exports = {
       if (_voucherId) {
         const discount = await Voucher.findById(_voucherId);
         if (discount) {
-          total =
-            (totalSubtotal + courierService.cost) - discount.discount;
+          total = totalSubtotal + courierService.cost - discount.discount;
         }
       } else {
         total = totalSubtotal + courierService.cost;
