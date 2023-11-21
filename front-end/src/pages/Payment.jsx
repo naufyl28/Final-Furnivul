@@ -1,9 +1,7 @@
-import { Button } from "flowbite-react";
-import { NavLink } from "react-router-dom";
 import { Breadcrumb } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
 
-function CategoryProduct() {
+function Payment() {
   return (
     <div>
       <Breadcrumb
@@ -13,15 +11,14 @@ function CategoryProduct() {
         <Breadcrumb.Item href="#" icon={FaCartShopping}>
           Home
         </Breadcrumb.Item>
-        <Breadcrumb.Item href="#">Category</Breadcrumb.Item>
+        <Breadcrumb.Item href="#">Cart</Breadcrumb.Item>
+        <Breadcrumb.Item href="#">Address</Breadcrumb.Item>
+        <Breadcrumb.Item href="#">Checkout</Breadcrumb.Item>
+        <Breadcrumb.Item href="#">Payment</Breadcrumb.Item>
       </Breadcrumb>
-      <h1>CategoryProduct</h1>
-      <Button>
-        <NavLink to={"/category-product/list-product"}>
-          <a>ListingProduct</a>
-        </NavLink>
-      </Button>
+      <h1>Payment</h1>
     </div>
   );
 }
-export default CategoryProduct;
+
+export default Payment;
