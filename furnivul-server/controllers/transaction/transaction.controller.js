@@ -292,6 +292,7 @@ module.exports = {
         date,
         _userId: userId,
         total: 0,
+        status: "pending",
       });
 
       return sendSuccessResponse(

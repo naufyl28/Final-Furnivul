@@ -1525,7 +1525,7 @@ components:
       properties:
         date:
           type: string
-          example: 2020-10-30T00:00:00.000Z
+          example: Just click execute because it will auto filled by current date and time
 
     TransactionDetails:
       type: object
@@ -1557,7 +1557,7 @@ components:
         _voucherId:
           type: string
           format: ObjectId
-          example: 5f9b0b3b9b7b3b1b3c3b3b3b
+          example: 5f9b0b3b9b7b3b1b3c3b3b3b || null
 
     TransactionDetailsEdit:
       type: object
@@ -1578,6 +1578,10 @@ components:
           type: string
           format: ObjectId
           example: 5f9b0b3b9b7b3b1b3c3b3b3b
+        _voucherId:
+          type: string
+          format: ObjectId
+          example: 5f9b0b3b9b7b3b1b3c3b3b3b || null
         qty:
           type: integer
           example: 2
