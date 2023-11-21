@@ -12,6 +12,7 @@ const reviewRouter = require("./review/review.route");
 const discussRouter = require("./discuss/discuss.route.js");
 const transactionRouter = require("./transactions/transaction.js");
 const transactionDetailRouter = require("./transactions/transaction.detail.js");
+const voucherRouter = require("./voucher/voucher.route.js");
 const auth = require("../middleware/auth");
 
 
@@ -26,5 +27,5 @@ router.use("/reviews", auth, reviewRouter);
 router.use("/discusses", auth, discussRouter);
 router.use("/transactions", auth, transactionRouter);
 router.use("/transaction-details", auth, transactionDetailRouter);
-
+router.use("/voucher", auth, voucherRouter)
 module.exports = router;
