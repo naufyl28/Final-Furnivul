@@ -438,7 +438,7 @@ module.exports = {
         }
 
         const subtotal =
-          product.product_price * productData.qty + courierService.cost;
+          product.product_price * productData.qty;
         totalSubtotal += subtotal;
 
         const newTransactionDetail = await TransactionDetail.create({
@@ -471,12 +471,14 @@ module.exports = {
         }
       }
 
-      transaction.total = totalSubtotal;
+      transaction.total = totalSubtotal + courierService.cost;
       await transaction.save();
 
       return sendSuccessResponse(res, 200, "Add transaction data success", {
         transactionDetails,
         totalSubtotal,
+        courierService: courierService.cost,
+        total: transaction.total,
       });
     } catch (error) {
       return sendErrorResponse(
