@@ -1,6 +1,5 @@
 import { Avatar, Button, Dropdown, Navbar } from "flowbite-react";
 import { NavLink, useNavigate } from "react-router-dom";
-
 import Logo from "../assets/images/logo.png";
 
 function navbar() {
@@ -8,8 +7,10 @@ function navbar() {
     <Navbar fluid rounded>
       <Navbar.Brand>
         <img
+
           src={Logo}
           className="mr-3 mt-8 h-6 sm:h-9"
+
           alt="Flowbite React Logo"
         />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">

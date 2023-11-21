@@ -34,6 +34,7 @@ import Payment from "./pages/Payment.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
+
     <>
       <Route path="/" element={<Layout />} errorElement={<NotFound />}>
         {/* routing pages */}
@@ -64,6 +65,7 @@ const router = createBrowserRouter(
         <Route path="/cart/address/checkout/payment" element={<Payment />} />
       </Route>
     </>
+
   )
 );
 
