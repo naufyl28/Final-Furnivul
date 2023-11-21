@@ -11,6 +11,10 @@ const transactionSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
+    _voucherId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Voucher',
+    },
     total: {
       type: Number,
       required: true,
