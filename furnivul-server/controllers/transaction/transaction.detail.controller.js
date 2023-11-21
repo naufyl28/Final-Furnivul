@@ -389,7 +389,7 @@ module.exports = {
   },
   addData: async (req, res) => {
     try {
-      let { _transactionId, products, _courierId, _courierServiceId } =
+      let { _transactionId, products, _courierId, _courierServiceId, _voucherId } =
         req.body;
       let userId = req.payload.id;
 
@@ -462,6 +462,13 @@ module.exports = {
           "Failed to add transaction data",
           new Error("Transaction not found")
         );
+      }
+
+      if (_voucherId) {
+        const discount = await Voucher.findById(_voucherId);
+        if (discount) {
+          totalSubtotal -= discount.discount;
+        }
       }
 
       transaction.total = totalSubtotal;
