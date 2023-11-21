@@ -11,6 +11,16 @@ module.exports = {
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
+        if (couriers.length === 0) {
+          console.log("Courier is empty")
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all couriers success",
+            "Courier is empty"
+          );
+        }
+
         sendSuccessResponse(res, 200, "Get all couriers success", couriers);
       } else {
         const startIndex = (page - 1) * limit;

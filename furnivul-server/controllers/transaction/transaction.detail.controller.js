@@ -60,6 +60,15 @@ module.exports = {
       }
 
       if (!page || !limit) {
+        if (transactionsDetail.length === 0) {
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all transaction data success",
+            "Transaction is empty"
+          );
+        }
+
         return sendSuccessResponse(
           res,
           200,

@@ -10,6 +10,16 @@ module.exports = {
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
+        if (courierServices.length === 0) {
+          console.log("Courier service is empty")
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all courier services success",
+            "Courier service is empty"
+          );
+        }
+
         sendSuccessResponse(
           res,
           200,

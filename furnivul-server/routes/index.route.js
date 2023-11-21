@@ -23,8 +23,8 @@ router.use("/couriers", auth, courierRouter);
 router.use("/product-categories", auth, productCategoryRouter);
 router.use("/product-types", auth, productTypeRouter);
 router.use("/products", productRouter);
-router.use("/reviews", auth, reviewRouter);
-router.use("/discusses", auth, discussRouter);
+router.use("/reviews", reviewRouter);
+router.use("/discusses", discussRouter);
 router.use("/transactions", auth, transactionRouter);
 router.use("/transaction-details", auth, transactionDetailRouter);
 router.use("/voucher", auth, voucherRouter)

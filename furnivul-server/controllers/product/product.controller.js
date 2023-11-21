@@ -12,6 +12,15 @@ module.exports = {
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
+        if (products.length === 0) {
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all products success",
+            "Product is empty"
+          );
+        }
+
         sendSuccessResponse(res, 200, "Get all products success", products);
       } else {
         const startIndex = (page - 1) * limit;

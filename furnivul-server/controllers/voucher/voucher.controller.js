@@ -13,12 +13,7 @@ module.exports = {
 
       if (!page || !limit) {
         if (vouchers.length === 0) {
-          return sendErrorResponse(
-            res,
-            404,
-            "Voucher not found",
-            new Error("Voucher not found")
-          );
+          return sendSuccessResponse(res, 204, "Get all vouchers success", "Voucher is empty");
         }
         sendSuccessResponse(res, 200, "Get all vouchers success", vouchers);
       } else {
@@ -60,7 +55,7 @@ module.exports = {
         );
       }
 
-      const voucher = Voucher.findById(id);
+      const voucher = await Voucher.findById(id);
 
       if (!voucher) {
         return sendErrorResponse(
@@ -172,7 +167,9 @@ module.exports = {
           res,
           400,
           "All field must be filled",
-          new Error("name, discount, description, code, start_date, end_date must be filled")
+          new Error(
+            "name, discount, description, code, start_date, end_date must be filled"
+          )
         );
       }
 

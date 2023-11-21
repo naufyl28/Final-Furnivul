@@ -1,12 +1,13 @@
 const Discuss = require("../../models/discuss/discuss");
-const { sendSuccessResponse, sendErrorResponse } = require("../../helpers/response.helper");
+const {
+  sendSuccessResponse,
+  sendErrorResponse,
+} = require("../../helpers/response.helper");
 
 module.exports = {
   getAllData: async (req, res) => {
     try {
-      const discusses = await Discuss.find({
-        _userId: req.payload.id,
-      })
+      const discusses = await Discuss.find()
         .populate("_userId")
         .populate("_productId");
 
@@ -14,6 +15,16 @@ module.exports = {
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
+        if (discusses.length === 0) {
+          console.log("Discuss is empty")
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all discusses success",
+            "Discuss is empty"
+          );
+        }
+
         sendSuccessResponse(res, 200, "Get all discusses success", discusses);
       } else {
         const startIndex = (page - 1) * limit;
@@ -67,6 +78,7 @@ module.exports = {
   updateData: async (req, res) => {
     try {
       let { id } = req.params;
+      const userId = req.payload.id;
 
       if (!id) {
         return sendErrorResponse(
@@ -77,9 +89,9 @@ module.exports = {
         );
       }
 
-      let { _productId, comment } = req.body;
+      let { comment } = req.body;
 
-      if (!_productId || !comment) {
+      if (!comment) {
         return sendErrorResponse(
           res,
           400,
@@ -87,10 +99,18 @@ module.exports = {
           new Error("User, product, comment must be not empty")
         );
       }
+      if (userId !== Discuss._userId) {
+        return sendErrorResponse(
+          res,
+          400,
+          "User not authorized",
+          new Error("User not authorized")
+        );
+      }
 
       const updateDiscuss = await Discuss.findByIdAndUpdate(
         id,
-        { _productId, comment },
+        { comment },
         { new: true }
       );
       sendSuccessResponse(res, 200, "Update discuss success", updateDiscuss);

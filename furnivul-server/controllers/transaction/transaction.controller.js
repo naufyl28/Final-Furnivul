@@ -1,6 +1,9 @@
 const Transaction = require("../../models/transaction/transaction");
 const TransactionDetail = require("../../models/transaction/transaction.detail");
-const { sendSuccessResponse, sendErrorResponse } = require("../../helpers/response.helper");
+const {
+  sendSuccessResponse,
+  sendErrorResponse,
+} = require("../../helpers/response.helper");
 
 module.exports = {
   getAllData: async (req, res) => {
@@ -34,6 +37,15 @@ module.exports = {
       }
 
       if (!page || !limit) {
+        if (transactions.length === 0) {
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all transaction data success",
+            "Transaction is empty"
+          );
+        }
+
         return sendSuccessResponse(
           res,
           200,
