@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const sendErrorResponse = require("../helpers/error.handler");
+const { sendErrorResponse } = require("../helpers/response.helper");
 const JWT_KEY = process.env.JWT_KEY;
 
 const auth = (req, res, next) => {
