@@ -8,9 +8,11 @@ import lowfi2 from "../assets/images/Low-Fi Placeholder 2.png";
 import Swiper from "../components/Swiper";
 function LandingPage() {
   return (
+
     <div className="container-fluid overflow-hidden">
       <div className=" lg:flex justify-center m-10 lg:mx-auto lg:my-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
         <div className="flex gap-20">
+
           <div className="relative">
             <img src={index1} className="rounded-md" alt="" />
 
