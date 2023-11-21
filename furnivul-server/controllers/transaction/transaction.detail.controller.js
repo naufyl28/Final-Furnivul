@@ -301,6 +301,7 @@ module.exports = {
   },
   updateData: async (req, res) => {
     try {
+      // get validate from validateRequest function
       let {
         id,
         userId,
@@ -311,9 +312,12 @@ module.exports = {
         _voucherId,
         qty,
       } = validateRequest(req, res);
+
+      // get data from fetchDataForUpdate function
       const { product, courierService, transaction, allTransactionDetails } =
         await fetchDataForUpdate(_productId, _courierServiceId, id);
 
+      // check if user is authorized to update transaction data
       console.log(transaction._userId.toString(), userId);
       if (transaction._userId.toString() !== userId) {
         return sendErrorResponse(
@@ -324,16 +328,20 @@ module.exports = {
         );
       }
 
+      // calculate subtotal by product price and qty
       const subtotal = product.product_price * qty;
 
+      // get total from calculateTotal function
       const total = await calculateTotal(
         _voucherId,
         courierService,
         allTransactionDetails
       );
-
+      
+      // check if transaction exists or not
       const transactionExists = await Transaction.findById(_transactionId);
 
+      // if transaction not found, return error response
       if (!transactionExists) {
         return sendErrorResponse(
           res,
@@ -343,6 +351,7 @@ module.exports = {
         );
       }
 
+      // define update object to update transaction detail
       let updateObject = {
         _transactionId,
         _productId,
@@ -352,12 +361,14 @@ module.exports = {
         subtotal,
       };
 
+      // check if voucher id exists or not and if exists, add to update object
       if (_voucherId) {
         updateObject._voucherId = _voucherId;
       } else {
         updateObject._voucherId = null;
       }
 
+      // update transaction detail and check if success or not
       const updatedTransactionDetail =
         await TransactionDetail.findByIdAndUpdate(id, updateObject, {
           new: true,
@@ -372,6 +383,7 @@ module.exports = {
         );
       }
 
+      // update transaction total and check if success return true or false
       const updatedTransaction = await Transaction.findByIdAndUpdate(
         _transactionId,
         { total: total },
