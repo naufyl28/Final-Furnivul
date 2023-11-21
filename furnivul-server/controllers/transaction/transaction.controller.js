@@ -1,7 +1,6 @@
 const Transaction = require("../../models/transaction/transaction");
 const TransactionDetail = require("../../models/transaction/transaction.detail");
-const sendErrorResponse = require("../../handlers/error.handler");
-const sendSuccessResponse = require("../../handlers/success.handler");
+const { sendSuccessResponse, sendErrorResponse } = require("../../helpers/response.helper");
 
 module.exports = {
   getAllData: async (req, res) => {

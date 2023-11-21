@@ -2,8 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
 const JWT_KEY = process.env.JWT_KEY;
-const sendErrorResponse = require("../../handlers/error.handler");
-const sendSuccessResponse = require("../../handlers/success.handler");
+const { sendSuccessResponse, sendErrorResponse } = require("../../helpers/response.helper");
 
 module.exports = {
   login: async (req, res) => {

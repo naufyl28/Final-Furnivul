@@ -1,7 +1,6 @@
 const Courier = require("../../models/courier/courier");
 const CourierService = require("../../models/courier/courier.service");
-const sendErrorResponse = require("../../handlers/error.handler");
-const sendSuccessResponse = require("../../handlers/success.handler");
+const { sendSuccessResponse, sendErrorResponse } = require("../../helpers/response.helper");
 
 module.exports = {
   getAllData: async (req, res) => {
