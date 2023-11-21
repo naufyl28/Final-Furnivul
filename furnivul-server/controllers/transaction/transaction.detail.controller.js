@@ -6,7 +6,10 @@ const CourierService = require("../../models/courier/courier.service");
 const Voucher = require("../../models/voucher/voucher");
 const User = require("../../models/user");
 
-const { sendErrorResponse, sendSuccessResponse } = require("../../helpers/response.helper");
+const {
+  sendErrorResponse,
+  sendSuccessResponse,
+} = require("../../helpers/response.helper");
 
 module.exports = {
   getAllData: async (req, res) => {
@@ -46,7 +49,8 @@ module.exports = {
           .populate("_transactionId")
           .populate("_productId")
           .populate("_courierId")
-          .populate("_courierServiceId");
+          .populate("_courierServiceId")
+          .populate("_voucherId");
 
         transactionsDetail.push(...detail);
       }
@@ -189,8 +193,14 @@ module.exports = {
         );
       }
 
-      let { _transactionId, _productId, _courierId, _courierServiceId, qty } =
-        req.body;
+      let {
+        _transactionId,
+        _productId,
+        _courierId,
+        _courierServiceId,
+        _voucherId,
+        qty,
+      } = req.body;
 
       if (
         !_transactionId ||
@@ -240,19 +250,27 @@ module.exports = {
         );
       }
 
-      const subtotal = product.product_price * qty + courierService.cost;
+      const subtotal = product.product_price * qty;
+
+      let updateObject = {
+        _transactionId,
+        _productId,
+        _courierId,
+        _courierServiceId,
+        qty,
+        subtotal,
+      };
+
+      if (_voucherId) {
+        updateObject._voucherId = _voucherId;
+      } else {
+        updateObject._voucherId = null;
+      }
 
       const updatedTransactionDetail =
         await TransactionDetail.findByIdAndUpdate(
           id,
-          {
-            _transactionId,
-            _productId,
-            _courierId,
-            _courierServiceId,
-            qty,
-            subtotal,
-          },
+          updateObject,
           { new: true }
         );
 
@@ -280,10 +298,19 @@ module.exports = {
         _transactionId,
       });
 
-      const total = allTransactionDetails.reduce(
+      let total = allTransactionDetails.reduce(
         (total, detail) => total + detail.subtotal,
         0
       );
+
+      if (_voucherId) {
+        const discount = await Voucher.findById(_voucherId);
+        if (discount) {
+          total = total + courierService.cost - discount.discount;
+        }
+      } else {
+        total = total + courierService.cost;
+      }
 
       const updatedTransaction = await Transaction.findByIdAndUpdate(
         _transactionId,
@@ -389,8 +416,13 @@ module.exports = {
   },
   addData: async (req, res) => {
     try {
-      let { _transactionId, products, _courierId, _courierServiceId, _voucherId } =
-        req.body;
+      let {
+        _transactionId,
+        products,
+        _courierId,
+        _courierServiceId,
+        _voucherId,
+      } = req.body;
       let userId = req.payload.id;
 
       if (!_transactionId || !products || !_courierId || !_courierServiceId) {
@@ -437,8 +469,7 @@ module.exports = {
           );
         }
 
-        const subtotal =
-          product.product_price * productData.qty;
+        const subtotal = product.product_price * productData.qty;
         totalSubtotal += subtotal;
 
         const newTransactionDetail = await TransactionDetail.create({
@@ -465,21 +496,26 @@ module.exports = {
         );
       }
 
+      let total = 0;
+
       if (_voucherId) {
         const discount = await Voucher.findById(_voucherId);
         if (discount) {
-          totalSubtotal -= discount.discount;
+          total =
+            (totalSubtotal + courierService.cost) - discount.discount;
         }
+      } else {
+        total = totalSubtotal + courierService.cost;
       }
 
-      transaction.total = totalSubtotal + courierService.cost;
+      transaction.total = total;
       await transaction.save();
 
       return sendSuccessResponse(res, 200, "Add transaction data success", {
         transactionDetails,
         totalSubtotal,
         courierService: courierService.cost,
-        total: transaction.total,
+        total,
       });
     } catch (error) {
       return sendErrorResponse(
