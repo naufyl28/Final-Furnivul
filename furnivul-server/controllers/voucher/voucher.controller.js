@@ -12,6 +12,14 @@ module.exports = {
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
+        if (vouchers.length === 0) {
+          return sendErrorResponse(
+            res,
+            404,
+            "Voucher not found",
+            new Error("Voucher not found")
+          );
+        }
         sendSuccessResponse(res, 200, "Get all vouchers success", vouchers);
       } else {
         const startIndex = (page - 1) * limit;
@@ -176,7 +184,7 @@ module.exports = {
         start_date,
         end_date,
       });
-      
+
       sendSuccessResponse(res, 201, "Add voucher success", voucher);
     } catch (error) {
       sendErrorResponse(res, 500, "Error add voucher", error);
