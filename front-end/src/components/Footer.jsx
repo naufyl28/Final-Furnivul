@@ -48,7 +48,7 @@ function Component() {
         <Footer.Divider />
         <div className="w-full sm:flex justify-center  sm:items-center sm:flex-end">
           <Footer.Copyright href="#" by="Furnivul™" year={2022} />
-          <div className="mt-4 gap-2 flex space-x-6 sm:mt-0 sm:justify-center">
+          <div className="mt-4 mx-4 flex gap-2 sm:mt-0 sm:justify-center">
             <Footer.Icon href="#" icon={BsFacebook} />
             <Footer.Icon href="#" icon={BsInstagram} />
             <Footer.Icon href="#" icon={BsTwitter} />
