@@ -13,7 +13,7 @@ function CategoryProduct() {
         <Breadcrumb.Item href="#" icon={FaCartShopping}>
           Home
         </Breadcrumb.Item>
-        <Breadcrumb.Item href="#">Articles</Breadcrumb.Item>
+        <Breadcrumb.Item href="#">Category</Breadcrumb.Item>
       </Breadcrumb>
       <h1>CategoryProduct</h1>
       <Button>
