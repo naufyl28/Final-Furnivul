@@ -1554,6 +1554,10 @@ components:
           type: string
           format: ObjectId
           example: 5f9b0b3b9b7b3b1b3c3b3b3b
+        _voucherId:
+          type: string
+          format: ObjectId
+          example: 5f9b0b3b9b7b3b1b3c3b3b3b
 
     TransactionDetailsEdit:
       type: object

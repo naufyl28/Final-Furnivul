@@ -1,6 +1,8 @@
 const ProductCategory = require("../../models/product/product.category");
-const sendErrorResponse = require("../../handlers/error.handler");
-const sendSuccessResponse = require("../../handlers/success.handler");
+const {
+  sendSuccessResponse,
+  sendErrorResponse,
+} = require("../../helpers/response.helper");
 
 module.exports = {
   getAllData: async (req, res) => {
@@ -10,6 +12,15 @@ module.exports = {
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
+        if (productCategories.length === 0) {
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all product categories success",
+            "Product category is empty"
+          );
+        }
+
         sendSuccessResponse(
           res,
           200,
@@ -34,7 +45,10 @@ module.exports = {
             limit: limit,
           };
         }
-        result.productCategories = productCategories.slice(startIndex, endIndex);
+        result.productCategories = productCategories.slice(
+          startIndex,
+          endIndex
+        );
 
         sendSuccessResponse(
           res,
@@ -43,7 +57,6 @@ module.exports = {
           result
         );
       }
-      
     } catch (error) {
       sendErrorResponse(res, 500, "Error get all product categories", error);
     }
@@ -157,12 +170,10 @@ module.exports = {
         category,
         description,
       });
-      sendSuccessResponse(
-        res,
-        200,
-        "Add product category success",
-        {_id : newProductCategory._id, ...newProductCategory._doc}
-      );
+      sendSuccessResponse(res, 200, "Add product category success", {
+        _id: newProductCategory._id,
+        ...newProductCategory._doc,
+      });
     } catch (error) {
       sendErrorResponse(res, 500, "Error add product category", error);
     }

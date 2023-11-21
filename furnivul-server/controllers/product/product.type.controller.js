@@ -1,6 +1,5 @@
 const ProductType = require("../../models/product/product.type");
-const sendErrorResponse = require("../../handlers/error.handler");
-const sendSuccessResponse = require("../../handlers/success.handler");
+const { sendSuccessResponse, sendErrorResponse } = require("../../helpers/response.helper");
 
 module.exports = {
   getAllData: async (req, res) => {
@@ -11,6 +10,15 @@ module.exports = {
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
+        if (productTypes.length === 0) {
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all product types success",
+            "Product type is empty"
+          );
+        }
+
         sendSuccessResponse(
           res,
           200,

@@ -1,19 +1,27 @@
 const Review = require("../../models/review/review");
-const sendErrorResponse = require("../../handlers/error.handler");
-const sendSuccessResponse = require("../../handlers/success.handler");
+const {
+  sendSuccessResponse,
+  sendErrorResponse,
+} = require("../../helpers/response.helper");
 
 module.exports = {
   getAllData: async (req, res) => {
     try {
-      const reviews = await Review.find({
-        _userId: req.payload.id,
-      })
+      const reviews = await Review.find()
         .populate("_userId")
         .populate("_productId");
       const page = parseInt(req.query.page);
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
+        if (reviews.length === 0) {
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all reviews success",
+            "Review is empty"
+          );
+        }
         sendSuccessResponse(res, 200, "Get all reviews success", reviews);
       } else {
         const startIndex = (page - 1) * limit;
@@ -67,6 +75,7 @@ module.exports = {
   updateData: async (req, res) => {
     try {
       let { id } = req.params;
+      const userId = req.payload.id;
 
       if (!id) {
         return sendErrorResponse(
@@ -84,6 +93,14 @@ module.exports = {
           400,
           "User, product, rating, comment required",
           new Error("User, product, rating, comment must be not empty")
+        );
+      }
+      if (userId !== Review._userId) {
+        return sendErrorResponse(
+          res,
+          403,
+          "Unauthorized",
+          new Error("You are not authorized to update this review.")
         );
       }
 

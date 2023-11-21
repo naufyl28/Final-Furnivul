@@ -1,6 +1,5 @@
 const CourierServices = require("../../models/courier/courier.service");
-const sendErrorResponse = require("../../handlers/error.handler");
-const sendSuccessResponse = require("../../handlers/success.handler");
+const { sendSuccessResponse, sendErrorResponse } = require("../../helpers/response.helper");
 
 module.exports = {
   getAllData: async (req, res) => {
@@ -11,6 +10,16 @@ module.exports = {
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
+        if (courierServices.length === 0) {
+          console.log("Courier service is empty")
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all courier services success",
+            "Courier service is empty"
+          );
+        }
+
         sendSuccessResponse(
           res,
           200,

@@ -3,10 +3,10 @@ const TransactionDetail = require("../../models/transaction/transaction.detail")
 const Product = require("../../models/product/product");
 const Courier = require("../../models/courier/courier");
 const CourierService = require("../../models/courier/courier.service");
+const Voucher = require("../../models/voucher/voucher");
 const User = require("../../models/user");
 
-const sendErrorResponse = require("../../handlers/error.handler");
-const sendSuccessResponse = require("../../handlers/success.handler");
+const { sendErrorResponse, sendSuccessResponse } = require("../../helpers/response.helper");
 
 module.exports = {
   getAllData: async (req, res) => {
@@ -61,6 +61,15 @@ module.exports = {
       }
 
       if (!page || !limit) {
+        if (transactionsDetail.length === 0) {
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all transaction data success",
+            "Transaction is empty"
+          );
+        }
+
         return sendSuccessResponse(
           res,
           200,
@@ -380,7 +389,7 @@ module.exports = {
   },
   addData: async (req, res) => {
     try {
-      let { _transactionId, products, _courierId, _courierServiceId } =
+      let { _transactionId, products, _courierId, _courierServiceId, _voucherId } =
         req.body;
       let userId = req.payload.id;
 
@@ -429,7 +438,7 @@ module.exports = {
         }
 
         const subtotal =
-          product.product_price * productData.qty + courierService.cost;
+          product.product_price * productData.qty;
         totalSubtotal += subtotal;
 
         const newTransactionDetail = await TransactionDetail.create({
@@ -437,6 +446,7 @@ module.exports = {
           _productId: productData._productId,
           _courierId,
           _courierServiceId,
+          _voucherId,
           qty: productData.qty,
           subtotal,
         });
@@ -455,12 +465,21 @@ module.exports = {
         );
       }
 
-      transaction.total = totalSubtotal;
+      if (_voucherId) {
+        const discount = await Voucher.findById(_voucherId);
+        if (discount) {
+          totalSubtotal -= discount.discount;
+        }
+      }
+
+      transaction.total = totalSubtotal + courierService.cost;
       await transaction.save();
 
       return sendSuccessResponse(res, 200, "Add transaction data success", {
         transactionDetails,
         totalSubtotal,
+        courierService: courierService.cost,
+        total: transaction.total,
       });
     } catch (error) {
       return sendErrorResponse(
