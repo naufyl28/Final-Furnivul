@@ -108,15 +108,6 @@ module.exports = {
         transactionsDetail.push(...detail);
       }
 
-      if (!transactionsDetail.length) {
-        return sendErrorResponse(
-          res,
-          400,
-          "Failed to get transactions data",
-          new Error("Transactions not found")
-        );
-      }
-
       if (!page || !limit) {
         if (transactionsDetail.length === 0) {
           return sendSuccessResponse(
@@ -305,6 +296,58 @@ module.exports = {
 
       const subtotal = product.product_price * qty;
 
+      const transaction = await Transaction.findById(
+        oldTransactionDetail._transactionId
+      );
+
+      if (!transaction) {
+        return sendErrorResponse(
+          res,
+          400,
+          "Failed to update transaction data",
+          new Error("Transaction not found")
+        );
+      }
+
+      console.log(transaction._userId.toString(), userId);
+      if (transaction._userId.toString() !== userId) {
+        return sendErrorResponse(
+          res,
+          403,
+          "Unauthorized",
+          new Error("You are not authorized to access this page(s).")
+        );
+      }
+
+      const allTransactionDetails = await TransactionDetail.find({
+        _transactionId,
+      });
+
+      let total = allTransactionDetails.reduce(
+        (total, detail) => total + detail.subtotal,
+        0
+      );
+
+      if (_voucherId) {
+        const discount = await Voucher.findById(_voucherId);
+        if (discount) {
+          total = total + courierService.cost - discount.discount;
+        }
+      } else {
+        total = total + courierService.cost;
+      }
+
+      const transactionExists = await Transaction.findById(_transactionId);
+
+      if (!transactionExists) {
+        return sendErrorResponse(
+          res,
+          400,
+          "Failed to update transaction data",
+          new Error("Transaction not found")
+        );
+      }
+
       let updateObject = {
         _transactionId,
         _productId,
@@ -332,44 +375,6 @@ module.exports = {
           "Failed to update transaction data",
           new Error("Failed to update transaction detail")
         );
-      }
-
-      const transaction = await Transaction.findById(oldTransactionDetail._transactionId);
-
-      if (!transaction) {
-        return sendErrorResponse(
-          res,
-          400,
-          "Failed to update transaction data",
-          new Error("Transaction not found")
-        );
-      }
-
-      if (transaction._userId.toString() !== userId) {
-        return sendErrorResponse(
-          res,
-          403,
-          "Unauthorized",
-          new Error("You are not authorized to access this page(s).")
-        );
-      }
-
-      const allTransactionDetails = await TransactionDetail.find({
-        _transactionId,
-      });
-
-      let total = allTransactionDetails.reduce(
-        (total, detail) => total + detail.subtotal,
-        0
-      );
-
-      if (_voucherId) {
-        const discount = await Voucher.findById(_voucherId);
-        if (discount) {
-          total = total + courierService.cost - discount.discount;
-        }
-      } else {
-        total = total + courierService.cost;
       }
 
       const updatedTransaction = await Transaction.findByIdAndUpdate(
@@ -448,6 +453,15 @@ module.exports = {
           400,
           "Failed to delete transaction data",
           new Error("Transaction not found")
+        );
+      }
+
+      if (transaction._userId.toString() !== userId) {
+        return sendErrorResponse(
+          res,
+          403,
+          "Unauthorized",
+          new Error("You are not authorized to access this page(s).")
         );
       }
 
