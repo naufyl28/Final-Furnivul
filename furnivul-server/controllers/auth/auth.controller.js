@@ -2,7 +2,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
 const JWT_KEY = process.env.JWT_KEY;
-const { sendSuccessResponse, sendErrorResponse } = require("../../helpers/response.helper");
+const {
+  sendSuccessResponse,
+  sendErrorResponse,
+} = require("../../helpers/response.helper");
 
 module.exports = {
   login: async (req, res) => {
@@ -27,7 +30,11 @@ module.exports = {
 
       const compare = await bcrypt.compare(password, login.password);
       if (compare) {
-        const token = jwt.sign({ id: login._id }, JWT_KEY, { expiresIn: "10h" });
+        const token = jwt.sign(
+          { id: login._id, role: login._idRole },
+          JWT_KEY,
+          { expiresIn: "10h" }
+        );
         sendSuccessResponse(res, 200, "Login success", { token });
       } else {
         return sendErrorResponse(
@@ -71,18 +78,14 @@ module.exports = {
         fullname,
         email,
         password,
+        _idRole: "655d7993226a56f1e4d66883",
       });
       sendSuccessResponse(res, 200, "Register success", {
         _id: user._id,
         ...user._doc,
       });
     } catch (error) {
-      sendErrorResponse(
-        res,
-        500,
-        "Error to create user",
-        error
-      );
+      sendErrorResponse(res, 500, "Error to create user", error);
     }
   },
 };
