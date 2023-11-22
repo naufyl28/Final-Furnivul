@@ -4,8 +4,70 @@ const {
   sendSuccessResponse,
   sendErrorResponse,
 } = require("../../helpers/response.helper");
+const Role = require("../../models/role/role");
 
 module.exports = {
+  getAllDataTransaction: async (req, res) => {
+    try {
+      const role = req.payload.role;
+      const checkRole = await Role.findById(role);
+      if (checkRole.role !== "admin") {
+        return sendErrorResponse(
+          res,
+          403,
+          "Forbidden access",
+          new Error("You are logged in as user")
+        );
+      }
+
+      const transactions = await Transaction.find().populate("_userId");
+
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+
+      if (!page || !limit) {
+        if (transactions.length === 0) {
+          return sendSuccessResponse(
+            res,
+            200,
+            "Success",
+            "Transaction is empty"
+          );
+        }
+
+        sendSuccessResponse(res, 200, "Success", transactions);
+      } else {
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const result = {};
+
+        if (endIndex < transactions.length) {
+          result.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+
+        result.transactions = transactions.slice(startIndex, endIndex);
+        sendSuccessResponse(
+          res,
+          200,
+          "Get all transactions page " + page,
+          result
+        );
+      }
+    } catch (error) {
+      sendErrorResponse(res, 500, "Internal server error", error);
+    }
+  },
+
   getAllData: async (req, res) => {
     try {
       const userId = req.payload.id;
@@ -18,7 +80,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Failed to get transactions data",
+          "Bad request",
           new Error("You must login first to access this page(s).")
         );
       }
@@ -30,8 +92,8 @@ module.exports = {
       if (!transactions) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to get transactions data",
+          404,
+          "Not found",
           new Error("Transactions not found")
         );
       }
@@ -40,18 +102,13 @@ module.exports = {
         if (transactions.length === 0) {
           return sendSuccessResponse(
             res,
-            204,
-            "Get all transaction data success",
+            200,
+            "Success",
             "Transaction is empty"
           );
         }
 
-        return sendSuccessResponse(
-          res,
-          200,
-          "Get all transaction data success",
-          transactions
-        );
+        return sendSuccessResponse(res, 200, "Success", transactions);
       } else {
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
@@ -80,12 +137,7 @@ module.exports = {
         );
       }
     } catch (error) {
-      return sendErrorResponse(
-        res,
-        500,
-        "Error to get transactions data",
-        error
-      );
+      return sendErrorResponse(res, 500, "Invernal server error", error);
     }
   },
   getDatabyID: async (req, res) => {
@@ -96,7 +148,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Failed to get transaction data",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
@@ -106,8 +158,8 @@ module.exports = {
       if (!userId) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to get transaction data",
+          401,
+          "Unauthorized",
           new Error("You must login first to access this page(s).")
         );
       }
@@ -117,25 +169,15 @@ module.exports = {
       if (!transaction) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to get transaction data",
+          404,
+          "Not found",
           new Error("Transaction not found")
         );
       }
 
-      return sendSuccessResponse(
-        res,
-        200,
-        "Get transaction data success",
-        transaction
-      );
+      return sendSuccessResponse(res, 200, "Success", transaction);
     } catch (error) {
-      return sendErrorResponse(
-        res,
-        500,
-        "Error to get transaction data",
-        error
-      );
+      return sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
   updateData: async (req, res) => {
@@ -147,7 +189,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Failed to update transaction data",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
@@ -155,8 +197,8 @@ module.exports = {
       if (!userId) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to update transaction data",
+          401,
+          "Unauthorized",
           new Error("You must login first to access this page(s).")
         );
       }
@@ -167,7 +209,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Failed to update transaction data",
+          "Bad request",
           new Error("Date must be not empty")
         );
       }
@@ -181,37 +223,39 @@ module.exports = {
       if (!dataUpdated) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to update transaction data",
+          404,
+          "Not found",
           new Error("Transaction not found")
         );
       }
 
-      return sendSuccessResponse(
-        res,
-        200,
-        "Update transaction data success",
-        dataUpdated
-      );
+      return sendSuccessResponse(res, 200, "Success", dataUpdated);
     } catch (error) {
-      return sendErrorResponse(
-        res,
-        500,
-        "Error to update transaction data",
-        error
-      );
+      return sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 
   deleteData: async (req, res) => {
     try {
+      const role = req.payload.role;
+
+      const checkRole = await Role.findById(role);
+      if (checkRole.role !== "admin") {
+        return sendErrorResponse(
+          res,
+          401,
+          "Unauthorized",
+          new Error("You are not admin")
+        );
+      }
+
       let { id } = req.params;
 
       if (!id) {
         return sendErrorResponse(
           res,
           400,
-          "Failed to delete transaction data",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
@@ -221,8 +265,8 @@ module.exports = {
       if (!userId) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to delete transaction data",
+          401,
+          "Unauthorized",
           new Error("You must login first to access this page(s).")
         );
       }
@@ -235,8 +279,8 @@ module.exports = {
       if (!transaction) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to delete transaction data",
+          404,
+          "Not found",
           new Error("Transaction not found")
         );
       }
@@ -244,24 +288,15 @@ module.exports = {
       if (!transactionDetail) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to delete transaction data",
+          404,
+          "Not found",
           new Error("Transaction detail not found")
         );
       }
 
-      return sendSuccessResponse(res, 200, "Delete transaction data success", {
-        id: transaction._id,
-        ...transaction._doc,
-        _userId: userId,
-      });
+      return sendSuccessResponse(res, 200, "Success", transaction);
     } catch (error) {
-      return sendErrorResponse(
-        res,
-        500,
-        "Error to delete transaction data",
-        error
-      );
+      return sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 
@@ -274,7 +309,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Failed to add transaction data",
+          "Bad request",
           new Error("Date must be not empty")
         );
       }
@@ -282,8 +317,8 @@ module.exports = {
       if (!userId) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to add transaction data",
+          401,
+          "Unauthorized",
           new Error("You must login first to access this page(s).")
         );
       }
@@ -295,19 +330,9 @@ module.exports = {
         status: "pending",
       });
 
-      return sendSuccessResponse(
-        res,
-        200,
-        "Add transaction data success",
-        newTransaction
-      );
+      return sendSuccessResponse(res, 200, "Success", newTransaction);
     } catch (error) {
-      return sendErrorResponse(
-        res,
-        500,
-        "Error to add transaction data",
-        error
-      );
+      return sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 };

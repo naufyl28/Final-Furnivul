@@ -33,6 +33,11 @@ const voucherSchema = new Schema(
       type: Date,
       required: true,
     },
+    isActive:
+    {
+      type: Boolean,
+      required: true,
+    },
   },
   {
     timestamps: true,
