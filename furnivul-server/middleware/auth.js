@@ -32,4 +32,17 @@ const auth = (req, res, next) => {
   }
 };
 
-module.exports = auth;
+const isAdmin = (req, res, next) => {
+  const { id_level } = req.payload;
+  if (id_level !== 1) {
+    return sendErrorResponse(
+      res,
+      403,
+      "Forbidden access",
+      new Error("Forbidden access")
+    );
+  }
+  next();
+};
+
+module.exports = { auth, isAdmin };
