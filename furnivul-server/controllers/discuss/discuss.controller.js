@@ -3,26 +3,21 @@ const {
   sendSuccessResponse,
   sendErrorResponse,
 } = require("../../helpers/response.helper");
+const Product = require("../../models/product/product");
+const Role = require("../../models/role/role");
 
 module.exports = {
   getAllData: async (req, res) => {
     try {
-      const discusses = await Discuss.find()
-        .populate("_userId")
-        .populate("_productId");
+      const discusses = await Discuss.find().populate("_productId");
 
       const page = parseInt(req.query.page);
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
         if (discusses.length === 0) {
-          console.log("Discuss is empty")
-          return sendSuccessResponse(
-            res,
-            204,
-            "Get all discusses success",
-            "Discuss is empty"
-          );
+          console.log("Discuss is empty");
+          return sendSuccessResponse(res, 200, "Success", "Discuss is empty");
         }
 
         sendSuccessResponse(res, 200, "Get all discusses success", discusses);
@@ -61,14 +56,16 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Id not found",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
 
       const discuss = await Discuss.findById(id)
-        .populate("_userId")
-        .populate("_productId");
+        .populate("_productId")
+        .populate("_userId");
+
+      console.log(discuss._userId);
       sendSuccessResponse(res, 200, "Get discuss by id success", discuss);
     } catch (error) {
       sendErrorResponse(res, 500, "Error get discuss by id", error);
@@ -84,7 +81,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Id not found",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
@@ -95,15 +92,18 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "User, product, comment required",
+          "Bad request",
           new Error("User, product, comment must be not empty")
         );
       }
-      if (userId !== Discuss._userId) {
+
+      const discuss = await Discuss.findById(id);
+
+      if (userId !== discuss._userId.toString()) {
         return sendErrorResponse(
           res,
-          400,
-          "User not authorized",
+          403,
+          "Forbidden",
           new Error("User not authorized")
         );
       }
@@ -113,6 +113,16 @@ module.exports = {
         { comment },
         { new: true }
       );
+
+      if (!updateDiscuss) {
+        return sendErrorResponse(
+          res,
+          404,
+          "Not found",
+          new Error("Discuss not found")
+        );
+      }
+
       sendSuccessResponse(res, 200, "Update discuss success", updateDiscuss);
     } catch (error) {
       sendErrorResponse(res, 500, "Error update discuss", error);
@@ -121,13 +131,24 @@ module.exports = {
 
   deleteData: async (req, res) => {
     try {
+      const role = req.payload.role;
+
+      const checkRole = await Role.findById(role);
+      if (checkRole.role !== "admin") {
+        return sendErrorResponse(
+          res,
+          401,
+          "Unauthorized",
+          new Error("You are not admin")
+        );
+      }
       const { id } = req.params;
 
       if (!id) {
         return sendErrorResponse(
           res,
           400,
-          "Id not found",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
@@ -136,8 +157,8 @@ module.exports = {
       if (!discuss) {
         return sendErrorResponse(
           res,
-          400,
-          "Discuss not found",
+          404,
+          "Not found",
           new Error("Discuss not found")
         );
       }
@@ -156,8 +177,19 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "User, product, comment required",
+          "Bad request",
           new Error("User, product, comment must be not empty")
+        );
+      }
+
+      const isExist = await Product.findById(_productId);
+
+      if (!isExist) {
+        return sendErrorResponse(
+          res,
+          400,
+          "Bad request",
+          new Error("Product not found")
         );
       }
 
@@ -167,12 +199,9 @@ module.exports = {
         comment,
       });
       await newDiscuss.save();
-      sendSuccessResponse(res, 200, "Add discuss success", {
-        _id: newDiscuss._id,
-        ...newDiscuss._doc,
-      });
+      sendSuccessResponse(res, 200, "Success", newDiscuss);
     } catch (error) {
-      sendErrorResponse(res, 500, "Error add discuss", error);
+      sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 };

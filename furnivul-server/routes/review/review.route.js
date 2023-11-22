@@ -4,7 +4,7 @@ const router = express.Router();
 const reviewController = require("../../controllers/review/review.controller.js");
 const { auth, isAdmin } = require("../../middleware/auth");
 
-router.get("/", auth, isAdmin, reviewController.getReviewData);
+router.get("/data", auth, isAdmin, reviewController.getReviewData);
 router.get("/", reviewController.getAllData);
 router.get("/:id", auth, reviewController.getDatabyID);
 router.put("/:id", auth, reviewController.updateData);

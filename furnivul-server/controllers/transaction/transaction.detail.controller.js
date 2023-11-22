@@ -8,6 +8,7 @@ const {
   sendErrorResponse,
   sendSuccessResponse,
 } = require("../../helpers/response.helper");
+const Role = require("../../models/role/role");
 
 const validateRequest = (req, res) => {
   let { id } = req.params;
@@ -15,7 +16,7 @@ const validateRequest = (req, res) => {
     return sendErrorResponse(
       res,
       400,
-      "Id not found",
+      "Bad request",
       new Error("Id not found or empty")
     );
   }
@@ -24,8 +25,8 @@ const validateRequest = (req, res) => {
   if (!userId) {
     return sendErrorResponse(
       res,
-      400,
-      "Failed to update transaction data",
+      401,
+      "Unauthorized",
       new Error("You must login first to access this page(s).")
     );
   }
@@ -49,7 +50,7 @@ const validateRequest = (req, res) => {
     return sendErrorResponse(
       res,
       400,
-      "All fields required",
+      "Bad request",
       new Error("All fields must be not empty")
     );
   }
@@ -85,8 +86,8 @@ const fetchDataForUpdate = async (
   if (!product) {
     return sendErrorResponse(
       res,
-      400,
-      "Failed to update transaction data",
+      404,
+      "Not found",
       new Error("Product not found")
     );
   }
@@ -94,8 +95,8 @@ const fetchDataForUpdate = async (
   if (!courierService) {
     return sendErrorResponse(
       res,
-      400,
-      "Failed to update transaction data",
+      404,
+      "Not found",
       new Error("Courier service not found")
     );
   }
@@ -103,8 +104,8 @@ const fetchDataForUpdate = async (
   if (!oldTransactionDetail) {
     return sendErrorResponse(
       res,
-      400,
-      "Failed to update transaction data",
+      404,
+      "Not found",
       new Error("Transaction detail not found")
     );
   }
@@ -112,8 +113,8 @@ const fetchDataForUpdate = async (
   if (!transaction) {
     return sendErrorResponse(
       res,
-      400,
-      "Failed to update transaction data",
+      404,
+      "Not found",
       new Error("Transaction not found")
     );
   }
@@ -121,8 +122,8 @@ const fetchDataForUpdate = async (
   if (!allTransactionDetails) {
     return sendErrorResponse(
       res,
-      400,
-      "Failed to update transaction data",
+      404,
+      "Not found",
       new Error("Transaction details not found")
     );
   }
@@ -135,7 +136,6 @@ const calculateTotal = async (
   courierService,
   allTransactionDetails
 ) => {
-  
   let total = allTransactionDetails.reduce(
     (total, detail) => total + detail.subtotal,
     0
@@ -154,6 +154,82 @@ const calculateTotal = async (
 };
 
 module.exports = {
+  getAllDataTransactionDetails: async (req, res) => {
+    try {
+      const role = req.payload.role;
+      const checkRole = await Role.findById(role);
+      if (checkRole.role !== "admin") {
+        return sendErrorResponse(
+          res,
+          403,
+          "Forbidden access",
+          new Error("You are logged in as user")
+        );
+      }
+
+      const page = parseInt(req.query.page);
+      const limit = parseInt(req.query.limit);
+
+      let transactions = await Transaction.find()
+        .populate("_transactionId")
+        .populate("_productId")
+        .populate("_courierId")
+        .populate("_courierServiceId")
+        .populate("_voucherId");
+
+      if (!page || !limit) {
+        if (transactions.length === 0) {
+          return sendSuccessResponse(
+            res,
+            200,
+            "Success",
+            "Transaction is empty"
+          );
+        }
+
+        return sendSuccessResponse(
+          res,
+          200,
+          "Success",
+          transactions
+        );
+      } else {
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const result = {};
+
+        if (endIndex < transactions.length) {
+          result.next = {
+            page: page + 1,
+            limit: limit,
+          };
+        }
+
+        if (startIndex > 0) {
+          result.previous = {
+            page: page - 1,
+            limit: limit,
+          };
+        }
+        result.transactions = transactions.slice(startIndex, endIndex);
+
+        return sendSuccessResponse(
+          res,
+          200,
+          "Get all transaction data page " + page,
+          result
+        );
+      }
+    } catch (error) {
+      return sendErrorResponse(
+        res,
+        500,
+        "Internal server error",
+        error
+      );
+    }
+  },
+
   getAllData: async (req, res) => {
     try {
       let userId = req.payload.id;
@@ -163,19 +239,21 @@ module.exports = {
       if (!userId) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to get transactions data",
+          401,
+          "Unauthorized",
           new Error("You must login first to access this page(s).")
         );
       }
 
-      let transactions = await Transaction.find().populate("_userId");
+      let transactions = await Transaction.find({ _userId: userId }).populate(
+        "_userId"
+      );
 
       if (!transactions) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to get transactions data",
+          404,
+          "Not found",
           new Error("Transactions not found")
         );
       }
@@ -189,7 +267,8 @@ module.exports = {
           .populate("_transactionId")
           .populate("_productId")
           .populate("_courierId")
-          .populate("_courierServiceId");
+          .populate("_courierServiceId")
+          .populate("_voucherId");
 
         transactionsDetail.push(...detail);
       }
@@ -198,8 +277,8 @@ module.exports = {
         if (transactionsDetail.length === 0) {
           return sendSuccessResponse(
             res,
-            204,
-            "Get all transaction data success",
+            200,
+            "Success",
             "Transaction is empty"
           );
         }
@@ -207,7 +286,7 @@ module.exports = {
         return sendSuccessResponse(
           res,
           200,
-          "Get all transaction data success",
+          "Success",
           transactionsDetail
         );
       } else {
@@ -241,7 +320,7 @@ module.exports = {
       return sendErrorResponse(
         res,
         500,
-        "Error to get transactions data",
+        "Invernal server error",
         error
       );
     }
@@ -255,7 +334,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Failed to get transaction data",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
@@ -263,8 +342,8 @@ module.exports = {
       if (!userId) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to get transaction data",
+          401,
+          "Unauthorized",
           new Error("You must login first to access this page(s).")
         );
       }
@@ -278,8 +357,8 @@ module.exports = {
       if (!transactionDetail) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to get transaction data",
+          404,
+          "Not found",
           new Error("Transaction detail not found")
         );
       }
@@ -287,14 +366,14 @@ module.exports = {
       return sendSuccessResponse(
         res,
         200,
-        "Get transaction data success",
+        "Success",
         transactionDetail
       );
     } catch (error) {
       return sendErrorResponse(
         res,
         500,
-        "Error to get transaction data",
+        "Internal server error",
         error
       );
     }
@@ -314,42 +393,39 @@ module.exports = {
       } = validateRequest(req, res);
 
       // get data from fetchDataForUpdate function
-      const { product, courierService, transaction, allTransactionDetails } =
-        await fetchDataForUpdate(_productId, _courierServiceId, id);
+      const { product, courierService, transaction } = await fetchDataForUpdate(
+        _productId,
+        _courierServiceId,
+        id,
+        _transactionId
+      );
 
       // check if user is authorized to update transaction data
-      console.log(transaction._userId.toString(), userId);
       if (transaction._userId.toString() !== userId) {
         return sendErrorResponse(
           res,
           403,
-          "Unauthorized",
+          "Forbidden",
           new Error("You are not authorized to access this page(s).")
+        );
+      }
+
+      const checkTransactionId = await Transaction.findOne({
+        _userId: userId,
+        _id: _transactionId,
+      });
+
+      if (!checkTransactionId) {
+        return sendErrorResponse(
+          res,
+          404,
+          "Not found",
+          new Error("Transaction not found")
         );
       }
 
       // calculate subtotal by product price and qty
       const subtotal = product.product_price * qty;
-
-      // get total from calculateTotal function
-      const total = await calculateTotal(
-        _voucherId,
-        courierService,
-        allTransactionDetails
-      );
-      
-      // check if transaction exists or not
-      const transactionExists = await Transaction.findById(_transactionId);
-
-      // if transaction not found, return error response
-      if (!transactionExists) {
-        return sendErrorResponse(
-          res,
-          400,
-          "Failed to update transaction data",
-          new Error("Transaction not found")
-        );
-      }
 
       // define update object to update transaction detail
       let updateObject = {
@@ -378,10 +454,21 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Failed to update transaction data",
+          "Bad request",
           new Error("Failed to update transaction detail")
         );
       }
+
+      // Recalculate total for all transaction details
+      const updatedTransactionDetails = await TransactionDetail.find({
+        _transactionId: _transactionId,
+      });
+
+      const total = await calculateTotal(
+        _voucherId,
+        courierService,
+        updatedTransactionDetails
+      );
 
       // update transaction total and check if success return true or false
       const updatedTransaction = await Transaction.findByIdAndUpdate(
@@ -394,7 +481,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Failed to update transaction data",
+          "Bad request",
           new Error("Failed to update transaction total")
         );
       }
@@ -409,7 +496,7 @@ module.exports = {
       return sendErrorResponse(
         res,
         500,
-        "Error to update transaction data",
+        "Internal server error",
         error
       );
     }
@@ -417,6 +504,18 @@ module.exports = {
 
   deleteData: async (req, res) => {
     try {
+      const role = req.payload.role;
+
+      const checkRole = await Role.findById(role);
+      if (checkRole.role !== "admin") {
+        return sendErrorResponse(
+          res,
+          401,
+          "Unauthorized",
+          new Error("You are not admin")
+        );
+      }
+
       let { id } = req.params;
 
       if (!id) {
@@ -433,8 +532,8 @@ module.exports = {
       if (!userId) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to delete transaction data",
+          401,
+          "Unauthorized",
           new Error("You must login first to access this page(s).")
         );
       }
@@ -444,8 +543,8 @@ module.exports = {
       if (!transactionDetail) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to delete transaction data",
+          404,
+          "Not found",
           new Error("Transaction detail not found")
         );
       }
@@ -458,7 +557,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Failed to delete transaction data",
+          "Bad request",
           new Error("Transaction not found")
         );
       }
@@ -467,7 +566,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           403,
-          "Unauthorized",
+          "Forbidden",
           new Error("You are not authorized to access this page(s).")
         );
       }
@@ -483,14 +582,14 @@ module.exports = {
       return sendSuccessResponse(
         res,
         200,
-        "Delete transaction data success",
+        "Success",
         transactionDetail
       );
     } catch (error) {
       return sendErrorResponse(
         res,
         500,
-        "Error to delete transaction data",
+        "Internal server error",
         error
       );
     }
@@ -518,8 +617,8 @@ module.exports = {
       if (!userId) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to add transaction data",
+          401,
+          "Unauthorized",
           new Error("You must login first to access this page(s).")
         );
       }
@@ -529,9 +628,34 @@ module.exports = {
       if (!courierService) {
         return sendErrorResponse(
           res,
-          400,
-          "Failed to add transaction data",
+          404,
+          "Not found",
           new Error("Courier service not found")
+        );
+      }
+
+      const transaction = await Transaction.findById(_transactionId);
+
+      if (!transaction) {
+        return sendErrorResponse(
+          res,
+          404,
+          "Not found",
+          new Error("Transaction not found")
+        );
+      }
+
+      const isExist = await Transaction.findOne({
+        _userId: userId,
+        _id: _transactionId,
+      });
+
+      if (!isExist) {
+        return sendErrorResponse(
+          res,
+          404,
+          "Not found",
+          new Error("Transaction not found")
         );
       }
 
@@ -544,8 +668,8 @@ module.exports = {
         if (!product) {
           return sendErrorResponse(
             res,
-            400,
-            "Failed to add transaction data",
+            404,
+            "Not found",
             new Error("Product not found")
           );
         }
@@ -566,17 +690,6 @@ module.exports = {
         transactionDetails.push(newTransactionDetail);
       }
 
-      const transaction = await Transaction.findById(_transactionId);
-
-      if (!transaction) {
-        return sendErrorResponse(
-          res,
-          400,
-          "Failed to add transaction data",
-          new Error("Transaction not found")
-        );
-      }
-
       let total = 0;
 
       if (_voucherId) {
@@ -591,7 +704,7 @@ module.exports = {
       transaction.total = total;
       await transaction.save();
 
-      return sendSuccessResponse(res, 200, "Add transaction data success", {
+      return sendSuccessResponse(res, 200, "Success", {
         transactionDetails,
         totalSubtotal,
         courierService: courierService.cost,
@@ -601,7 +714,7 @@ module.exports = {
       return sendErrorResponse(
         res,
         500,
-        "Error to add transaction data",
+        "Internal server error",
         error
       );
     }

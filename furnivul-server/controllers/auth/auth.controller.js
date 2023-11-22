@@ -15,7 +15,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Email and password required",
+          "Bad request",
           new Error("Email and password must be not empty")
         );
 
@@ -23,8 +23,8 @@ module.exports = {
       if (!login)
         return sendErrorResponse(
           res,
-          400,
-          "Email not found",
+          404,
+          "Not found",
           new Error("Email not found")
         );
 
@@ -57,8 +57,8 @@ module.exports = {
       if (!emailRegex.test(email)) {
         return sendErrorResponse(
           res,
-          400,
-          "Email is not valid",
+          422,
+          "Unprocessable Content",
           new Error("Invalid email format")
         );
       }
@@ -66,7 +66,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "fullname, email, and password are required",
+          "Bad request",
           new Error("all fields are required")
         );
       }
@@ -80,12 +80,9 @@ module.exports = {
         password,
         _idRole: "655d7993226a56f1e4d66883",
       });
-      sendSuccessResponse(res, 200, "Register success", {
-        _id: user._id,
-        ...user._doc,
-      });
+      sendSuccessResponse(res, 200, "Success", user);
     } catch (error) {
-      sendErrorResponse(res, 500, "Error to create user", error);
+      sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 };

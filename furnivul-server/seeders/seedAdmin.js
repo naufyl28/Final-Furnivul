@@ -2,6 +2,8 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 const Role = require('../models/role/role')
 const User = require('../models/user')
+const bcrypt = require('bcrypt')
+const saltRounds = 10
 
 const seedAdmin = async () => {
   try{
@@ -20,7 +22,7 @@ const seedAdmin = async () => {
     const addAdmin = new User({
       fullname: 'Admin',
       email: 'admin@gmail.com',
-      password: 'admin123',
+      password: bcrypt.hashSync('admin123', saltRounds),
       _idRole: adminRole._id
     })
 
