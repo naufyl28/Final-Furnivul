@@ -1045,6 +1045,165 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  
+  /discusses/{id}/replies:
+    get: 
+      tags:
+        - Reply
+      security:
+        - bearerAuth: []
+      summary: Get Discuss Replies
+      description: Get Discuss Replies
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses: 
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiscussReply"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      tags:
+        - Reply
+      security:
+        - bearerAuth: []
+      summary: Create Discuss Reply
+      description: Create Discuss Reply
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DiscussReply"
+      responses: 
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /discusses/{id}/replies/{replyId}:
+    get: 
+      tags:
+        - Reply
+      security:
+        - bearerAuth: []
+      summary: Get Discuss Reply
+      description: Get Discuss Reply
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: replyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses: 
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiscussReply"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      tags:
+        - Reply
+      security:
+        - bearerAuth: []
+      summary: Update Discuss Reply
+      description: Update Discuss Reply
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: replyId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content: 
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DiscussReply"
+      responses: 
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+        - Reply
+      security:
+        - bearerAuth: []
+      summary: Delete Discuss Reply
+      description: Delete Discuss Reply
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: replyId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses: 
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /reviews/data:
     get:
@@ -1788,6 +1947,21 @@ components:
           format: ObjectId
           example: 5f9b0b3b9b7b3b1b3c3b3b3b
         comment:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl eget ultricies ultrices, nunc nisl ultricies nunc, quis
+
+    DiscussReply:
+      type: object
+      properties:
+        _discussId:
+          type: string
+          format: ObjectId
+          example: 5f9b0b3b9b7b3b1b3c3b3b3b
+        _userId:
+          type: string
+          format: ObjectId
+          example: 5f9b0b3b9b7b3b1b3c3b3b3b
+        reply:
           type: string
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl eget ultricies ultrices, nunc nisl ultricies nunc, quis
 
