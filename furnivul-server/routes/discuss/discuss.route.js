@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const discussController = require("../../controllers/discuss/discuss.controller.js");
-const auth = require("../../middleware/auth");
+const { auth } = require("../../middleware/auth");
 
 router.get("/", discussController.getAllData);
 router.get("/:id", auth, discussController.getDatabyID);

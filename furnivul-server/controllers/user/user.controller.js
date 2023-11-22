@@ -1,6 +1,9 @@
 const User = require("../../models/user");
 
 const { sendSuccessResponse, sendErrorResponse } = require("../../helpers/response.helper");
+const Transaction = require("../../models/transaction/transaction");
+const Review = require("../../models/review/review");
+const Discuss = require("../../models/discuss/discuss");
 
 module.exports = {
   getAllData: async (req, res) => {
@@ -109,7 +112,10 @@ module.exports = {
           new Error("Id not found or empty")
         );
       }
-
+      await Transaction.deleteMany({ id_user: id });
+      await Review.deleteMany({ id_user: id });
+      await Discuss.deleteMany({ id_user: id });
+      
       const deleteUser = await User.findByIdAndDelete(id);
       if (!deleteUser) {
         return sendErrorResponse(
