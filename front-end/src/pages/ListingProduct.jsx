@@ -81,7 +81,7 @@ function ListingProduct() {
             {datas.map((item, index) => (
               <div
                 key={index}
-                className="border-2 rounded-xl mt-3 mx-8 justify-center flex lg:flex-row gap-8 p-4 sm:flex-col md:flex-col"
+                className="border-2 rounded-xl mt-3 mx-8 justify-center lg:flex lg:flex-row gap-8 p-4 md:flex-row sm:flex-col sm:gap-4 sm:p-2"
               >
                 <img
                   src={item.product_image}
