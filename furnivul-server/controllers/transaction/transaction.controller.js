@@ -330,6 +330,7 @@ module.exports = {
         status: "pending",
       });
 
+      console.log(newTransaction);
       return sendSuccessResponse(res, 200, "Success", newTransaction);
     } catch (error) {
       return sendErrorResponse(res, 500, "Internal server error", error);

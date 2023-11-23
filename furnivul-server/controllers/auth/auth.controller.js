@@ -51,7 +51,7 @@ module.exports = {
 
   register: async (req, res) => {
     try {
-      let { fullname, email, password } = req.body;
+      let { fullname, email, password, image_url } = req.body;
 
       const emailRegex = /\S+@\S+\.\S+/;
       if (!emailRegex.test(email)) {
@@ -62,12 +62,22 @@ module.exports = {
           new Error("Invalid email format")
         );
       }
-      if (!fullname || !email || !password) {
+      if (!fullname || !email || !password || !image_url) {
         return sendErrorResponse(
           res,
           400,
           "Bad request",
           new Error("all fields are required")
+        );
+      }
+
+      const isExist = await User.findOne({ email });
+      if (isExist) {
+        return sendErrorResponse(
+          res,
+          409,
+          "Conflict",
+          new Error("Email already registered")
         );
       }
 
@@ -79,6 +89,7 @@ module.exports = {
         email,
         password,
         _idRole: "655d7993226a56f1e4d66883",
+        image_url,
       });
       sendSuccessResponse(res, 200, "Success", user);
     } catch (error) {
