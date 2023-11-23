@@ -42,7 +42,7 @@ function LandingPage() {
                 <a
                   href="/pages/detailproduct/detailproduc-desc.html"
                   className="text-3xl my-4 px-4 mx-auto text-white tracking-wide"
-                >
+                > 
                   <img src={vector} alt="" />
                 </a>
               </div>
