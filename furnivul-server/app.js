@@ -13,10 +13,6 @@ try {
   console.log(error);
 }
 
-if (swaggerDocument) {
-  app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
-}
-
 const port = process.env.PORT || 3000;
 
 const indexRouter = require("./routes/index.route");
@@ -35,6 +31,11 @@ app.get("/", (req, res) => {
     Check <a href="https://github.com/naufalalief/furnivul-server">Github</a> for updates
   `);
 });
+
+if (swaggerDocument) {
+  app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+}
+
 app.listen(port, () => {
   console.log(`Server berjalan di port ${port}`);
 });
