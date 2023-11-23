@@ -1,10 +1,23 @@
-import { Banner, Card } from "flowbite-react";
+import { Banner, Button, Card } from "flowbite-react";
 import { HiX } from "react-icons/hi";
 import { MdAnnouncement } from "react-icons/md";
 import { Breadcrumb } from "flowbite-react";
 import { HiHome } from "react-icons/hi";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Link, NavLink } from "react-router-dom";
 
 function Article() {
+  const [datas, setData] = useState([]);
+
+  useEffect(() => {
+    axios(
+      "https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=6b7134c9f303460892979d4632931405"
+    ).then((result) => {
+      setData(result.data.articles);
+    });
+  }, []);
+
   return (
     <>
       <Banner>
@@ -33,34 +46,44 @@ function Article() {
       </Banner>
       <Breadcrumb
         aria-label="Solid background breadcrumb example"
-        className="bg-gray-50 px-5 py-3 dark:bg-gray-800"
+        className="bg-gray-50 px-5 py-3 mx-4 dark:bg-gray-800"
       >
-        <Breadcrumb.Item href="#" icon={HiHome}>
+        <Breadcrumb.Item href="/" icon={HiHome}>
           Home
         </Breadcrumb.Item>
         <Breadcrumb.Item href="#">Articles</Breadcrumb.Item>
-        <Breadcrumb.Item>Detail</Breadcrumb.Item>
       </Breadcrumb>
       <div>
-        <Card
-          className="max-w-sm"
-          renderImage={() => (
-            <img
-              width={500}
-              height={500}
-              src="/images/blog/image-1.jpg"
-              alt="image 1"
-            />
-          )}
-        >
-          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Noteworthy technology acquisitions 2021
-          </h5>
-          <p className="font-normal text-gray-700 dark:text-gray-400">
-            Here are the biggest enterprise technology acquisitions of 2021 so
-            far, in reverse chronological order.
-          </p>
-        </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3 mx-8 ">
+          {/* article axios */}
+
+          {datas.map((datas) => (
+            <div>
+              <Card
+                className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mt-4 h-full"
+                renderImage={() => (
+                  <img
+                    width={1000}
+                    height={350}
+                    src={datas.urlToImage}
+                    alt="image 1"
+                  />
+                )}
+              >
+                <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  {datas.title}
+                </h5>
+                <p className="font-normal text-gray-700 dark:text-gray-400">
+                  {datas.description}
+                </p>
+
+                <NavLink to={"/article/detail-article"}>
+                  <Button> DetailArticle </Button>
+                </NavLink>
+              </Card>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );

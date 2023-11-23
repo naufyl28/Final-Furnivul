@@ -5,10 +5,10 @@ import Logo from "../assets/images/logo.png";
 
 const Login = () => {
   return (
-    <section className="bg-cyan-800 dark:bg-gray-900 pt-8 h-[100%] justify-center bg-background bg-no-repeat bg-cover bg-center ">
+    <section className="bg-cyan-800 dark:bg-gray-900 pt-8  justify-center bg-background bg-no-repeat bg-cover bg-center ">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:gap-8 justify-center ">
-        <div className=" pt-4 mb-8">
-          <div className="w-full lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800  pt-8 justify-center">
+        <div className="  mb-8">
+          <div className="w-full lg:max-w-xl p-6 space-y-4 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800  pt-8 justify-center">
             <div className="">
               <div className="flex w-full h-full  justify-center text-center mr-2">
                 <img src={Logo} alt="" className="h-10 w-10 mr-2" />

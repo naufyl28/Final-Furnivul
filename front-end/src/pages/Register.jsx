@@ -4,10 +4,10 @@ import { NavLink } from "react-router-dom";
 
 const Register = () => {
   return (
-    <section className=" dark:bg-gray-900 pt-8 h-[100%] justify-center bg-background bg-no-repeat bg-cover bg-center">
+    <section className="bg-cyan-800 dark:bg-gray-900 justify-center  ">
       <div className="justify-center py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:gap-8 ">
-        <div className="mt-3 pt-2 mb-5">
-          <div className="w-full lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800 mt-8 pt-8 justify-center">
+        <div className=" pt-2 mb-8">
+          <div className="w-full mb-6 lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800 mt-8 pt-8 justify-center">
             <div className="flex gap-4 mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white text-center justify-center">
               <img src="../assets/logo-login.svg" alt="" />
             </div>
@@ -85,7 +85,7 @@ const Register = () => {
                   href="../login/login.html"
                   className="text-blue-600 hover:underline dark:text-blue-500"
                 >
-                  <NavLink to={"/login"}>Login</NavLink>
+                  <NavLink to={"/login"}>&nbsp;Login</NavLink>
                 </a>
               </div>
             </form>
