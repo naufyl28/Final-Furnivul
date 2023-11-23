@@ -41,9 +41,7 @@ function Footer() {
 
   return (
     <>
-      <div className="mx-auto overflow-hidden">
-        {/* ... bagian navbar ... */}
-      </div>
+      <div className="mx-auto overflow-hidden">{}</div>
 
       <div className="p-8">
         <a
@@ -57,7 +55,7 @@ function Footer() {
 
       <div>
         <div className="my-4 flex items-center max-w-screen-xl mx-auto p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover-bg-gray-700">
-          {  }
+          {}
         </div>
       </div>
 
@@ -73,7 +71,7 @@ function Footer() {
           type="button"
           className="justify-center items-center text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:focus:ring-yellow-900"
         >
-          <a href="../checkout/checkout.html">Checkout</a>
+          <a href="address/checkout">Checkout</a>
         </button>
       </div>
 

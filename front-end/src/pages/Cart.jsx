@@ -10,7 +10,7 @@ function Cart() {
         aria-label="Solid background breadcrumb example"
         className="bg-gray-50 px-5 py-3 dark:bg-gray-800"
       >
-        <Breadcrumb.Item href="" icon={FaCartShopping}>
+        <Breadcrumb.Item href="/" icon={FaCartShopping}>
           Home
         </Breadcrumb.Item>
         <Breadcrumb.Item href="#" className="">
@@ -23,9 +23,7 @@ function Cart() {
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-8">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-           
-          </thead>
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"></thead>
           <tbody>
             <tr
               id="container"
@@ -81,7 +79,7 @@ function Cart() {
               >
                 {/* ... */}
               </svg>
-              <a href="../Address-add address/Address.html">Checkout</a>
+              <a href="cart/address">Checkout</a>
             </button>
           </div>
         </div>
