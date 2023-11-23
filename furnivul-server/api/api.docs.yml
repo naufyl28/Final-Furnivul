@@ -13,6 +13,8 @@ info:
 servers:
   - url: http://localhost:3000
     description: Local server
+  - url: https://ill-ruby-butterfly-hem.cyclic.app
+    description: Cyclic server
 paths:
   /auth/login:
     post:
