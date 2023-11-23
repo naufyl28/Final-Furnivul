@@ -31,8 +31,18 @@ const validateRequest = (req, res) => {
     );
   }
 
+  const _transactionId = req.params.transactionId;
+
+  if (!_transactionId) {
+    return sendErrorResponse(
+      res,
+      400,
+      "Bad request",
+      new Error("Transaction id not found or empty")
+    );
+  }
+
   let {
-    _transactionId,
     _productId,
     _courierId,
     _courierServiceId,
@@ -187,12 +197,7 @@ module.exports = {
           );
         }
 
-        return sendSuccessResponse(
-          res,
-          200,
-          "Success",
-          transactions
-        );
+        return sendSuccessResponse(res, 200, "Success", transactions);
       } else {
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
@@ -221,20 +226,25 @@ module.exports = {
         );
       }
     } catch (error) {
-      return sendErrorResponse(
-        res,
-        500,
-        "Internal server error",
-        error
-      );
+      return sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 
   getAllData: async (req, res) => {
     try {
+      const _transactionId = req.params.transactionId;
       let userId = req.payload.id;
       const page = parseInt(req.query.page);
       const limit = parseInt(req.query.limit);
+
+      if (!_transactionId) {
+        return sendErrorResponse(
+          res,
+          400,
+          "Bad request",
+          new Error("Transaction id not found or empty")
+        );
+      }
 
       if (!userId) {
         return sendErrorResponse(
@@ -245,10 +255,10 @@ module.exports = {
         );
       }
 
-      let transactions = await Transaction.find({ _userId: userId }).populate(
-        "_userId"
-      );
-
+      let transactions = await Transaction.find({
+        _userId: userId,
+        _id: _transactionId,
+      });
       if (!transactions) {
         return sendErrorResponse(
           res,
@@ -283,12 +293,7 @@ module.exports = {
           );
         }
 
-        return sendSuccessResponse(
-          res,
-          200,
-          "Success",
-          transactionsDetail
-        );
+        return sendSuccessResponse(res, 200, "Success", transactionsDetail);
       } else {
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
@@ -317,12 +322,7 @@ module.exports = {
         );
       }
     } catch (error) {
-      return sendErrorResponse(
-        res,
-        500,
-        "Invernal server error",
-        error
-      );
+      return sendErrorResponse(res, 500, "Invernal server error", error);
     }
   },
   getDatabyID: async (req, res) => {
@@ -363,19 +363,9 @@ module.exports = {
         );
       }
 
-      return sendSuccessResponse(
-        res,
-        200,
-        "Success",
-        transactionDetail
-      );
+      return sendSuccessResponse(res, 200, "Success", transactionDetail);
     } catch (error) {
-      return sendErrorResponse(
-        res,
-        500,
-        "Internal server error",
-        error
-      );
+      return sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
   updateData: async (req, res) => {
@@ -493,12 +483,7 @@ module.exports = {
         updatedTransactionDetail
       );
     } catch (error) {
-      return sendErrorResponse(
-        res,
-        500,
-        "Internal server error",
-        error
-      );
+      return sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 
@@ -562,15 +547,6 @@ module.exports = {
         );
       }
 
-      if (transaction._userId.toString() !== userId) {
-        return sendErrorResponse(
-          res,
-          403,
-          "Forbidden",
-          new Error("You are not authorized to access this page(s).")
-        );
-      }
-
       const total = transaction.total - transactionDetail.subtotal;
 
       await Transaction.findByIdAndUpdate(transactionDetail._transactionId, {
@@ -579,32 +555,16 @@ module.exports = {
 
       await TransactionDetail.findByIdAndDelete(id);
 
-      return sendSuccessResponse(
-        res,
-        200,
-        "Success",
-        transactionDetail
-      );
+      return sendSuccessResponse(res, 200, "Success", transactionDetail);
     } catch (error) {
-      return sendErrorResponse(
-        res,
-        500,
-        "Internal server error",
-        error
-      );
+      return sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
   addData: async (req, res) => {
     try {
-      let {
-        _transactionId,
-        products,
-        _courierId,
-        _courierServiceId,
-        _voucherId,
-      } = req.body;
+      let { products, _courierId, _courierServiceId, _voucherId } = req.body;
       let userId = req.payload.id;
-
+      let _transactionId = req.params.transactionId;
       if (!_transactionId || !products || !_courierId || !_courierServiceId) {
         return sendErrorResponse(
           res,
@@ -635,7 +595,6 @@ module.exports = {
       }
 
       const transaction = await Transaction.findById(_transactionId);
-
       if (!transaction) {
         return sendErrorResponse(
           res,
@@ -649,7 +608,6 @@ module.exports = {
         _userId: userId,
         _id: _transactionId,
       });
-
       if (!isExist) {
         return sendErrorResponse(
           res,
@@ -711,12 +669,7 @@ module.exports = {
         total,
       });
     } catch (error) {
-      return sendErrorResponse(
-        res,
-        500,
-        "Internal server error",
-        error
-      );
+      return sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 };

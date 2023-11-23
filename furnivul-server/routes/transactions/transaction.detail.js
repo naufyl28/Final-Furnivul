@@ -1,5 +1,7 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({
+  mergeParams: true,
+});
 
 const transactionDetailController = require("../../controllers/transaction/transaction.detail.controller.js");
 const { isAdmin } = require("../../middleware/auth.js");

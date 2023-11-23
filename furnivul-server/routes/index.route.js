@@ -27,6 +27,6 @@ router.use("/reviews", reviewRouter);
 router.use("/discusses", discussRouter);
 router.use("/discusses/:id/replies", auth, replyRouter);
 router.use("/transactions", auth, transactionRouter);
-router.use("/transaction-details", auth, transactionDetailRouter);
+router.use("/transaction/:transactionId/transaction-details", auth, transactionDetailRouter);
 router.use("/voucher", auth, voucherRouter);
 module.exports = router;
