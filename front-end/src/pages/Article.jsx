@@ -76,10 +76,11 @@ function Article() {
                 <p className="font-normal text-gray-700 dark:text-gray-400">
                   {datas.description}
                 </p>
-
-                <NavLink to={"/article/detail-article"}>
-                  <Button> DetailArticle </Button>
-                </NavLink>
+                <div className="flex flex-end">
+                  <NavLink to={"/article/detail-article"}>
+                    <Button> DetailArticle </Button>
+                  </NavLink>
+                </div>
               </Card>
             </div>
           ))}

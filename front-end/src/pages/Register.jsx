@@ -1,8 +1,52 @@
-import React from "react";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const Register = () => {
+  const [fullname, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    let image_url =
+      "https://img.icons8.com/?size=512&id=tZuAOUGm9AuS&format=png";
+
+    await axios
+      .post("https://clever-gray-pocketbook.cyclic.app/auth/register", {
+        fullname: fullname,
+        email: email,
+        password: password,
+        image_url: image_url,
+      })
+      .then((result) => {
+        new Swal(
+          "Success!",
+          "your account has been successfully created.",
+          "success",
+          {
+            timer: 3000,
+          },
+          navigate("/login")
+        );
+      })
+      .catch((error) => {
+        new Swal(
+          "Opps Sorry!",
+          "your account has been failed created.",
+          "error",
+          {
+            error,
+          }
+        );
+      });
+  };
+
   return (
     <section className="bg-cyan-800 dark:bg-gray-900 justify-center  ">
       <div className="justify-center py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:gap-8 ">
@@ -11,7 +55,7 @@ const Register = () => {
             <div className="flex gap-4 mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white text-center justify-center">
               <img src="../assets/logo-login.svg" alt="" />
             </div>
-            <form className="" action="#">
+            <form className="" onSubmit={handleRegister}>
               <div>
                 <Label
                   htmlFor="name"
@@ -26,9 +70,11 @@ const Register = () => {
                   Your name
                 </Label>
                 <TextInput
-                  id="name"
-                  placeholder="Name"
+                  id="fullname"
+                  placeholder="Full Name"
                   className="input-field"
+                  value={fullname}
+                  onChange={(e) => setFullName(e.target.value)}
                   required
                 />
               </div>
@@ -40,9 +86,12 @@ const Register = () => {
                   Email address
                 </Label>
                 <TextInput
+                  type="email"
                   id="email"
-                  placeholder="name@mail.com"
+                  placeholder="Email"
                   className="input-field"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -53,7 +102,15 @@ const Register = () => {
                 >
                   Your password
                 </Label>
-                <TextInput id="password1" type="password" required />
+                <TextInput
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  required
+                />
               </div>
 
               <div className="flex items-start mt-4 mb-4">
@@ -76,7 +133,7 @@ const Register = () => {
                   Lost Password?
                 </a>
               </div>
-              <Button type="submit" id="btn-submit" className="submit-button">
+              <Button type="submit" id="btn-submit" className="">
                 Register
               </Button>
               <div className="text-sm mt-3 font-medium text-gray-900 dark:text-white gap-1">
