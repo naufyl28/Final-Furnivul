@@ -11,8 +11,8 @@ info:
     url: "www.github.com/naufalalief"
     email: "vaellouisse@gmail.com"
 servers:
-  - url: https://ill-ruby-butterfly-hem.cyclic.app
-    description: Cyclic server
+  - url: http://localhost:3000
+    description: Local server
 paths:
   /auth/login:
     post:
