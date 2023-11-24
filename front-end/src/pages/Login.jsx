@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Cookies from "js-cookie";
+// import jwt from "jsonwebtoken";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -33,8 +33,19 @@ const Login = () => {
           },
           navigate("/login")
         );
+        console.log(result.data.data.token);
+
+        // try {
+        //   const decodedToken = jwt.decode(result.data.data.token);
+
+        //   // Lakukan sesuatu dengan data yang didecode, seperti menyimpan ke state aplikasi
+        //   console.log("Decoded Token:", decodedToken);
+        // } catch (error) {
+        //   console.error("Error decoding token:", error);
+        // }
       })
       .catch((error) => {
+        console.log(error);
         new Swal("Opps Sorry!", "failed login.", "error", {
           error,
         });
