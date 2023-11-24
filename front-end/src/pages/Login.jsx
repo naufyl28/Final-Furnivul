@@ -5,6 +5,8 @@ import Logo from "../assets/images/logo.png";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,36 +17,30 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    let res = await axios.get(
-      "https://clever-gray-pocketbook.cyclic.app/auth/users"
-    );
-    let data = await res.data;
-
-    const ambilData = () => {
-      const result = [];
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].email == email && data[i].password == password) {
-          result.push(data[i]);
-        }
-      }
-
-      if (result < 1) {
-        alert("Gagal Login");
-      } else {
-        // alert("Berhasil Login");
-        const loginData = {
-          email: result[0].email,
-          name: result[0].fullname,
-          id: result[0].id,
-          img: result[0].image_url,
-        };
-        const loginDataJson = JSON.stringify(loginData);
-        localStorage.setItem("idUser", loginDataJson);
-        navigate("/");
-      }
-    };
-    ambilData();
+    await axios
+      .post("https://clever-gray-pocketbook.cyclic.app/auth/login", {
+        email: email,
+        password: password,
+      })
+      .then((result) => {
+        localStorage.setItem("token", JSON.stringify(result.data.data.token));
+        new Swal(
+          "Success!login",
+          "your account has been successfully created.",
+          "success",
+          {
+            timer: 3000,
+          },
+          navigate("/login")
+        );
+      })
+      .catch((error) => {
+        new Swal("Opps Sorry!", "failed login.", "error", {
+          error,
+        });
+      });
   };
+
   return (
     <section className="bg-cyan-800 dark:bg-gray-900 pt-8  justify-center bg-background bg-no-repeat bg-cover bg-center ">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:gap-8 justify-center ">
