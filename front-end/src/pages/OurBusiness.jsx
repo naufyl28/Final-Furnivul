@@ -5,10 +5,10 @@ function OurBusiness() {
   return (
     <>
       <div className="flex mx-auto flex-col w-full justify-center text-center items-center gap-4">
-        <div className="text-bold font-bold mt-4 pt-4 mb-1 ">
+        <div className="text-bold font-bold mt-4 pt-4 mb-1 mx-8 ">
           Buka bisnis furniture anda dengan sekali klik!
         </div>
-        <div className="lg:flex gap-2 md:flex mb-6 mt-3">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-2 mb-6 mt-3">
           <Card className="max-w-sm mt-3 ">
             <h5 className="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">
               Mikro plan
