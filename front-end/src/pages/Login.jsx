@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-// import jwt from "jsonwebtoken";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -24,31 +24,52 @@ const Login = () => {
       })
       .then((result) => {
         localStorage.setItem("token", JSON.stringify(result.data.data.token));
+
+        const token = result.data.data.token;
+        const decoded = jwtDecode(token, { header: true });
+        localStorage.setItem("idUser", JSON.stringify(decoded.id));
+        // console.log(decoded.id);
+
         new Swal(
-          "Success!login",
-          "your account has been successfully created.",
+          "Success! login",
+          "your account has been login.",
           "success",
           {
             timer: 3000,
           },
-          navigate("/login")
+          navigate("/")
         );
-        console.log(result.data.data.token);
-
-        // try {
-        //   const decodedToken = jwt.decode(result.data.data.token);
-
-        //   // Lakukan sesuatu dengan data yang didecode, seperti menyimpan ke state aplikasi
-        //   console.log("Decoded Token:", decodedToken);
-        // } catch (error) {
-        //   console.error("Error decoding token:", error);
-        // }
       })
       .catch((error) => {
         console.log(error);
-        new Swal("Opps Sorry!", "failed login.", "error", {
+        new Swal("Oops Sorry!", "failed login.", "error", {
           error,
         });
+      });
+  };
+
+  useEffect(() => {
+    pushDataUser();
+  }, []);
+
+  const pushDataUser = async () => {
+    const id = JSON.parse(localStorage.getItem("idUser"));
+    const token = JSON.parse(localStorage.getItem("token"));
+    console.log(id);
+    console.log(token);
+    await axios
+      .get(`https://clever-gray-pocketbook.cyclic.app/users${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((result) => {
+        localStorage.setItem("idUser", JSON.stringify(result.data.data));
+        console.log(result.data.data);
+        console.log("push data berhasil");
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
@@ -69,7 +90,6 @@ const Login = () => {
             </div>
 
             <div className="flex text-xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-              <img src="../assets/logo-login.svg" alt="" />
               <Label
                 htmlFor="name"
                 className="block text-2xl font-bold text-gray-900 dark:text-white "

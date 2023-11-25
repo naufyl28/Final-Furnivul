@@ -12,7 +12,7 @@ function CategoryProduct() {
     axios("https://clever-gray-pocketbook.cyclic.app/product-categories").then(
       (result) => {
         setData(result.data.data);
-        console.log(result);
+        // console.log(result.data.data);
       }
     );
   }, []);

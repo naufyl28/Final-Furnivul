@@ -2,7 +2,6 @@ import { Breadcrumb, Card } from "flowbite-react";
 import { HiHome } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
 
 function DetailArticle() {
   const [datas, setData] = useState([]);

@@ -3,62 +3,62 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../assets/images/logo.png";
 
 function navbar() {
-  const isLoggedIn = JSON.parse(localStorage.getItem("idUser")); // // true or false
+  // const isLoggedIn = JSON.parse(localStorage.getItem("idUser")); // // true or false
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("idUser");
-    window.location.reload();
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem("idUser");
+  //   window.location.reload();
+  // };
 
-  let component = "";
-  if (isLoggedIn) {
-    component = (
-      <>
-        <div className="text-center">
-          <Dropdown>
-            <Dropdown.Toggle id="dropdown-basic">Account&nbsp;</Dropdown.Toggle>
+  // let component = "";
+  // if (isLoggedIn) {
+  //   component = (
+  //     <>
+  //       <div className="text-center">
+  //         <Dropdown>
+  //           <Dropdown.Toggle id="dropdown-basic">Account&nbsp;</Dropdown.Toggle>
 
-            <Dropdown.Menu>
-              <div className="text-center mx-4">
-                <img
-                  height={50}
-                  className="text-center justify-center"
-                  src={isLoggedIn.img}
-                />
+  //           <Dropdown.Menu>
+  //             <div className="text-center mx-4">
+  //               <img
+  //                 height={50}
+  //                 className="text-center justify-center"
+  //                 src={isLoggedIn.img}
+  //               />
 
-                <h5 className="ms-auto text-center">{isLoggedIn.name}</h5>
+  //               <h5 className="ms-auto text-center">{isLoggedIn.name}</h5>
 
-                <Button
-                  onClick={handleLogout}
-                  // onClick={window.localStorage.clear()}
-                  className=" text-white py-2"
-                >
-                  Logout
-                </Button>
-              </div>
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
-      </>
-    );
-  } else {
-    component = (
-      <>
-        <Button className="text-center ">
-          <NavLink to={"/login"} className="">
-            Login
-          </NavLink>
-        </Button>
-        <Button>
-          <NavLink to={"/register"} className=" text-white ">
-            Register
-          </NavLink>
-        </Button>
-      </>
-    );
-  }
+  //               <Button
+  //                 onClick={handleLogout}
+  //                 // onClick={window.localStorage.clear()}
+  //                 className=" text-white py-2"
+  //               >
+  //                 Logout
+  //               </Button>
+  //             </div>
+  //           </Dropdown.Menu>
+  //         </Dropdown>
+  //       </div>
+  //     </>
+  //   );
+  // } else {
+  //   component = (
+  //     <>
+  //       <Button className="text-center ">
+  //         <NavLink to={"/login"} className="">
+  //           Login
+  //         </NavLink>
+  //       </Button>
+  //       <Button>
+  //         <NavLink to={"/register"} className=" text-white ">
+  //           Register
+  //         </NavLink>
+  //       </Button>
+  //     </>
+  //   );
+  // }
 
   return (
     <div className="mt-2 mb-2 mx-4">
@@ -133,10 +133,10 @@ function navbar() {
           <Dropdown.Item>Dashboard</Dropdown.Item>
           <Dropdown.Item>Settings</Dropdown.Item>
           <NavLink to={"/cart"}>
-            <a>
+            <span>
               {" "}
               <Dropdown.Item>Cart</Dropdown.Item>
-            </a>{" "}
+            </span>{" "}
           </NavLink>
 
           <Dropdown.Divider />
@@ -145,7 +145,7 @@ function navbar() {
 
         <Navbar.Toggle />
       </Navbar>
-      <Navbar className="ms-auto gap-1">{component}</Navbar>
+      {/* <Navbar className="ms-auto gap-1">{component}</Navbar> */}
     </div>
   );
 }
