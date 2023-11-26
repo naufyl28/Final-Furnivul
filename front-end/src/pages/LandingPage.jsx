@@ -6,6 +6,9 @@ import arrow from "../assets/svg/arrow-right.svg";
 import lowfi3 from "../assets/images/Low-Fi Placeholder 3.png";
 import lowfi2 from "../assets/images/Low-Fi Placeholder 2.png";
 import Swiper from "../components/Swiper";
+import React  from "react";
+
+
 function LandingPage() {
   return (
     <div className="container-fluid overflow-hidden">
@@ -19,7 +22,7 @@ function LandingPage() {
                 Bagikan momen dengan orang tersayang
               </h1>
               <a
-                href="#"
+                href="Article"
                 className="lg:text-3xl text-white tracking-wide text-lg"
               >
                 Cek inspirasinya &gt;
@@ -40,9 +43,9 @@ function LandingPage() {
                   Daftar sekarang!
                 </h2>
                 <a
-                  href="/pages/detailproduct/detailproduc-desc.html"
+                  href="/register"
                   className="text-3xl my-4 px-4 mx-auto text-white tracking-wide"
-                >
+                > 
                   <img src={vector} alt="" />
                 </a>
               </div>
@@ -63,7 +66,7 @@ function LandingPage() {
               keadaan manusia yang telah berprasangka baik ke semua.
             </p>
             <a
-              href="#category"
+              href="category-product"
               className="bg-[#ffb703] text-gray-800 font-semibold py-2 px-4 rounded shadow my-4 w-max flex items-center gap-6"
             >
               <span>Lihat Kategori</span>

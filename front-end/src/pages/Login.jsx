@@ -23,12 +23,11 @@ const Login = () => {
         password: password,
       })
       .then((result) => {
-        localStorage.setItem("token", JSON.stringify(result.data.data.token));
-
+        console.log(result)
         const token = result.data.data.token;
-        const decoded = jwtDecode(token, { header: true });
+        const decoded = jwtDecode(token);
+        localStorage.setItem("token", JSON.stringify(token));
         localStorage.setItem("idUser", JSON.stringify(decoded.id));
-        // console.log(decoded.id);
 
         new Swal(
           "Success! login",
@@ -48,30 +47,30 @@ const Login = () => {
       });
   };
 
-  useEffect(() => {
-    pushDataUser();
-  }, []);
+  // useEffect(() => {
+  //   pushDataUser();
+  // }, []);
 
-  const pushDataUser = async () => {
-    const id = JSON.parse(localStorage.getItem("idUser"));
-    const token = JSON.parse(localStorage.getItem("token"));
-    console.log(id);
-    console.log(token);
-    await axios
-      .get(`https://clever-gray-pocketbook.cyclic.app/users${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((result) => {
-        localStorage.setItem("idUser", JSON.stringify(result.data.data));
-        console.log(result.data.data);
-        console.log("push data berhasil");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const pushDataUser = async () => {
+  //   const id = JSON.parse(localStorage.getItem("idUser"));
+  //   const token = JSON.parse(localStorage.getItem("token"));
+  //   console.log(id);
+  //   console.log(token);
+  //   await axios
+  //     .get(`https://clever-gray-pocketbook.cyclic.app/users/${id}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     })
+  //     .then((result) => {
+  //       localStorage.setItem("idUser", JSON.stringify(result.data.data));
+  //       console.log(result.data.data);
+  //       console.log("push data berhasil");
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   return (
     <section className="bg-cyan-800 dark:bg-gray-900 pt-8  justify-center bg-background bg-no-repeat bg-cover bg-center ">

@@ -1,6 +1,9 @@
 const ProductType = require("../../models/product/product.type");
-const sendErrorResponse = require("../../handlers/error.handler");
-const sendSuccessResponse = require("../../handlers/success.handler");
+const {
+  sendSuccessResponse,
+  sendErrorResponse,
+} = require("../../helpers/response.helper");
+const Role = require("../../models/role/role");
 
 module.exports = {
   getAllData: async (req, res) => {
@@ -11,6 +14,15 @@ module.exports = {
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
+        if (productTypes.length === 0) {
+          return sendSuccessResponse(
+            res,
+            204,
+            "Get all product types success",
+            "Product type is empty"
+          );
+        }
+
         sendSuccessResponse(
           res,
           200,
@@ -57,7 +69,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Id not found",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
@@ -76,13 +88,25 @@ module.exports = {
 
   updateData: async (req, res) => {
     try {
+      const role = req.payload.role;
+
+      const checkRole = await Role.findById(role);
+      if (checkRole.role !== "admin") {
+        return sendErrorResponse(
+          res,
+          401,
+          "Unauthorized",
+          new Error("You are not admin")
+        );
+      }
+
       let { id } = req.params;
 
       if (!id) {
         return sendErrorResponse(
           res,
           400,
-          "Id not found",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
@@ -102,6 +126,16 @@ module.exports = {
         { type, description },
         { new: true }
       );
+
+      if (!updateProductType) {
+        return sendErrorResponse(
+          res,
+          400,
+          "Product type not found",
+          new Error("Product type not found")
+        );
+      }
+
       sendSuccessResponse(
         res,
         200,
@@ -115,13 +149,25 @@ module.exports = {
 
   deleteData: async (req, res) => {
     try {
+      const role = req.payload.role;
+
+      const checkRole = await Role.findById(role);
+      if (checkRole.role !== "admin") {
+        return sendErrorResponse(
+          res,
+          401,
+          "Unauthorized",
+          new Error("You are not admin")
+        );
+      }
+
       const { id } = req.params;
 
       if (!id) {
         return sendErrorResponse(
           res,
           400,
-          "Id not found",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
@@ -143,6 +189,18 @@ module.exports = {
 
   addData: async (req, res) => {
     try {
+      const role = req.payload.role;
+
+      const checkRole = await Role.findById(role);
+      if (checkRole.role !== "admin") {
+        return sendErrorResponse(
+          res,
+          401,
+          "Unauthorized",
+          new Error("You are not admin")
+        );
+      }
+
       let { type, description } = req.body;
       if (!type || !description) {
         return sendErrorResponse(
@@ -150,6 +208,16 @@ module.exports = {
           400,
           "Type and description required",
           new Error("Type and description must be not empty")
+        );
+      }
+
+      const checkType = await ProductType.find({ type });
+      if (checkType.length > 0) {
+        return sendErrorResponse(
+          res,
+          400,
+          "Type already exist",
+          new Error("Type already exist")
         );
       }
 
