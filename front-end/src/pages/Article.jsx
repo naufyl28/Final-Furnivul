@@ -57,7 +57,7 @@ function Article() {
         <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3 mx-8 ">
           {/* article axios */}
 
-          {datas.map((datas) => (
+          {datas.map((datas, index) => (
             <div>
               <Card
                 className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mt-4 h-full"
@@ -76,10 +76,11 @@ function Article() {
                 <p className="font-normal text-gray-700 dark:text-gray-400">
                   {datas.description}
                 </p>
-
-                <NavLink to={"/article/detail-article"}>
-                  <Button> DetailArticle </Button>
-                </NavLink>
+                <div className="flex flex-end">
+                  <NavLink to={"/article/detail-article"}>
+                    <Button> DetailArticle </Button>
+                  </NavLink>
+                </div>
               </Card>
             </div>
           ))}

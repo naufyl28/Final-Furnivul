@@ -2,8 +2,76 @@ import React from "react";
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import { Form } from "react-router-dom";
 import Logo from "../assets/images/logo.png";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    await axios
+      .post("https://clever-gray-pocketbook.cyclic.app/auth/login", {
+        email: email,
+        password: password,
+      })
+      .then((result) => {
+        console.log(result)
+        const token = result.data.data.token;
+        const decoded = jwtDecode(token);
+        localStorage.setItem("token", JSON.stringify(token));
+        localStorage.setItem("idUser", JSON.stringify(decoded.id));
+
+        new Swal(
+          "Success! login",
+          "your account has been login.",
+          "success",
+          {
+            timer: 3000,
+          },
+          navigate("/")
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+        new Swal("Oops Sorry!", "failed login.", "error", {
+          error,
+        });
+      });
+  };
+
+  // useEffect(() => {
+  //   pushDataUser();
+  // }, []);
+
+  // const pushDataUser = async () => {
+  //   const id = JSON.parse(localStorage.getItem("idUser"));
+  //   const token = JSON.parse(localStorage.getItem("token"));
+  //   console.log(id);
+  //   console.log(token);
+  //   await axios
+  //     .get(`https://clever-gray-pocketbook.cyclic.app/users/${id}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     })
+  //     .then((result) => {
+  //       localStorage.setItem("idUser", JSON.stringify(result.data.data));
+  //       console.log(result.data.data);
+  //       console.log("push data berhasil");
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
   return (
     <section className="bg-cyan-800 dark:bg-gray-900 pt-8  justify-center bg-background bg-no-repeat bg-cover bg-center ">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:gap-8 justify-center ">
@@ -21,7 +89,6 @@ const Login = () => {
             </div>
 
             <div className="flex text-xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-              <img src="../assets/logo-login.svg" alt="" />
               <Label
                 htmlFor="name"
                 className="block text-2xl font-bold text-gray-900 dark:text-white "
@@ -29,7 +96,12 @@ const Login = () => {
                 Log In
               </Label>
             </div>
-            <Form id="login-form" className="space-y-6" action="#">
+            <Form
+              id="login-form"
+              onSubmit={handleLogin}
+              className="space-y-6"
+              action="#"
+            >
               <div>
                 <Label
                   htmlFor="email1"
@@ -38,9 +110,12 @@ const Login = () => {
                   Your email
                 </Label>
                 <TextInput
-                  id="email1"
                   type="email"
-                  placeholder="name@flowbite.com"
+                  className="form-control"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Masukkan Email"
                   required
                 />
               </div>
@@ -51,7 +126,15 @@ const Login = () => {
                 >
                   Your password
                 </Label>
-                <TextInput id="password1" type="password" required />
+                <TextInput
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Masukkan Password"
+                  required
+                />
               </div>
               <div className="flex items-start mt-2">
                 <Checkbox id="remember" />
@@ -79,10 +162,9 @@ const Login = () => {
               <div className="text-sm mt-3 font-medium text-gray-900 dark:text-white">
                 Not registered yet?
                 <a
-                  href="../register/register.html"
+                  href="/register"
                   className="text-blue-600 hover:underline dark:text-blue-500"
                 >
-                  {" "}
                   Create account
                 </a>
               </div>
