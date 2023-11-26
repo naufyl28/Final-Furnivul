@@ -17,9 +17,7 @@ function Address() {
 
   return (
     <>
-      <div className="mx-auto overflow-hidden">
-        {/* Tampilkan data di sini */}
-      </div>
+      <div className="mx-auto overflow-hidden">{/* Tampilkan data di sini */}</div>
 
       <div className="p-8">
         <a

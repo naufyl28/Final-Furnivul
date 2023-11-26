@@ -1,16 +1,38 @@
+// Impor dependensi
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button, Modal } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
-import { Button as FlowbiteButton } from "flowbite-react"; // Rename the Button component to avoid conflict
+import { Button as FlowbiteButton } from "flowbite-react";
 
 function Cart() {
+  // Variabel state
   const [datas, setData] = useState({ message: "", data: [] });
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  const [voucherData, setVoucherData] = useState(null);
   const [voucherModal, setVoucherModal] = useState(false);
+  const [voucherData, setVoucherData] = useState(null);
+
+const fetchVoucherData = () => {
+  axios
+    .get("https://clever-gray-pocketbook.cyclic.app/voucher", {
+      headers: {
+        Authorization: "Bearer YOUR_ACCESS_TOKEN",
+      },
+    })
+    .then((result) => {
+      console.log("Data Voucher:", result.data);
+      setVoucherData(result.data);
+    })
+    .catch((error) => {
+      console.error("Error mengambil data voucher:", error);
+      if (error.response) {
+        console.error("Detail respons:", error.response.data);
+      }
+    });
+};
+
 
   useEffect(() => {
     axios("https://clever-gray-pocketbook.cyclic.app/products")
@@ -22,13 +44,15 @@ function Cart() {
           }));
           setData({ message: "", data: initialData });
         } else {
-          console.error("API response data is not an array:", result.data.data);
+          console.error("Data respons API bukan array:", result.data.data);
         }
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error("Error mengambil data:", error);
       });
-  }, []);
+
+    fetchVoucherData();
+  }, []); 
 
   const handleIncrement = (index) => {
     const updatedData = [...datas.data];
@@ -51,7 +75,7 @@ function Cart() {
   };
 
   const handleDeleteItem = () => {
-    console.log("Delete Item Function");
+    console.log("Fungsi Hapus Item");
     if (deleteIndex !== null) {
       const updatedData = datas.data.filter(
         (_, index) => index !== deleteIndex
@@ -62,41 +86,45 @@ function Cart() {
     }
   };
 
-const handleVoucherClick = async () => {
-  try {
-    const response = await axios.get(
-      "https://clever-gray-pocketbook.cyclic.app/voucher",
-      {
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    );
-    setVoucherData(response.data);
-    setVoucherModal(true);
-  } catch (error) {
-    console.error("Error fetching voucher data:", error);
-  }
-};
+  const handleVoucherClick = () => {
+    setVoucherModal(!voucherModal);
+  };
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(value);
+  };
+
+  const calculateTotalPrice = () => {
+    return datas.data.reduce(
+      (total, item) => total + item.quantity * item.product_price,
+      0
+    );
+  };
 
   return (
     <>
+      {/* Breadcrumb */}
       <Breadcrumb
-        aria-label="Solid background breadcrumb example"
+        aria-label="Contoh breadcrumb dengan latar belakang solid"
         className="bg-gray-50 px-5 py-3 dark:bg-gray-800"
       >
         <Breadcrumb.Item key="home" href="/" icon={FaCartShopping}>
-          Home
+          Beranda
         </Breadcrumb.Item>
         <Breadcrumb.Item key="cart" href="#" className="">
-          Cart
+          Keranjang
         </Breadcrumb.Item>
       </Breadcrumb>
+
+      {/* Tombol Alamat */}
       <Button className="">
-        <NavLink to={"address"}> Address </NavLink>
+        <NavLink to={"address"}> Alamat </NavLink>
       </Button>
 
+      {/* Daftar Produk */}
       <div className="mt-3 mx-8 justify-center">
         {datas.data.map((item, index) => (
           <div key={index} className="flex items-center">
@@ -133,7 +161,7 @@ const handleVoucherClick = async () => {
                 <p>{item.product_category}</p>
               </div>
               <div className="mt-3 ">
-                <p>Rp {item.product_price},-</p>
+                <p> {formatCurrency(item.product_price)},-</p>
                 <span
                   className="mx-2 font-bold flex items-center mt-6 "
                   style={{ fontSize: "1.2em" }}
@@ -146,32 +174,64 @@ const handleVoucherClick = async () => {
         ))}
       </div>
 
+      {/* Modal Voucher */}
+      <Modal show={voucherModal} onClose={() => setVoucherModal(false)}>
+        <Modal.Header>Voucher </Modal.Header>
+        <Modal.Body>
+          {/* Tampilkan data voucher */}
+          {voucherData ? (
+            <>
+              <p>Kode Voucher: {voucherData.code}</p>
+              <p>Diskon: {voucherData.discount}</p>
+            </>
+          ) : (
+            <p>Mengambil data voucher...</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          {/* Tombol modal voucher */}
+          <FlowbiteButton onClick={() => setVoucherModal(false)}>
+            Tutup
+          </FlowbiteButton>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Bagian Checkout */}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-8">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           {/* ... */}
         </table>
 
+        {/* Tampilan Total */}
+        <div className="mb-4 text-3xl font-bold text-center">
+          Total: {formatCurrency(calculateTotalPrice())}
+        </div>
+
+        {/* Tombol Checkout */}
         <div className="flex flex-wrap justify-between p-3 px-8">
-          <FlowbiteButton
-            className="text-black custom-background font-semibold bg-blue-500 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-3 py-2 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
-            id="voucher-button"
-            onClick={handleVoucherClick}
-          >
-            Voucher
-          </FlowbiteButton>
-          <form>{/* ... */}</form>
+          {/* Tombol Voucher */}
           <div className="checkout-container">
             <FlowbiteButton
               type="button"
-              className="text-black custom-background font-semibold bg-yellow-300 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
-              id="checkout-button"
+              className="text-black custom-background font-semibold bg-blue-500 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
+              id="voucher-button"
+              onClick={handleVoucherClick}
             >
-              <a href="cart/address">Checkout</a>
+              Voucher
             </FlowbiteButton>
           </div>
+          {/* Tombol Checkout */}
+          <FlowbiteButton
+            type="button"
+            className="text-black custom-background font-semibold bg-yellow-300 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
+            id="checkout-button"
+          >
+            <a href="cart/address">Checkout</a>
+          </FlowbiteButton>
         </div>
       </div>
 
+      {/* Modal Hapus Item */}
       <Modal
         show={openModal || deleteIndex !== null}
         onClose={() => {
@@ -179,37 +239,16 @@ const handleVoucherClick = async () => {
           setDeleteIndex(null);
         }}
       >
-        <Modal.Header>Delete Item</Modal.Header>
+        <Modal.Header>Hapus Item</Modal.Header>
         <Modal.Body>
           {deleteIndex !== null ? (
-            <p>Are you sure you want to delete this item?</p>
+            <p>Apakah Anda yakin ingin menghapus item ini?</p>
           ) : (
-            <p>Quantity will be reduced to 0. Are you sure?</p>
+            <p>Jumlah akan dikurangi menjadi 0. Apakah Anda yakin?</p>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <FlowbiteButton onClick={handleDeleteItem}>Yes</FlowbiteButton>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal show={voucherModal} onClose={() => setVoucherModal(false)}>
-        <Modal.Header>Voucher Information</Modal.Header>
-        <Modal.Body>
-          {voucherData ? (
-            <div>
-              <p>Name: {voucherData.name}</p>
-              <p>Description: {voucherData.description}</p>
-              <p>Discount: {voucherData.discount}</p>
-              <p>Code: {voucherData.code}</p>
-              <p>Start Date: {voucherData.start_date}</p>
-              <p>End Date: {voucherData.end_date}</p>
-            </div>
-          ) : (
-            <p>Loading voucher information...</p>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          {/* Add any additional buttons or actions here */}
+          <FlowbiteButton onClick={handleDeleteItem}>Ya</FlowbiteButton>
         </Modal.Footer>
       </Modal>
     </>
