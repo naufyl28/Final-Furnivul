@@ -3,11 +3,14 @@ import { Breadcrumb, Button, Modal } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
+import { Button as FlowbiteButton } from "flowbite-react"; // Rename the Button component to avoid conflict
 
 function Cart() {
   const [datas, setData] = useState({ message: "", data: [] });
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [voucherData, setVoucherData] = useState(null);
+  const [voucherModal, setVoucherModal] = useState(false);
 
   useEffect(() => {
     axios("https://clever-gray-pocketbook.cyclic.app/products")
@@ -58,6 +61,24 @@ function Cart() {
       setOpenModal(false);
     }
   };
+
+const handleVoucherClick = async () => {
+  try {
+    const response = await axios.get(
+      "https://clever-gray-pocketbook.cyclic.app/voucher",
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
+    setVoucherData(response.data);
+    setVoucherModal(true);
+  } catch (error) {
+    console.error("Error fetching voucher data:", error);
+  }
+};
+
 
   return (
     <>
@@ -131,15 +152,22 @@ function Cart() {
         </table>
 
         <div className="flex flex-wrap justify-between p-3 px-8">
+          <FlowbiteButton
+            className="text-black custom-background font-semibold bg-blue-500 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-3 py-2 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
+            id="voucher-button"
+            onClick={handleVoucherClick}
+          >
+            Voucher
+          </FlowbiteButton>
           <form>{/* ... */}</form>
           <div className="checkout-container">
-            <button
+            <FlowbiteButton
               type="button"
               className="text-black custom-background font-semibold bg-yellow-300 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
               id="checkout-button"
             >
               <a href="cart/address">Checkout</a>
-            </button>
+            </FlowbiteButton>
           </div>
         </div>
       </div>
@@ -159,11 +187,29 @@ function Cart() {
             <p>Quantity will be reduced to 0. Are you sure?</p>
           )}
         </Modal.Body>
-        <Modal.Footer >
-          <Button onClick={handleDeleteItem}>Yes</Button>
-          {/* <Button type="button" onClick={() => setOpenModal(false)}>
-            No
-          </Button> */}
+        <Modal.Footer>
+          <FlowbiteButton onClick={handleDeleteItem}>Yes</FlowbiteButton>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={voucherModal} onClose={() => setVoucherModal(false)}>
+        <Modal.Header>Voucher Information</Modal.Header>
+        <Modal.Body>
+          {voucherData ? (
+            <div>
+              <p>Name: {voucherData.name}</p>
+              <p>Description: {voucherData.description}</p>
+              <p>Discount: {voucherData.discount}</p>
+              <p>Code: {voucherData.code}</p>
+              <p>Start Date: {voucherData.start_date}</p>
+              <p>End Date: {voucherData.end_date}</p>
+            </div>
+          ) : (
+            <p>Loading voucher information...</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          {/* Add any additional buttons or actions here */}
         </Modal.Footer>
       </Modal>
     </>

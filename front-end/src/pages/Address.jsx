@@ -2,46 +2,24 @@ import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 
-function Footer() {
-  const [addressData, setAddressData] = useState(
-    JSON.parse(localStorage.getItem("addressData"))
-  );
-
-  useEffect(() => {
-    if (addressData) {
-      document.getElementById("display-full-name").textContent =
-        addressData.fullName;
-      document.getElementById(
-        "display-address-details"
-      ).textContent = ` email ${addressData.email}, telephone ${addressData.telephone}, RT ${addressData.rt} RW ${addressData.rw}, Kec. ${addressData.kecamatan}, ${addressData.provinsi}, ${addressData.kodePos}`;
-    }
-  }, [addressData]);
-
-  const fetchDataFromAPI = async () => {
-    try {
-      const response = await fetch(
-        "https://6524bed5ea560a22a4ea0e3b.mockapi.io/users"
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch data from the API");
-      }
-
-      const data = await response.json();
-
-      console.log("Data from API:", data);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+function Address() {
+  const [datas, setData] = useState([]);
 
   useEffect(() => {
-    fetchDataFromAPI();
+    axios("https://clever-gray-pocketbook.cyclic.app/users").then((result) => {
+      setData(result.data.address);
+    });
   }, []);
+
+  console.log(datas);
 
   return (
     <>
-      <div className="mx-auto overflow-hidden">{}</div>
+      <div className="mx-auto overflow-hidden">
+        {/* Tampilkan data di sini */}
+      </div>
 
       <div className="p-8">
         <a
@@ -55,7 +33,7 @@ function Footer() {
 
       <div>
         <div className="my-4 flex items-center max-w-screen-xl mx-auto p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover-bg-gray-700">
-          {}
+          {/* Tampilkan data di sini */}
         </div>
       </div>
 
@@ -85,12 +63,11 @@ function Footer() {
           Verifikasi Pembayaran
         </button>
       </div>
-      <Address />
     </>
   );
 }
 
-function Address() {
+function AddressPage() {
   return (
     <div>
       <Breadcrumb
@@ -107,8 +84,9 @@ function Address() {
       <Button className="">
         <NavLink to={"checkout"}> payment</NavLink>
       </Button>
+      <Address />
     </div>
   );
 }
 
-export default Footer;
+export default AddressPage;
