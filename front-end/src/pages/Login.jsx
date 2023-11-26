@@ -23,7 +23,7 @@ const Login = () => {
         password: password,
       })
       .then((result) => {
-        console.log(result)
+        console.log(result);
         const token = result.data.data.token;
         const decoded = jwtDecode(token);
         localStorage.setItem("token", JSON.stringify(token));
@@ -47,30 +47,35 @@ const Login = () => {
       });
   };
 
-  // useEffect(() => {
-  //   pushDataUser();
-  // }, []);
+  useEffect(() => {
+    pushDataUser();
+  }, [handleLogin]);
 
-  // const pushDataUser = async () => {
-  //   const id = JSON.parse(localStorage.getItem("idUser"));
-  //   const token = JSON.parse(localStorage.getItem("token"));
-  //   console.log(id);
-  //   console.log(token);
-  //   await axios
-  //     .get(`https://clever-gray-pocketbook.cyclic.app/users/${id}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     })
-  //     .then((result) => {
-  //       localStorage.setItem("idUser", JSON.stringify(result.data.data));
-  //       console.log(result.data.data);
-  //       console.log("push data berhasil");
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const pushDataUser = async () => {
+    const id = JSON.parse(localStorage.getItem("idUser"));
+    const token = JSON.parse(localStorage.getItem("token"));
+    console.log(id);
+    console.log(token);
+    await axios
+      .get(`https://clever-gray-pocketbook.cyclic.app/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((result) => {
+        console.log(result.data.data);
+        localStorage.setItem("name", JSON.stringify(result.data.data.fullname));
+        localStorage.setItem("email", JSON.stringify(result.data.data.email));
+
+        localStorage.setItem(
+          "image",
+          JSON.stringify(result.data.data.image_url)
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <section className="bg-cyan-800 dark:bg-gray-900 pt-8  justify-center bg-background bg-no-repeat bg-cover bg-center ">
@@ -159,8 +164,11 @@ const Login = () => {
               >
                 Log In
               </Button>
-              <div className="text-sm mt-3 font-medium text-gray-900 dark:text-white">
-                Not registered yet?
+              <div className="flex text-sm mt-3 font-medium">
+                <div className=" text-gray-900 dark:text-white">
+                  Not registered yet?
+                </div>
+                &nbsp;
                 <a
                   href="/register"
                   className="text-blue-600 hover:underline dark:text-blue-500"
