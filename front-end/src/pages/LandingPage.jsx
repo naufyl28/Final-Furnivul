@@ -45,7 +45,7 @@ function LandingPage() {
                 <a
                   href="/register"
                   className="text-3xl my-4 px-4 mx-auto text-white tracking-wide"
-                > 
+                >
                   <img src={vector} alt="" />
                 </a>
               </div>
@@ -87,7 +87,7 @@ function LandingPage() {
                 Bawa kehangatan di ruang keluarga
               </h1>
               <a
-                href="#"
+                href="Article"
                 className="lg:text-3xl text-white tracking-wide text-lg"
               >
                 Cek inspirasinya &gt;
