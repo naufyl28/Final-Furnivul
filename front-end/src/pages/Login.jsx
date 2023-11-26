@@ -23,7 +23,7 @@ const Login = () => {
         password: password,
       })
       .then((result) => {
-        console.log(result)
+        console.log(result);
         const token = result.data.data.token;
         const decoded = jwtDecode(token);
         localStorage.setItem("token", JSON.stringify(token));
