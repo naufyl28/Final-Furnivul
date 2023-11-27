@@ -6,12 +6,12 @@ import arrow from "../assets/svg/arrow-right.svg";
 import lowfi3 from "../assets/images/Low-Fi Placeholder 3.png";
 import lowfi2 from "../assets/images/Low-Fi Placeholder 2.png";
 import Swiper from "../components/Swiper";
-import React  from "react";
-
+import React from "react";
+import { Button } from "flowbite-react";
 
 function LandingPage() {
   return (
-    <div className="container-fluid overflow-hidden">
+    <div className="container-fluid overflow-hidden mx-4">
       <div className=" lg:flex justify-center m-10 lg:mx-auto lg:my-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
         <div className="flex gap-20">
           <div className="relative">
@@ -45,7 +45,7 @@ function LandingPage() {
                 <a
                   href="/register"
                   className="text-3xl my-4 px-4 mx-auto text-white tracking-wide"
-                > 
+                >
                   <img src={vector} alt="" />
                 </a>
               </div>
@@ -56,7 +56,7 @@ function LandingPage() {
       <div className="container-fluid lg:flex justify-between lg:px-28 m-10 lg:mx-auto lg:my-10 gap-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
         <div className="flex flex-col lg:flex-row mx-auto lg:gap-[120px]">
           <img className="lg:rounded-l-lg" src={about} alt="" />
-          <div className="flex flex-col lg:p-20 p-4">
+          <div className="flex flex-col font-semibold lg:p-20 p-4">
             <p className="text-justify tracking-wide">
               <span className="text-[#ffb703]">Furnivul</span> berdiri sejak
               nenek moyang telah lahir menggunakan goresan
@@ -65,13 +65,13 @@ function LandingPage() {
               <br />
               keadaan manusia yang telah berprasangka baik ke semua.
             </p>
-            <a
+            <Button
               href="category-product"
-              className="bg-[#ffb703] text-gray-800 font-semibold py-2 px-4 rounded shadow my-4 w-max flex items-center gap-6"
+              className="bg-[#ffb703] text-gray-800 font-semibold rounded-xl shadow my-4 w-fit "
             >
-              <span>Lihat Kategori</span>
+              <span>Lihat Kategori</span> &nbsp;
               <img src={arrow} alt="" />
-            </a>
+            </Button>
           </div>
         </div>
       </div>

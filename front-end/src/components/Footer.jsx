@@ -11,7 +11,7 @@ import {
 function Component() {
   return (
     <Footer container>
-      <div className="w-full">
+      <div className="w-full mx-4">
         <div className="grid lg:grid-cols-3  w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
           <div>
             <Footer.Brand

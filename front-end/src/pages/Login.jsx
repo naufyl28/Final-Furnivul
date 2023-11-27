@@ -18,10 +18,13 @@ const Login = () => {
     e.preventDefault();
 
     await axios
-      .post("https://clever-gray-pocketbook.cyclic.app/auth/login", {
-        email: email,
-        password: password,
-      })
+      .post(
+        "https://furnivul-web-app-production-66c6.up.railway.app/auth/login",
+        {
+          email: email,
+          password: password,
+        }
+      )
       .then((result) => {
         console.log(result);
         const token = result.data.data.token;
@@ -57,11 +60,14 @@ const Login = () => {
     console.log(id);
     console.log(token);
     await axios
-      .get(`https://clever-gray-pocketbook.cyclic.app/users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(
+        `https://furnivul-web-app-production-66c6.up.railway.app/users/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((result) => {
         console.log(result.data.data);
         localStorage.setItem("name", JSON.stringify(result.data.data.fullname));
