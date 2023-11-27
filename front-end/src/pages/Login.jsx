@@ -19,7 +19,7 @@ const Login = () => {
 
     await axios
       .post(
-        "https://furnivul-web-app-production-66c6.up.railway.app/auth/login",
+        "https://furnivul-web-app-production-b99b.up.railway.app/auth/login",
         {
           email: email,
           password: password,
@@ -31,6 +31,7 @@ const Login = () => {
         const decoded = jwtDecode(token);
         localStorage.setItem("token", JSON.stringify(token));
         localStorage.setItem("idUser", JSON.stringify(decoded.id));
+        pushDataUser();
 
         new Swal(
           "Success! login",
@@ -50,10 +51,6 @@ const Login = () => {
       });
   };
 
-  useEffect(() => {
-    pushDataUser();
-  }, [handleLogin]);
-
   const pushDataUser = async () => {
     const id = JSON.parse(localStorage.getItem("idUser"));
     const token = JSON.parse(localStorage.getItem("token"));
@@ -61,7 +58,7 @@ const Login = () => {
     console.log(token);
     await axios
       .get(
-        `https://furnivul-web-app-production-66c6.up.railway.app/users/${id}`,
+        `https://furnivul-web-app-production-b99b.up.railway.app/users/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

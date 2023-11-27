@@ -69,7 +69,7 @@ function navbar() {
 
   return (
     <div className=" justify-center  my-2  mx-4">
-      <Navbar container>
+      <Navbar fluid>
         <Navbar.Brand onClick={() => navigate("/")}>
           <img
             src={Logo}

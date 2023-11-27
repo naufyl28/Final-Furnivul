@@ -18,7 +18,10 @@ function Checkout() {
       </Breadcrumb>
       <h1>Checkout</h1>
       <Button className="">
-        <NavLink to={"payment"}> payment </NavLink>
+        <NavLink to={"payment"}>
+          {" "}
+          <span>payment</span>{" "}
+        </NavLink>
       </Button>
     </div>
   );

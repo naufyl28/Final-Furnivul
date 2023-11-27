@@ -73,7 +73,9 @@ function Cart() {
         </Breadcrumb.Item>
       </Breadcrumb>
       <Button className="">
-        <NavLink to={"address"}> Address </NavLink>
+        <NavLink to={"address"}>
+          <span> Address</span>{" "}
+        </NavLink>
       </Button>
 
       <div className="mt-3 mx-8 justify-center">
@@ -159,7 +161,7 @@ function Cart() {
             <p>Quantity will be reduced to 0. Are you sure?</p>
           )}
         </Modal.Body>
-        <Modal.Footer >
+        <Modal.Footer>
           <Button onClick={handleDeleteItem}>Yes</Button>
           {/* <Button type="button" onClick={() => setOpenModal(false)}>
             No

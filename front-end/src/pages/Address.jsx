@@ -105,7 +105,10 @@ function Address() {
       </Breadcrumb>
       <h1>Address</h1>
       <Button className="">
-        <NavLink to={"checkout"}> payment</NavLink>
+        <NavLink to={"checkout"}>
+          {" "}
+          <span>payment</span>
+        </NavLink>
       </Button>
     </div>
   );
