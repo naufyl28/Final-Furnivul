@@ -31,6 +31,7 @@ import Cart from "./pages/Cart.jsx";
 import Address from "./pages/Address.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Payment from "./pages/Payment.jsx";
+import AddAdress from "./pages/AddAddress.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -60,7 +61,9 @@ const router = createBrowserRouter(
         {/* routing checkout system */}
         <Route path="/cart" element={<Cart />} />
         <Route path="/cart/address" element={<Address />} />
-        <Route path="/cart/address/checkout" element={<Checkout />} />
+        <Route path="/cart/address/addadress" element={<AddAdress />} />
+        <Route path="/cart/address/addadress/checkout" element={<Checkout />} />
+
         <Route path="/cart/address/checkout/payment" element={<Payment />} />
       </Route>
     </>
