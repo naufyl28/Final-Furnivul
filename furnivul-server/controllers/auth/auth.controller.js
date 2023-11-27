@@ -19,7 +19,7 @@ module.exports = {
           new Error("Email and password must be not empty")
         );
 
-      const login = await User.findOne({ email });
+      const login = await User.findOne({ email }).populate("_idRole");
       if (!login)
         return sendErrorResponse(
           res,
@@ -35,7 +35,7 @@ module.exports = {
           JWT_KEY,
           { expiresIn: "10h" }
         );
-        sendSuccessResponse(res, 200, "Login success", { token });
+        sendSuccessResponse(res, 200, "Login success", { login, token });
       } else {
         return sendErrorResponse(
           res,
