@@ -142,7 +142,7 @@ paths:
   /users/{id}:
     get:
       tags:
-        - User (Admin)
+        - User
       security:
         - bearerAuth: []
       summary: Get User

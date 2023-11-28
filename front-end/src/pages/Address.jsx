@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import axios from "axios";
 
 function Address() {
@@ -23,28 +23,14 @@ function Address() {
 
   return (
     <>
-      <div className="mx-auto overflow-hidden">
-        {/* Tampilkan data di sini */}
-        {userData && (
-          <div>
-            <p>{`Fullname: ${userData.fullname}`}</p>
-            <p>{`Email: ${userData.email}`}</p>
-            <p>{`Phone: ${userData.phone}`}</p>
-            <p>{`Province: ${userData.province}`}</p>
-            <p>{`District: ${userData.district}`}</p>
-            <p>{`Subdistrict: ${userData.subdistrict}`}</p>
-            <p>{`Zipcode: ${userData.zipcode}`}</p>
-          </div>
-        )}
-      </div>
+      <div className="mx-auto overflow-hidden">{/* Tampilkan data di sini */}</div>
 
       <div className="p-8">
         <a
-          href="add-address"
           className="text-gray-900 bg-white w-full border border-yellow-400 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm p-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
           style={{ display: "block", textAlign: "center" }}
         >
-          Tambah alamat baru
+          <Link to={"add-address"}>Tambah alamat baru</Link>
         </a>
       </div>
 
@@ -99,7 +85,7 @@ function AddressPage() {
       </Breadcrumb>
       <h1>Address</h1>
       <Button className="">
-        <NavLink to={"checkout"}>
+        <NavLink to={"/cart/address/add-address/checkout"}>
           {" "}
           <span>payment</span>
         </NavLink>
