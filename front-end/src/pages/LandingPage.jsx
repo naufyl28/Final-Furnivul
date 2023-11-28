@@ -87,7 +87,7 @@ function LandingPage() {
                 Bawa kehangatan di ruang keluarga
               </h1>
               <a
-                href="#"
+                href="Article"
                 className="lg:text-3xl text-white tracking-wide text-lg"
               >
                 Cek inspirasinya &gt;
