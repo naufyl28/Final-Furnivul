@@ -16,7 +16,7 @@ function Cart() {
 
 const fetchVoucherData = () => {
   axios
-    .get("https://clever-gray-pocketbook.cyclic.app/voucher", {
+    .get("https://furnivul-web-app-production.up.railway.app/voucher", {
       headers: {
         Authorization: "Bearer YOUR_ACCESS_TOKEN",
       },
@@ -35,7 +35,7 @@ const fetchVoucherData = () => {
 
 
   useEffect(() => {
-    axios("https://clever-gray-pocketbook.cyclic.app/products")
+    axios("https://furnivul-web-app-production.up.railway.app/products")
       .then((result) => {
         if (Array.isArray(result.data.data)) {
           const initialData = result.data.data.map((item) => ({

@@ -8,8 +8,8 @@ function ListingProduct() {
   const [datas, setData] = useState([]);
 
   useEffect(() => {
-    axios("https://clever-gray-pocketbook.cyclic.app/products").then((result) =>
-      setData(result.data.data)
+    axios("https://furnivul-web-app-production.up.railway.app/products").then(
+      (result) => setData(result.data.data)
     );
   }, []);
 
