@@ -18,13 +18,10 @@ const Login = () => {
     e.preventDefault();
 
     await axios
-      .post(
-        "https://furnivul-web-app-production-b99b.up.railway.app/auth/login",
-        {
-          email: email,
-          password: password,
-        }
-      )
+      .post("https://furnivul-web-app-production.up.railway.app/auth/login", {
+        email: email,
+        password: password,
+      })
       .then((result) => {
         console.log(result);
         const token = result.data.data.token;
@@ -57,14 +54,11 @@ const Login = () => {
     console.log(id);
     console.log(token);
     await axios
-      .get(
-        `https://furnivul-web-app-production-b99b.up.railway.app/users/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .get(`https://furnivul-web-app-production.up.railway.app/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((result) => {
         console.log(result.data.data);
         localStorage.setItem("name", JSON.stringify(result.data.data.fullname));
