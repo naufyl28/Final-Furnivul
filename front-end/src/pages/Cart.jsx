@@ -121,7 +121,9 @@ const fetchVoucherData = () => {
 
       {/* Tombol Alamat */}
       <Button className="">
+
         <NavLink to={"address"}> Alamat </NavLink>
+
       </Button>
 
       {/* Daftar Produk */}
@@ -248,7 +250,9 @@ const fetchVoucherData = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
+
           <FlowbiteButton onClick={handleDeleteItem}>Ya</FlowbiteButton>
+
         </Modal.Footer>
       </Modal>
     </>

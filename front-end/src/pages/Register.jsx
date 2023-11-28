@@ -142,7 +142,9 @@ const Register = () => {
                   href="../login/login.html"
                   className="text-blue-600 hover:underline dark:text-blue-500"
                 >
-                  <NavLink to={"/login"}>&nbsp;Login</NavLink>
+                  <NavLink to={"/login"}>
+                    &nbsp;<span>Login</span>
+                  </NavLink>
                 </a>
               </div>
             </form>

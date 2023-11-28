@@ -18,7 +18,7 @@ const Login = () => {
     e.preventDefault();
 
     await axios
-      .post("https://clever-gray-pocketbook.cyclic.app/auth/login", {
+      .post("https://furnivul-web-app-production.up.railway.app/auth/login", {
         email: email,
         password: password,
       })
@@ -28,6 +28,7 @@ const Login = () => {
         const decoded = jwtDecode(token);
         localStorage.setItem("token", JSON.stringify(token));
         localStorage.setItem("idUser", JSON.stringify(decoded.id));
+        pushDataUser();
 
         new Swal(
           "Success! login",
@@ -47,17 +48,13 @@ const Login = () => {
       });
   };
 
-  useEffect(() => {
-    pushDataUser();
-  }, [handleLogin]);
-
   const pushDataUser = async () => {
     const id = JSON.parse(localStorage.getItem("idUser"));
     const token = JSON.parse(localStorage.getItem("token"));
     console.log(id);
     console.log(token);
     await axios
-      .get(`https://clever-gray-pocketbook.cyclic.app/users/${id}`, {
+      .get(`https://furnivul-web-app-production.up.railway.app/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

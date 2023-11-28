@@ -54,12 +54,12 @@ function navbar() {
         <div className="flex gap-1 mx-auto">
           <Button className=" ">
             <NavLink to={"/login"} className="">
-              Login
+              <span>Login</span>
             </NavLink>
           </Button>
           <Button>
             <NavLink to={"/register"} className=" text-white ">
-              Register
+              <span> Register</span>
             </NavLink>
           </Button>
         </div>
@@ -68,17 +68,18 @@ function navbar() {
   }
 
   return (
-    <div className="w-full  mt-2  mx-4  ">
+    <div className=" justify-center  my-2  mx-4">
       <Navbar fluid>
         <Navbar.Brand onClick={() => navigate("/")}>
           <img
             src={Logo}
-            className="mr-3  sm:h-9"
+            className=" mr-3  sm:h-9 flex-start"
             style={{ height: 35, width: 38 }}
             alt="Flowbite React Logo"
           />
           <span className="text-2xl font-bold dark:text-white">Furnivul</span>
         </Navbar.Brand>
+
         <Navbar.Collapse className="">
           <NavLink to={"/"} className="mt-1">
             <Navbar.Link>
@@ -103,8 +104,9 @@ function navbar() {
             </Navbar.Link>
           </NavLink>{" "}
         </Navbar.Collapse>
+
         <div className="">{component}</div>
-        <hr />
+
         <Navbar.Toggle />
       </Navbar>
     </div>
