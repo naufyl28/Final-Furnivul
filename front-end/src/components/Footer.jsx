@@ -20,7 +20,7 @@ function Component() {
               alt="Furnivul Logo"
               name="Furnivul"
             />
-            <div className="mt-8">
+            <div className="my-8 text-blue-900">
               <span>Furnivul</span> berdiri sejak nenek moyang <br></br> telah
               lahir menggunakan goresan tangan <br></br> sesepuh, dengan
               kearifan lokal yang mendunia.{" "}
