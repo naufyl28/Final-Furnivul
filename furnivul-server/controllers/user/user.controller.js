@@ -59,7 +59,6 @@ module.exports = {
   getDatabyID: async (req, res) => {
     try {
       const userId = req.payload.id;
-      const role = req.payload.role;
 
       const { id } = req.params;
 
@@ -72,8 +71,7 @@ module.exports = {
         );
       }
 
-      const checkRole = await Role.findById(role);
-      if (checkRole.role !== "admin" && userId !== id) {
+      if (userId !== id) {
         return sendErrorResponse(
           res,
           401,
