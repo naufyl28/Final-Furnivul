@@ -81,7 +81,7 @@ function AddressPage() {
       </Breadcrumb>
       <h1>Address</h1>
       <Button className="">
-        <NavLink to={"checkout"}>
+        <NavLink to={"/cart/address/add-address/checkout"}>
           {" "}
           <span>payment</span>
         </NavLink>

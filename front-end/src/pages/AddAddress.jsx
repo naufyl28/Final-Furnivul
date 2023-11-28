@@ -45,8 +45,8 @@ function AddAddress() {
           </div>
         </div>
         <Button className="">
-          <Link to={"checkout"}>
-            <span> payment</span>
+          <Link to={"/cart/address"}>
+            <span> Add Address</span>
           </Link>
         </Button>
       </Card>
