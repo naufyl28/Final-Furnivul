@@ -1,54 +1,41 @@
-import { Breadcrumb } from "flowbite-react";
+import React, { useState, useEffect } from "react";
+import { Breadcrumb, Button } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button } from "flowbite-react";
-import Swal from "sweetalert2";
+import { useParams } from "react-router-dom";
 
-function detailProduct() {
-  const [datas, setData] = useState([]);
-  const [addCart, setAddCart] = useState([]);
+function DetailProduct() {
+  const { productId } = useParams();
+  const [productData, setProductData] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [activeTab, setActiveTab] = useState("description");
 
   useEffect(() => {
-    axios("https://furnivul-web-app-production.up.railway.app/products").then(
-      (result) => setData(result.data.data)
-    );
-  }, []);
-
-  const handleAddToCart = () => {
-    const id = JSON.parse(localStorage.getItem("idUser"));
-    const token = JSON.parse(localStorage.getItem("token"));
-    console.log(id);
-    console.log(token);
-    axios
-      .post(
-        `https://furnivul-web-app-production.up.railway.app/users/${id}/cart`,
-        {
-          product_id: datas._id,
-          quantity: 1,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+    // Fetch product data
+    axios(
+      `https://furnivul-web-app-production.up.railway.app/products/${productId}`
+    )
       .then((result) => {
-        new Swal(
-          "Success! add to cart",
-          "your product has been add to cart.",
-          "success",
-          {
-            timer: 3000,
-          }
-        );
-        console.log(result);
-        setAddCart(result.data.data);
+        setProductData(result.data.data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error("Error fetching product data:", error);
       });
+
+    // Fetch reviews data
+    axios(`https://furnivul-web-app-production.up.railway.app/reviews`)
+      .then((result) => {
+        setReviews(result.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching reviews:", error);
+      });
+  }, [productId]);
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
   };
+
 
   return (
     <>
@@ -59,51 +46,96 @@ function detailProduct() {
         <Breadcrumb.Item href="/" icon={FaCartShopping}>
           Home
         </Breadcrumb.Item>
-        <Breadcrumb.Item href="#">Category</Breadcrumb.Item>
-        <Breadcrumb.Item href="#">List Product</Breadcrumb.Item>
+        <Breadcrumb.Item href="/category-product">Category</Breadcrumb.Item>
+        <Breadcrumb.Item href="/category-product/list-product">
+          List Product
+        </Breadcrumb.Item>
         <Breadcrumb.Item>Detail Product</Breadcrumb.Item>
       </Breadcrumb>
-      <div>
-        <h1>detailProduct</h1>
-      </div>
-      {/* detail product */}
-      {/* card lisitng product */}
-      <div>
-        {datas.map((item) => (
-          <div
-            key={item._id}
-            className="border-2 rounded-xl mt-3 mx-8 justify-center lg:flex lg:flex-row gap-8 p-4 md:flex-row sm:flex-col sm:gap-4 sm:p-2"
-          >
-            <img
-              src={item.product_image}
-              style={{ height: 400, width: 600 }}
-              alt=""
-            />
-            <div className="text-2xl mt-8 mb-8 ml-8">
-              <p className="font-bold">{item.product_name}</p>
-              <hr />
 
-              <div className="mt-3">
-                <p>{item.product_category}</p>
-              </div>
-              <div className="mt-3">
-                <p>sudah terjual: {item.product_sold}</p>
-              </div>
-              <div>description : {item.product_category}</div>
-              <div className="mt-3">
-                <p>Rp {item.product_price.toLocaleString()},-</p>
-              </div>
-              <Button className="mt-8 text-black bg-yellow-300 border border-gray-800 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                <a href="#" className="text-xl" onClick={handleAddToCart}>
-                  <span> add to cart </span>
-                </a>
-              </Button>
+
+      {productData ? (
+        <div className="flex mt-6 mx-4">
+          <div className="w-1/2">
+            <h1 className="text-3xl font-bold mb-4">
+              {productData.product_name}
+            </h1>
+            <p className="mb-2 text-lg">Rating: {productData.product_rate}</p>
+            <p className="mb-2 text-lg">Sold: {productData.product_sold}</p>
+            <p className="mb-4 text-2xl font-bold">
+              Price: Rp {productData.product_price.toLocaleString()},-
+            </p>
+
+            {/* Button.Group and Buttons */}
+            <div className="mt-4">
+              <Button.Group>
+                <Button
+                  color={activeTab === "description" ? "blue" : "gray"}
+                  onClick={() => handleTabChange("description")}
+                >
+                  Deskripsi
+                </Button>
+                <Button
+                  color={activeTab === "review" ? "blue" : "gray"}
+                  onClick={() => handleTabChange("review")}
+                >
+                  Ulasan
+                </Button>
+                <Button
+                  color={activeTab === "discussion" ? "blue" : "gray"}
+                  onClick={() => handleTabChange("discussion")}
+                >
+                  Diskusi
+                </Button>
+              </Button.Group>
+            </div>
+            {/* End of Button.Group and Buttons */}
+
+            {/* Content based on activeTab */}
+            <div className="mt-4">
+              {activeTab === "description" && (
+                <div>
+                  <h1 className="mt-6 mb-2 font-bold ">
+                    {productData.product_name}
+                  </h1>
+                  <p className="mt-1 mb-2">{productData.product_description}</p>
+                  <p className="mt-4 mb-4">
+                    Material: {productData.product_material}
+                  </p>
+                </div>
+              )}
+
+              {activeTab === "review" && (
+                <div>
+                  <h1 className="mt-6 mb-2 font-bold">Ulasan</h1>
+                  {/* Display reviews here */}
+                  {reviews.map((review) => (
+                    <div key={review.id} className="mt-1 mb-2">
+                      <p> {review._userId.fullname}</p>
+                      <p>Rating: {review.rating}</p>
+                      <p>Ulasan: {review.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-        ))}
-      </div>
-      {/* ===================== */}
+          <div className="w-1/2">
+            <div className="w-2/3 mx-auto">
+              <img
+                src={productData.product_image}
+                alt={productData.product_name}
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <p>Loading...</p>
+      )}
+
     </>
   );
 }
-export default detailProduct;
+
+export default DetailProduct;
