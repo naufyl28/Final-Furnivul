@@ -9,12 +9,12 @@ function CategoryProduct() {
   const [datas, setData] = useState([]);
 
   useEffect(() => {
-    axios("https://clever-gray-pocketbook.cyclic.app/product-categories").then(
-      (result) => {
-        setData(result.data.data);
-        // console.log(result.data.data);
-      }
-    );
+    axios(
+      "https://furnivul-web-app-production.up.railway.app/product-categories"
+    ).then((result) => {
+      setData(result.data.data);
+      // console.log(result.data.data);
+    });
   }, []);
 
   return (

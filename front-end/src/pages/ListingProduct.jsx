@@ -8,8 +8,8 @@ function ListingProduct() {
   const [datas, setData] = useState([]);
 
   useEffect(() => {
-    axios("https://clever-gray-pocketbook.cyclic.app/products").then((result) =>
-      setData(result.data.data)
+    axios("https://furnivul-web-app-production.up.railway.app/products").then(
+      (result) => setData(result.data.data)
     );
   }, []);
 
@@ -102,9 +102,11 @@ function ListingProduct() {
                     <p>Rp {item.product_price.toLocaleString()},-</p>
                   </div>
                   <Button className="mt-8 text-black bg-yellow-300 border border-gray-800 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    <a href="#" className="text-xl">
-                      Detail Product
-                    </a>
+                    <NavLink
+                      to={"/category-product/list-product/detail-product"}
+                    >
+                      <span> DetailProduct</span>
+                    </NavLink>
                   </Button>
                 </div>
               </div>
