@@ -11,7 +11,7 @@ function DetailProduct() {
   const [activeTab, setActiveTab] = useState("description");
 
   useEffect(() => {
-    // Fetch product data
+   
     axios(
       `https://furnivul-web-app-production.up.railway.app/products/${productId}`
     )
