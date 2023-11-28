@@ -55,7 +55,7 @@ const router = createBrowserRouter(
           element={<ListingProduct />}
         />
         <Route
-          path="/category-product/list-product/detail-product"
+          path="/category-product/list-product/detail-product/:productId"
           element={<Product />}
         />
 

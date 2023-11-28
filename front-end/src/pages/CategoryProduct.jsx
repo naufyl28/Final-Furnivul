@@ -1,58 +1,61 @@
 import { Button, Card } from "flowbite-react";
-import { NavLink } from "react-router-dom";
 import { Breadcrumb } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 function CategoryProduct() {
   const [datas, setData] = useState([]);
+  const navigate = useNavigate();
+  const { categoryId } = useParams();
 
   useEffect(() => {
-    axios("https://furnivul-web-app-production.up.railway.app/product-categories").then(
-      (result) => {
-        setData(result.data.data);
-        // console.log(result.data.data);
-      }
-    );
+    axios(
+      "https://furnivul-web-app-production.up.railway.app/product-categories"
+    ).then((result) => {
+      setData(result.data.data);
+    });
   }, []);
+
+const handleListingProduct = () => {
+  navigate(`/category-product/list-product`);
+};
 
   return (
     <div className="">
       <Breadcrumb
-        aria-label="Solid background breadcrumb example"
+        aria-label="Breadcrumb dengan latar belakang solid"
         className="bg-gray-50 px-5 py-3 dark:bg-gray-800 ml-1"
       >
         <Breadcrumb.Item href="#" icon={FaCartShopping}>
-          Home
+          Beranda
         </Breadcrumb.Item>
         <Breadcrumb.Item href="#">Category</Breadcrumb.Item>
       </Breadcrumb>
 
       <div className="my-3 ml-6 text-3xl font-semibold">
-        <h1>Category Product</h1>
+        <h1>category product </h1>
       </div>
       <div className="grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mx-4 mb-4">
-        {datas.map((datas) => (
-          <Card key={datas._id} className=" mt-3  mx-2">
+        {datas.map((data) => (
+          <Card key={data._id} className="mt-3 mx-2">
             <img
-              src={datas.image_url}
-              alt="product"
+              src={data.image_url}
+              alt="produk"
               style={{ height: 200 }}
-              className=" object-cover rounded-t-md"
+              className="object-cover rounded-t-md"
             />
             <div className="font-semibold text-xl">
-              <p>{datas.category}</p>
+              <p>{data.category}</p>
             </div>
             <div>
-              <p>{datas.description}</p>
+              <p>{data.description}</p>
             </div>
             <div>
-              <NavLink to={"/category-product/list-product"}>
-                <Button>
-                  <a>Listing Product</a>
-                </Button>
-              </NavLink>
+              <Button onClick={() => handleListingProduct(data._id)}>
+                <a>List Product</a>
+              </Button>
             </div>
           </Card>
         ))}
@@ -60,4 +63,5 @@ function CategoryProduct() {
     </div>
   );
 }
+
 export default CategoryProduct;

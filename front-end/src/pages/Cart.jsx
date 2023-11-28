@@ -1,4 +1,3 @@
-// Impor dependensi
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button, Modal } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
@@ -14,25 +13,24 @@ function Cart() {
   const [voucherModal, setVoucherModal] = useState(false);
   const [voucherData, setVoucherData] = useState(null);
 
-const fetchVoucherData = () => {
-  axios
-    .get("https://furnivul-web-app-production.up.railway.app/voucher", {
-      headers: {
-        Authorization: "Bearer YOUR_ACCESS_TOKEN",
-      },
-    })
-    .then((result) => {
-      console.log("Data Voucher:", result.data);
-      setVoucherData(result.data);
-    })
-    .catch((error) => {
-      console.error("Error mengambil data voucher:", error);
-      if (error.response) {
-        console.error("Detail respons:", error.response.data);
-      }
-    });
-};
-
+  const fetchVoucherData = () => {
+    axios
+      .get("https://furnivul-web-app-production.up.railway.app/voucher", {
+        headers: {
+          Authorization: "Bearer YOUR_ACCESS_TOKEN",
+        },
+      })
+      .then((result) => {
+        console.log("Data Voucher:", result.data);
+        setVoucherData(result.data);
+      })
+      .catch((error) => {
+        console.error("Error mengambil data voucher:", error);
+        if (error.response) {
+          console.error("Detail respons:", error.response.data);
+        }
+      });
+  };
 
   useEffect(() => {
     axios("https://furnivul-web-app-production.up.railway.app/products")
@@ -52,7 +50,7 @@ const fetchVoucherData = () => {
       });
 
     fetchVoucherData();
-  }, []); 
+  }, []);
 
   const handleIncrement = (index) => {
     const updatedData = [...datas.data];
@@ -121,9 +119,7 @@ const fetchVoucherData = () => {
 
       {/* Tombol Alamat */}
       <Button className="">
-
         <NavLink to={"address"}> Alamat </NavLink>
-
       </Button>
 
       {/* Daftar Produk */}
@@ -250,9 +246,7 @@ const fetchVoucherData = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-
           <FlowbiteButton onClick={handleDeleteItem}>Ya</FlowbiteButton>
-
         </Modal.Footer>
       </Modal>
     </>
