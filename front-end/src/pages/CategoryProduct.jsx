@@ -15,6 +15,8 @@ function CategoryProduct() {
       "https://furnivul-web-app-production.up.railway.app/product-categories"
     ).then((result) => {
       setData(result.data.data);
+
+
     });
   }, []);
 

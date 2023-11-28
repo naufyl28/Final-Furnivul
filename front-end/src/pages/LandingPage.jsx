@@ -67,7 +67,7 @@ function LandingPage() {
             </p>
             <Button
               href="category-product"
-              className="bg-[#ffb703] text-gray-800 font-semibold rounded-xl shadow my-4 w-fit "
+              className="bg-[#ffb703] text-gray-800 font-semibold rounded-xl border-blue-900 shadow my-4 w-fit "
             >
               <span>Lihat Kategori</span> &nbsp;
               <img src={arrow} alt="" />

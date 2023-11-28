@@ -1,8 +1,8 @@
 import { Breadcrumb, Button, Card, TextInput } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function Address() {
+function AddAddress() {
   return (
     <div>
       <Breadcrumb
@@ -16,55 +16,42 @@ function Address() {
         <Breadcrumb.Item href="#">Address</Breadcrumb.Item>
         <Breadcrumb.Item href="#">Add Address</Breadcrumb.Item>
       </Breadcrumb>
-      <h1>Address</h1>
-      <Button className="">
-        {/* <Card className="bg-gray-50 dark:bg-gray-800">
-          <Card.Body>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <label className="text-sm">Full Name</label>
-                <input
-                  type="text"
-                  className="border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 block w-full sm:text-sm"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label className="text-sm">Phone Number</label>
-                <TextInput
-                  type="text"
-                  className="border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 block w-full sm:text-sm"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label className="text-sm">Address</label>
-                <TextInput
-                  type="text"
-                  className="border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 block w-full sm:text-sm"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label className="text-sm">City</label>
-                <TextInput
-                  type="text"
-                  className="border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 block w-full sm:text-sm"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label className="text-sm">Postal Code</label>
-                <TextInput
-                  type="text"
-                  className="border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500 block w-full sm:text-sm"
-                />
-              </div>
-            </div>
-          </Card.Body>
-        </Card> */}
-        <NavLink to={"checkout"}>
-          <span> payment</span>
-        </NavLink>
-      </Button>
+
+      <Card className="w-full">
+        <h1 className="text-2xl font-semibold">Address</h1>
+        <div className="text-3xl font-semibold my-3 space-y-3">
+          <div>
+            <TextInput label="Name" placeholder="Name" className="" />
+          </div>
+
+          <div>
+            <TextInput label="Address" placeholder="Address" className="" />
+          </div>
+          <div>
+            <TextInput label="City" placeholder="City" className="" />
+          </div>
+          <div>
+            <TextInput
+              label="Postal Code"
+              placeholder="Postal Code"
+              className=""
+            />{" "}
+          </div>
+          <div>
+            <TextInput label="Country" placeholder="Country" className="" />
+          </div>
+          <div>
+            <TextInput label="Phone" placeholder="Phone" className="" />
+          </div>
+        </div>
+        <Button className="">
+          <Link to={"checkout"}>
+            <span> payment</span>
+          </Link>
+        </Button>
+      </Card>
     </div>
   );
 }
 
-export default Address;
+export default AddAddress;

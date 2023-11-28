@@ -36,6 +36,7 @@ function DetailProduct() {
     setActiveTab(tab);
   };
 
+
   return (
     <>
       <Breadcrumb
@@ -51,6 +52,7 @@ function DetailProduct() {
         </Breadcrumb.Item>
         <Breadcrumb.Item>Detail Product</Breadcrumb.Item>
       </Breadcrumb>
+
 
       {productData ? (
         <div className="flex mt-6 mx-4">
@@ -131,6 +133,7 @@ function DetailProduct() {
       ) : (
         <p>Loading...</p>
       )}
+
     </>
   );
 }
