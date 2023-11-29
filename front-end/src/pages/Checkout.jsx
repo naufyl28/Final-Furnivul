@@ -1,35 +1,30 @@
-import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button, Card, Label, Select } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 function Checkout() {
-  const [courierData, setCourierData] = useState([]);
-  const [selectedCourier, setSelectedCourier] = useState("");
+  // const [courier, setCourier] = useState([]);
 
-  useEffect(() => {
-    axios(
-      "https://furnivul-web-app-production.up.railway.app/courier-services",
-      {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjM3Mzg2MTc1OTUyODgxYjhhMGU3OCIsInJvbGUiOnsiX2lkIjoiNjU1ZDc5OTMyMjZhNTZmMWU0ZDY2ODgzIiwicm9sZSI6InVzZXIiLCJfX3YiOjAsImNyZWF0ZWRBdCI6IjIwMjMtMTEtMjJUMDM6NDY6MjcuMzI0WiIsInVwZGF0ZWRBdCI6IjIwMjMtMTEtMjJUMDM6NDY6MjcuMzI0WiJ9LCJpYXQiOjE3MDEyNDUyNDgsImV4cCI6MTcwMTI4MTI0OH0.loGfPP9Hd9UEOeWxAqT6blu2jfF4rn9ZfE7zhxe9vtU",
-        },
-      }
-    )
-      .then((result) => {
-        setCourierData(result.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching courier data:", error);
-        console.log("Error response data:", error.response.data);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios(
+  //     "https://furnivul-web-app-production.up.railway.app/courier-services/"
+  //   )
+  //     .then((result) => {
+  //       setCourier(result.data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching courier data:", error);
+  //     });
+  // }, []);
 
-  const selectCourier = (event) => {
-    setSelectedCourier(event.target.value);
-  };
+  // console.log(courier);
+
+  // const selectCourier = (event) => {
+  //   event.preventDefault();
+  //   setCourier(event.target.value);
+  // };
 
   return (
     <div>
@@ -47,33 +42,44 @@ function Checkout() {
       <h1>Checkout</h1>
       <Button className="">
         <NavLink to={"payment"}>
-          <span>payment</span>
+          {" "}
+          <span>payment</span>{" "}
         </NavLink>
       </Button>
       <div>
         <Card className="w-full">
           <h1 className="text-2xl font-semibold">Address</h1>
           <div className="text-md font-semibold my-3 space-y-3">
-            {/* ... other content ... */}
+            <p>Tingkatkan keamanan akun anda!</p>
+            <p>
+              Tingkatkan keamanan akun anda dengan mengaktifkan autentikasi dua
+              faktor. Dengan menggunakan autentikasi dua faktor dapat memberikan
+              proteksi terhadap akun anda. Untuk lebih lengkapnya klik disini!.
+            </p>
+            <Button className="">Mengerti</Button>
           </div>
+          select courier
           <div className="max-w-sm">
             <div className="mb-2 block">
               <Label htmlFor="selectCourier" value="Select your courier" />
             </div>
-            <Select
-              id="selectCourier"
-              required
-              onChange={selectCourier}
-              value={selectedCourier}
-            >
-              <option value="" disabled>
-                Select your courier
-              </option>
-              {courierData.map((data) => (
-                <option key={data._id} value={data.name}>
-                  {`${data.name} - ${data.description} (${data.etd}, Cost: ${data.cost})`}
-                </option>
-              ))}
+            {/* {courier.map((data) => (
+              <div key={data._id}>
+                <Select
+                  id="countries"
+                  required
+                  onClick={selectCourier}
+                  value={data.courier_name}
+                >
+                  <option>{data.courier_name}</option>
+                </Select>
+              </div>
+            ))} */}
+            <Select id="countries" required>
+              <option>United States</option>
+              <option>Canada</option>
+              <option>France</option>
+              <option>Germany</option>
             </Select>
           </div>
         </Card>
@@ -83,4 +89,3 @@ function Checkout() {
 }
 
 export default Checkout;
-  

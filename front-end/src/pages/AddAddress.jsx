@@ -1,24 +1,65 @@
 // AddAddress.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button, Card, TextInput } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Form, Link } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function AddAddress() {
-  const [addressData, setAddressData] = useState({
-    fullName: "",
-    phone: "",
-    province: "",
-    country: "",
-    district: "",
-    zipCode: "",
-  });
+  const token = JSON.parse(localStorage.getItem("token"));
 
-  const handleInputChange = (name, value) => {
-    setAddressData({
-      ...addressData,
-      [name]: value,
-    });
+  const [phone, setPhone] = useState("");
+  const [province, setProvince] = useState("");
+  const [district, setDistrict] = useState("");
+  const [subdistrict, setSubdistrict] = useState("");
+  const [zipCode, setZipCode] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const result = await axios.put(
+        "https://furnivul-web-app-production.up.railway.app/users",
+        {
+          phone: phone,
+          province: province,
+          district: district,
+          subdistrict: subdistrict,
+          zipcode: zipCode,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      navigate("/cart/address");
+
+      // kirim ke localstorage
+      localStorage.setItem("phone", JSON.stringify(phone));
+      localStorage.setItem("province", JSON.stringify(province));
+      localStorage.setItem("district", JSON.stringify(district));
+      localStorage.setItem("subdistrict", JSON.stringify(subdistrict));
+      localStorage.setItem("zipcode", JSON.stringify(zipCode));
+
+      Swal.fire({
+        title: "Success! add address",
+        text: "Your address has been added.",
+        icon: "success",
+        timer: 3000,
+      });
+
+      console.log(result);
+    } catch (error) {
+      new Swal("Oops Sorry!", "failed add address.", "error", {
+        error,
+      });
+      console.error("Error adding address:", error);
+    }
   };
 
   return (
@@ -36,65 +77,55 @@ function AddAddress() {
       </Breadcrumb>
 
       <Card className="w-full">
-        <h1 className="text-2xl font-semibold">Add Address</h1>
-        <div className="text-3xl font-semibold my-3 space-y-3">
-          <div>
-            <TextInput
-              label="Full name"
-              placeholder="Full name"
-              value={addressData.fullName}
-              onChange={(e) => handleInputChange("fullName", e.target.value)}
-            />
-          </div>
+        <Form onSubmit={handleSubmit}>
+          <h1 className="text-2xl font-semibold">Add Address</h1>
+          <div className="text-3xl font-semibold my-3 space-y-3">
+            <div>
+              <TextInput
+                label="Phone"
+                placeholder="Phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+            <div>
+              <TextInput
+                label="Province"
+                placeholder="Province"
+                value={province}
+                onChange={(e) => setProvince(e.target.value)}
+              />
+            </div>
+            <div>
+              <TextInput
+                label="District"
+                placeholder="District"
+                value={district}
+                onChange={(e) => setDistrict(e.target.value)}
+              />
+            </div>
+            <div>
+              <TextInput
+                label="Subdistrict"
+                placeholder="Subdistrict"
+                value={subdistrict}
+                onChange={(e) => setSubdistrict(e.target.value)}
+              />
+            </div>
 
-          <div>
-            <TextInput
-              label="Phone"
-              placeholder="Phone"
-              value={addressData.phone}
-              onChange={(e) => handleInputChange("phone", e.target.value)}
-            />
+            <div>
+              <TextInput
+                label="Zip code"
+                placeholder="Zip code"
+                value={zipCode}
+                onChange={(e) => setZipCode(e.target.value)}
+              />
+            </div>
           </div>
-          <div>
-            <TextInput
-              label="Province"
-              placeholder="Province"
-              value={addressData.province}
-              onChange={(e) => handleInputChange("province", e.target.value)}
-            />
-          </div>
-          <div>
-            <TextInput
-              label="Country"
-              placeholder="Country"
-              value={addressData.country}
-              onChange={(e) => handleInputChange("country", e.target.value)}
-            />
-          </div>
-          <div>
-            <TextInput
-              label="District"
-              placeholder="District"
-              value={addressData.district}
-              onChange={(e) => handleInputChange("district", e.target.value)}
-            />
-          </div>
-          <div>
-            <TextInput
-              label="Zip code"
-              placeholder="Zip code"
-              value={addressData.zipCode}
-              onChange={(e) => handleInputChange("zipCode", e.target.value)}
-            />
-          </div>
-        </div>
-        <Button className="">
-          <Link
-            to={`/cart/address?${new URLSearchParams(addressData).toString()}`}
-          >
-            <span> Add Address</span>
-          </Link>
-        </Button>
+          <Button type="submit" className="w-full">
+            Add Address
+          </Button>
+        </Form>
       </Card>
     </div>
   );
