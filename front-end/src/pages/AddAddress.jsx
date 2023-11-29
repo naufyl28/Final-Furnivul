@@ -1,8 +1,26 @@
+// AddAddress.jsx
+import React, { useState } from "react";
 import { Breadcrumb, Button, Card, TextInput } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
 function AddAddress() {
+  const [addressData, setAddressData] = useState({
+    fullName: "",
+    phone: "",
+    province: "",
+    country: "",
+    district: "",
+    zipCode: "",
+  });
+
+  const handleInputChange = (name, value) => {
+    setAddressData({
+      ...addressData,
+      [name]: value,
+    });
+  };
+
   return (
     <div>
       <Breadcrumb
@@ -18,34 +36,62 @@ function AddAddress() {
       </Breadcrumb>
 
       <Card className="w-full">
-        <h1 className="text-2xl font-semibold">Address</h1>
+        <h1 className="text-2xl font-semibold">Add Address</h1>
         <div className="text-3xl font-semibold my-3 space-y-3">
           <div>
-            <TextInput label="Name" placeholder="Name" className="" />
+            <TextInput
+              label="Full name"
+              placeholder="Full name"
+              value={addressData.fullName}
+              onChange={(e) => handleInputChange("fullName", e.target.value)}
+            />
           </div>
 
           <div>
-            <TextInput label="Address" placeholder="Address" className="" />
-          </div>
-          <div>
-            <TextInput label="City" placeholder="City" className="" />
+            <TextInput
+              label="Phone"
+              placeholder="Phone"
+              value={addressData.phone}
+              onChange={(e) => handleInputChange("phone", e.target.value)}
+            />
           </div>
           <div>
             <TextInput
-              label="Postal Code"
-              placeholder="Postal Code"
-              className=""
-            />{" "}
+              label="Province"
+              placeholder="Province"
+              value={addressData.province}
+              onChange={(e) => handleInputChange("province", e.target.value)}
+            />
           </div>
           <div>
-            <TextInput label="Country" placeholder="Country" className="" />
+            <TextInput
+              label="Country"
+              placeholder="Country"
+              value={addressData.country}
+              onChange={(e) => handleInputChange("country", e.target.value)}
+            />
           </div>
           <div>
-            <TextInput label="Phone" placeholder="Phone" className="" />
+            <TextInput
+              label="District"
+              placeholder="District"
+              value={addressData.district}
+              onChange={(e) => handleInputChange("district", e.target.value)}
+            />
+          </div>
+          <div>
+            <TextInput
+              label="Zip code"
+              placeholder="Zip code"
+              value={addressData.zipCode}
+              onChange={(e) => handleInputChange("zipCode", e.target.value)}
+            />
           </div>
         </div>
         <Button className="">
-          <Link to={"/cart/address"}>
+          <Link
+            to={`/cart/address?${new URLSearchParams(addressData).toString()}`}
+          >
             <span> Add Address</span>
           </Link>
         </Button>
