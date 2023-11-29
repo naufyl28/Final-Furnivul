@@ -5,25 +5,18 @@ import { Link, NavLink } from "react-router-dom";
 import axios from "axios";
 
 function Address() {
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-
-    const userId = "65637386175952881b8a0e78";
-
-   
-    axios(`https://furnivul-web-app-production.up.railway.app/users/${userId}`)
-      .then((result) => {
-        setUserData(result.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-      });
-  }, []);
+  const name = JSON.parse(localStorage.getItem("name"));
+  const phone = JSON.parse(localStorage.getItem("phone"));
+  const province = JSON.parse(localStorage.getItem("province"));
+  const district = JSON.parse(localStorage.getItem("district"));
+  const subdistrict = JSON.parse(localStorage.getItem("subdistrict"));
+  const zipcode = JSON.parse(localStorage.getItem("zipcode"));
 
   return (
     <>
-      <div className="mx-auto overflow-hidden">{/* Tampilkan data di sini */}</div>
+      <div className="mx-auto overflow-hidden ">
+        {/* Tampilkan data di sini */}
+      </div>
 
       <div className="p-8">
         <a
@@ -32,6 +25,27 @@ function Address() {
         >
           <Link to={"add-address"}>Tambah alamat baru</Link>
         </a>
+      </div>
+      <div>
+        <div className="my-4 flex items-center max-w-screen-xl mx-auto p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover-bg-gray-700">
+          {/* Tampilkan data di sini */}
+          <div>
+            <div className="text-2xl">Data Resi anda : </div>
+            <div>{name}</div>
+            <div>{phone}</div>
+            <div>{province}</div>
+            <div>{district}</div>
+            <div>{subdistrict}</div>
+            <div>{zipcode}</div>
+          </div>
+          <div className="">
+            <Button>
+              <NavLink to={"/cart/address/add-address/checkout"}>
+                <span>payment</span>
+              </NavLink>
+            </Button>
+          </div>
+        </div>
       </div>
 
       <div>
@@ -61,7 +75,6 @@ function Address() {
           id="verifikasiButton"
           type="button"
           className="mt-10 text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          style={{ display: "none" }}
         >
           Verifikasi Pembayaran
         </button>
@@ -72,7 +85,7 @@ function Address() {
 
 function AddressPage() {
   return (
-    <div>
+    <div className="">
       <Breadcrumb
         aria-label="Solid background breadcrumb example"
         className="bg-gray-50 px-5 py-3 dark:bg-gray-800"
@@ -84,7 +97,7 @@ function AddressPage() {
         <Breadcrumb.Item href="#">Address</Breadcrumb.Item>
       </Breadcrumb>
       <h1>Address</h1>
-      <Button className="">
+      <Button className="max-w-screen-xl">
         <NavLink to={"/cart/address/add-address/checkout"}>
           {" "}
           <span>payment</span>

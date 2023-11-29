@@ -18,12 +18,15 @@ const Register = () => {
       "https://img.icons8.com/?size=512&id=tZuAOUGm9AuS&format=png";
 
     await axios
-      .post("https://clever-gray-pocketbook.cyclic.app/auth/register", {
-        fullname: fullname,
-        email: email,
-        password: password,
-        image_url: image_url,
-      })
+      .post(
+        "https://furnivul-web-app-production.up.railway.app/auth/register",
+        {
+          fullname: fullname,
+          email: email,
+          password: password,
+          image_url: image_url,
+        }
+      )
       .then((result) => {
         new Swal(
           "Success!",

@@ -66,6 +66,7 @@ const router = createBrowserRouter(
           path="/cart/address/add-address/checkout"
           element={<Checkout />}
         />
+        <Route path="/cart/address/checkout" element={<Checkout />} />
         <Route
           path="/cart/address/add-address/checkout/payment"
           element={<Payment />}
