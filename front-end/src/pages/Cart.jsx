@@ -6,7 +6,6 @@ import axios from "axios";
 import { Button as FlowbiteButton } from "flowbite-react";
 
 function Cart() {
-  // Variable state
   const [datas, setData] = useState({ message: "", data: [] });
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [openModal, setOpenModal] = useState(false);
@@ -15,7 +14,6 @@ function Cart() {
   const [voucherData, setVoucherData] = useState(null);
   const [useVoucher, setUseVoucher] = useState(false);
 
-  // Fetch cart data from localStorage
   const productCart = JSON.parse(localStorage.getItem("cart") || "[]");
 
   const token = JSON.parse(localStorage.getItem("token"));
@@ -39,69 +37,97 @@ function Cart() {
       });
   };
 
-  useEffect(() => {
-    fetchVoucherData();
-  }, []);
+useEffect(() => {
+  fetchVoucherData();
 
-  const handleIncrement = (index) => {
-    const updatedData = [...datas.data];
-    const product = updatedData[index];
+  // Perbarui state datas.data dari localStorage saat komponen dimuat
+  setData({ ...datas, data: productCart });
+}, []);
 
-    // Check if the product with the same ID already exists in the cart
-    const existingProductIndex = productCart.findIndex(
-      (item) => item.product_id === (product && product.product_id)
-    );
+const handleIncrement = (index) => {
+  const updatedData = [...datas.data];
+  const product = updatedData[index];
 
-    if (existingProductIndex !== -1) {
-      // If the product exists, increment its quantity
-      productCart[existingProductIndex].quantity += 1;
+  const existingProductIndex = productCart.findIndex(
+    (item) => item.product_id === (product && product.product_id)
+  );
+
+  if (existingProductIndex !== -1) {
+    // Produk sudah ada di keranjang, tambahkan kuantitas
+    productCart[existingProductIndex].quantity += 1;
+    setData({
+      ...datas,
+      data: updatedData.map((item, i) =>
+        item.product_id === productCart[existingProductIndex].product_id
+          ? { ...item, quantity: productCart[existingProductIndex].quantity }
+          : item
+      ),
+    });
+  } else {
+    // Produk belum ada di keranjang, tambahkan baru
+    const newProduct = { ...product, quantity: 1 };
+    productCart.push(newProduct);
+    setData({
+      ...datas,
+      data: [...productCart],
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(productCart));
+  fetchVoucherData();
+};
+
+
+// ...
+
+const handleDecrement = (index) => {
+  const updatedData = [...datas.data];
+  const product = updatedData[index];
+
+  const existingProductIndex = productCart.findIndex(
+    (item) => item.product_id === (product && product.product_id)
+  );
+
+  if (existingProductIndex !== -1) {
+    if (productCart[existingProductIndex].quantity > 1) {
+      // Produk sudah ada di keranjang, kurangi kuantitas
+      productCart[existingProductIndex].quantity -= 1;
+      setData({
+        ...datas,
+        data: updatedData.map((item, i) =>
+          item.product_id === productCart[existingProductIndex].product_id
+            ? { ...item, quantity: productCart[existingProductIndex].quantity }
+            : item
+        ),
+      });
     } else {
-      // If the product doesn't exist, add a new item to the cart with quantity 1
-      productCart.push({ ...product, quantity: 1 });
+      // Set deleteIndex ke nilai yang sesuai
+      setDeleteIndex(existingProductIndex);
+      setOpenModal(true);
+      return;
     }
+  }
 
-    // Update the local storage and state
-    localStorage.setItem("cart", JSON.stringify(productCart));
+  localStorage.setItem("cart", JSON.stringify(productCart));
+  fetchVoucherData();
+};
+
+
+
+const handleDeleteItem = () => {
+  if (deleteIndex !== null) {
+    const updatedData = datas.data.filter((_, index) => index !== deleteIndex);
     setData({ ...datas, data: updatedData });
-  };
+    setDeleteIndex(null);
+    setOpenModal(false);
 
-  const handleDecrement = (index) => {
-    const updatedData = [...datas.data];
-    const product = updatedData[index];
-
-    // Check if the product with the same ID already exists in the cart
-    const existingProductIndex = productCart.findIndex(
-      (item) => item.product_id === (product && product.product_id)
-    );
-
-    if (existingProductIndex !== -1) {
-      // If the product exists and quantity is greater than 1, decrement its quantity
-      if (productCart[existingProductIndex].quantity > 1) {
-        productCart[existingProductIndex].quantity -= 1;
-      } else {
-        // If quantity is 1, prompt the user to confirm deletion
-        setDeleteIndex(index);
-        setOpenModal(true);
-        return;
-      }
-    }
-
-    // Update the local storage and state
-    localStorage.setItem("cart", JSON.stringify(productCart));
-    setData({ ...datas, data: updatedData });
-  };
-
-  const handleDeleteItem = () => {
-    console.log("Fungsi Hapus Item");
-    if (deleteIndex !== null) {
-      const updatedData = datas.data.filter(
-        (_, index) => index !== deleteIndex
-      );
-      setData({ ...datas, data: updatedData });
-      setDeleteIndex(null);
-      setOpenModal(false);
-    }
-  };
+    // Perbarui localStorage setelah menghapus item
+    const updatedCart = [...productCart];
+    updatedCart.splice(deleteIndex, 1);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    fetchVoucherData();
+  }
+};
 
   const handleVoucherSelect = (voucher) => {
     setSelectedVoucher(voucher);
@@ -120,20 +146,19 @@ function Cart() {
     }).format(value);
   };
 
-  const calculateTotalPrice = () => {
-    const totalPriceWithoutDiscount = Array.isArray(datas.data)
-      ? datas.data.reduce(
-          (total, item) =>
-            total + (item.quantity || 0) * (item.product_price || 0),
-          0
-        )
-      : 0;
+const calculateTotalPrice = () => {
+  const totalPriceWithoutDiscount = Array.isArray(datas.data)
+    ? datas.data.reduce(
+        (total, item) =>
+          total + (item.quantity || 0) * (item.product_price || 0),
+        0
+      )
+    : 0;
 
-    return useVoucher && selectedVoucher
-      ? Math.max(totalPriceWithoutDiscount - (selectedVoucher.discount || 0), 0)
-      : Math.max(totalPriceWithoutDiscount, 0);
-  };
-
+  return useVoucher && selectedVoucher
+    ? Math.max(totalPriceWithoutDiscount - (selectedVoucher.discount || 0), 0)
+    : Math.max(totalPriceWithoutDiscount, 0);
+};
   return (
     <>
       <Breadcrumb

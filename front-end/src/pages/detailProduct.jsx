@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button, Modal } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
-import { NavLink, useNavigate, useParams, Link } from "react-router-dom"; // Import Link
+import { NavLink, useNavigate, useParams, Link } from "react-router-dom"; 
 import axios from "axios";
 import { Button as FlowbiteButton } from "flowbite-react";
 import Swal from "sweetalert2";
 
 function DetailProduct() {
-  const navigate = useNavigate(); // Use useNavigate here
+  const navigate = useNavigate(); 
   const { productId } = useParams();
   const [productData, setProductData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [activeTab, setActiveTab] = useState("description");
   const [discusses, setDiscusses] = useState([]);
-  const [addToCartSuccess, setAddToCartSuccess] = useState(false); // Track successful addition to cart
+  const [addToCartSuccess, setAddToCartSuccess] = useState(false); 
 
   const Avatar = JSON.parse(localStorage.getItem("image"));
 
@@ -26,6 +26,10 @@ function DetailProduct() {
       })
       .catch((error) => {
         console.error("Error fetching product data:", error);
+        console.log("Product ID:", product.product_id);
+        console.log("Existing Cart:", existingCart);
+        console.log("Existing Product Index:", existingProductIndex);
+
       });
 
     axios(`https://furnivul-web-app-production.up.railway.app/reviews`)
@@ -42,6 +46,7 @@ function DetailProduct() {
       })
       .catch((error) => {
         console.error("Error fetching reviews:", error);
+
       });
   }, [productId]);
 
@@ -49,24 +54,35 @@ function DetailProduct() {
     setActiveTab(tab);
   };
 
-  const handleAddToCart = (product) => {
-    new Swal(
-      "Success! add to cart",
-      "your product has been add to cart.",
-      "success",
-      {
-        timer: 3000,
-      }
-    );
-    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const updatedCart = [...existingCart, product];
+const handleAddToCart = (product) => {
+  Swal.fire({
+    icon: "success",
+    title: "Success! Added to cart",
+    text: "Your product has been added to the cart.",
+    timer: 3000,
+  });
 
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setAddToCartSuccess(true);
-    setTimeout(() => {
-      setAddToCartSuccess(false);
-    }, 3000);
-  };
+  const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const existingProductIndex = existingCart.findIndex(
+    (item) => item.product_id === product.product_id
+  );
+
+  if (existingProductIndex !== -1) {
+    // Produk dengan ID yang sama sudah ada di keranjang, tingkatkan kuantitasnya
+    existingCart[existingProductIndex].quantity += 1;
+  } else {
+    // Produk belum ada di keranjang, tambahkan baru dengan kuantitas 1
+    const newProduct = { ...productId, quantity: 1 };
+    existingCart.push(newProduct);
+  }
+
+  localStorage.setItem("cart", JSON.stringify(existingCart));
+  setAddToCartSuccess(true);
+  setTimeout(() => {
+    setAddToCartSuccess(false);
+  }, 3000);
+};
 
   return (
     <>
