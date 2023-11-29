@@ -4,6 +4,7 @@ import { FaCartShopping } from "react-icons/fa6";
 import { NavLink, useNavigate, useParams, Link } from "react-router-dom"; // Import Link
 import axios from "axios";
 import { Button as FlowbiteButton } from "flowbite-react";
+import Swal from "sweetalert2";
 
 function DetailProduct() {
   const navigate = useNavigate(); // Use useNavigate here
@@ -35,7 +36,6 @@ function DetailProduct() {
         console.error("Error fetching reviews:", error);
       });
 
-  
     axios(`https://furnivul-web-app-production.up.railway.app/discusses`)
       .then((result) => {
         setDiscusses(result.data.data);
@@ -50,12 +50,19 @@ function DetailProduct() {
   };
 
   const handleAddToCart = (product) => {
-    
+    new Swal(
+      "Success! add to cart",
+      "your product has been add to cart.",
+      "success",
+      {
+        timer: 3000,
+      }
+    );
     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
     const updatedCart = [...existingCart, product];
 
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setAddToCartSuccess(true); 
+    setAddToCartSuccess(true);
     setTimeout(() => {
       setAddToCartSuccess(false);
     }, 3000);
@@ -84,21 +91,18 @@ function DetailProduct() {
                 {productData.product_name}
               </h1>
               <p className="mb-2 text-lg">Rate: {productData.product_rate}</p>
-              <p className="mb-2 text-lg">
-                sold: {productData.product_sold}
-              </p>
+              <p className="mb-2 text-lg">sold: {productData.product_sold}</p>
 
               <p className="mb-4 text-2xl font-bold">
                 Price: Rp {productData.product_price.toLocaleString()},-
               </p>
               <Link to={`/cart`}>
                 {" "}
-                <button onClick={() => handleAddToCart(productData)}>
+                <Button onClick={() => handleAddToCart(productData)}>
                   Add to cart &nbsp;
                   <FaCartShopping />
-                </button>
+                </Button>
               </Link>
-
 
               {/* Button.Group and Buttons */}
               <div className="mt-6 w-full ">
