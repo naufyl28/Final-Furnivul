@@ -184,14 +184,35 @@ const handleAddToCart = (product) => {
                 )}
               </div>
             </div>
-            <div className="w-1/2">
-              <div className="w-2/3 mx-auto ">
-                <img
-                  src={productData.product_image}
-                  alt={productData.product_name}
-                  className="w-full h-auto rounded-lg"
-                />
-              </div>
+            {}
+
+            {/* Content based on activeTab */}
+            <div className="mt-4">
+              {activeTab === "description" && (
+                <div>
+                  <h1 className="mt-6 mb-2 font-bold ">
+                    {productData.product_name}
+                  </h1>
+                  <p className="mt-1 mb-2">{productData.product_description}</p>
+                  <p className="mt-4 mb-4">
+                    Material: {productData.product_material}
+                  </p>
+                </div>
+              )}
+
+              {activeTab === "review" && (
+                <div>
+                  <h1 className="mt-6 mb-2 font-bold">Ulasan</h1>
+                  {/* Display reviews here */}
+                  {reviews.map((review) => (
+                    <div key={review.id} className="mt-1 mb-2">
+                      <p> {review._userId.fullname}</p>
+                      <p>Rating: {review.rating}</p>
+                      <p>Ulasan: {review.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ) : (
