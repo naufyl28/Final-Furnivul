@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button, Modal } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
-import { NavLink, useNavigate, useParams, Link } from "react-router-dom"; 
+import { NavLink, useNavigate, useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { Button as FlowbiteButton } from "flowbite-react";
 import Swal from "sweetalert2";
 
 function DetailProduct() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const { productId } = useParams();
   const [productData, setProductData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [activeTab, setActiveTab] = useState("description");
   const [discusses, setDiscusses] = useState([]);
-  const [addToCartSuccess, setAddToCartSuccess] = useState(false); 
+  const [addToCartSuccess, setAddToCartSuccess] = useState(false);
 
   const Avatar = JSON.parse(localStorage.getItem("image"));
 
   useEffect(() => {
-   
     axios(
       `https://furnivul-web-app-production.up.railway.app/products/${productId}`
     )
@@ -30,7 +29,6 @@ function DetailProduct() {
         console.log("Product ID:", product.product_id);
         console.log("Existing Cart:", existingCart);
         console.log("Existing Product Index:", existingProductIndex);
-
       });
 
     axios(`https://furnivul-web-app-production.up.railway.app/reviews`)
@@ -47,7 +45,6 @@ function DetailProduct() {
       })
       .catch((error) => {
         console.error("Error fetching reviews:", error);
-
       });
   }, [productId]);
 
@@ -55,35 +52,34 @@ function DetailProduct() {
     setActiveTab(tab);
   };
 
-const handleAddToCart = (product) => {
-  Swal.fire({
-    icon: "success",
-    title: "Success! Added to cart",
-    text: "Your product has been added to the cart.",
-    timer: 3000,
-  });
+    const handleAddToCart = (product) => {
+      Swal.fire({
+        icon: "success",
+        title: "Success! Added to cart",
+        text: "Your product has been added to the cart.",
+        timer: 3000,
+      });
 
-  const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existingProductIndex = existingCart.findIndex(
+        (item) => item._id === product._id
+      );
 
-  const existingProductIndex = existingCart.findIndex(
-    (item) => item.product_id === product.product_id
-  );
+      if (existingProductIndex !== -1) {
+        // Product with the same ID is already in the cart, increase its quantity
+        existingCart[existingProductIndex].quantity += 1;
+      } else {
+        // Product is not in the cart, add it with quantity 1
+        const newProduct = { ...product, quantity: 1 };
+        existingCart.push(newProduct);
+      }
 
-  if (existingProductIndex !== -1) {
-    // Produk dengan ID yang sama sudah ada di keranjang, tingkatkan kuantitasnya
-    existingCart[existingProductIndex].quantity += 1;
-  } else {
-    // Produk belum ada di keranjang, tambahkan baru dengan kuantitas 1
-    const newProduct = { ...productId, quantity: 1 };
-    existingCart.push(newProduct);
-  }
-
-  localStorage.setItem("cart", JSON.stringify(existingCart));
-  setAddToCartSuccess(true);
-  setTimeout(() => {
-    setAddToCartSuccess(false);
-  }, 3000);
-};
+      localStorage.setItem("cart", JSON.stringify(existingCart));
+      setAddToCartSuccess(true);
+      setTimeout(() => {
+        setAddToCartSuccess(false);
+      }, 3000);
+    };
 
   return (
     <>
@@ -184,35 +180,14 @@ const handleAddToCart = (product) => {
                 )}
               </div>
             </div>
-            {}
-
-            {/* Content based on activeTab */}
-            <div className="mt-4">
-              {activeTab === "description" && (
-                <div>
-                  <h1 className="mt-6 mb-2 font-bold ">
-                    {productData.product_name}
-                  </h1>
-                  <p className="mt-1 mb-2">{productData.product_description}</p>
-                  <p className="mt-4 mb-4">
-                    Material: {productData.product_material}
-                  </p>
-                </div>
-              )}
-
-              {activeTab === "review" && (
-                <div>
-                  <h1 className="mt-6 mb-2 font-bold">Ulasan</h1>
-                  {/* Display reviews here */}
-                  {reviews.map((review) => (
-                    <div key={review.id} className="mt-1 mb-2">
-                      <p> {review._userId.fullname}</p>
-                      <p>Rating: {review.rating}</p>
-                      <p>Ulasan: {review.comment}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div className="w-1/2">
+              <div className="w-2/3 mx-auto ">
+                <img
+                  src={productData.product_image}
+                  alt={productData.product_name}
+                  className="w-full h-auto rounded-lg"
+                />
+              </div>
             </div>
           </div>
         ) : (
