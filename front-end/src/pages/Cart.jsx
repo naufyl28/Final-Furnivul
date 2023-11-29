@@ -6,7 +6,7 @@ import axios from "axios";
 import { Button as FlowbiteButton } from "flowbite-react";
 
 function Cart() {
-  // Variabel state
+  // Variable state
   const [datas, setData] = useState({ message: "", data: [] });
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [openModal, setOpenModal] = useState(false);
@@ -15,16 +15,19 @@ function Cart() {
   const [voucherData, setVoucherData] = useState(null);
   const [useVoucher, setUseVoucher] = useState(false);
 
+  // Fetch cart data from localStorage
+  const productCart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  const token = JSON.parse(localStorage.getItem("token"));
+
   const fetchVoucherData = () => {
     return axios
       .get("https://furnivul-web-app-production.up.railway.app/voucher", {
         headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjM3Mzg2MTc1OTUyODgxYjhhMGU3OCIsInJvbGUiOnsiX2lkIjoiNjU1ZDc5OTMyMjZhNTZmMWU0ZDY2ODgzIiwicm9sZSI6InVzZXIiLCJfX3YiOjAsImNyZWF0ZWRBdCI6IjIwMjMtMTEtMjJUMDM6NDY6MjcuMzI0WiIsInVwZGF0ZWRBdCI6IjIwMjMtMTEtMjJUMDM6NDY6MjcuMzI0WiJ9LCJpYXQiOjE3MDEyNDUyNDgsImV4cCI6MTcwMTI4MTI0OH0.loGfPP9Hd9UEOeWxAqT6blu2jfF4rn9ZfE7zhxe9vtU",
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((result) => {
-        console.log("Data Voucher:", result.data);
         setVoucherData(result.data);
       })
       .catch((error) => {
@@ -37,43 +40,55 @@ function Cart() {
   };
 
   useEffect(() => {
-    axios("https://furnivul-web-app-production.up.railway.app/products")
-      .then((result) => {
-        if (Array.isArray(result.data.data)) {
-          const initialData = result.data.data.map((item) => ({
-            ...item,
-            quantity: 1,
-          }));
-          setData({ message: "", data: initialData });
-        } else {
-          console.error("Data respons API bukan array:", result.data.data);
-        }
-      })
-      .catch((error) => {
-        console.error("Error mengambil data:", error);
-      });
-
     fetchVoucherData();
   }, []);
 
   const handleIncrement = (index) => {
     const updatedData = [...datas.data];
-    updatedData[index].quantity = (updatedData[index].quantity || 0) + 1;
+    const product = updatedData[index];
+
+    // Check if the product with the same ID already exists in the cart
+    const existingProductIndex = productCart.findIndex(
+      (item) => item.product_id === (product && product.product_id)
+    );
+
+    if (existingProductIndex !== -1) {
+      // If the product exists, increment its quantity
+      productCart[existingProductIndex].quantity += 1;
+    } else {
+      // If the product doesn't exist, add a new item to the cart with quantity 1
+      productCart.push({ ...product, quantity: 1 });
+    }
+
+    // Update the local storage and state
+    localStorage.setItem("cart", JSON.stringify(productCart));
     setData({ ...datas, data: updatedData });
   };
 
   const handleDecrement = (index) => {
     const updatedData = [...datas.data];
+    const product = updatedData[index];
 
-    if ((updatedData[index].quantity || 0) === 1) {
-      setDeleteIndex(index);
-    } else {
-      updatedData[index].quantity = Math.max(
-        (updatedData[index].quantity || 0) - 1,
-        0
-      );
-      setData({ ...datas, data: updatedData });
+    // Check if the product with the same ID already exists in the cart
+    const existingProductIndex = productCart.findIndex(
+      (item) => item.product_id === (product && product.product_id)
+    );
+
+    if (existingProductIndex !== -1) {
+      // If the product exists and quantity is greater than 1, decrement its quantity
+      if (productCart[existingProductIndex].quantity > 1) {
+        productCart[existingProductIndex].quantity -= 1;
+      } else {
+        // If quantity is 1, prompt the user to confirm deletion
+        setDeleteIndex(index);
+        setOpenModal(true);
+        return;
+      }
     }
+
+    // Update the local storage and state
+    localStorage.setItem("cart", JSON.stringify(productCart));
+    setData({ ...datas, data: updatedData });
   };
 
   const handleDeleteItem = () => {
@@ -86,10 +101,6 @@ function Cart() {
       setDeleteIndex(null);
       setOpenModal(false);
     }
-  };
-
-  const handleVoucherClick = () => {
-    setVoucherModal(true);
   };
 
   const handleVoucherSelect = (voucher) => {
@@ -110,16 +121,17 @@ function Cart() {
   };
 
   const calculateTotalPrice = () => {
-    const totalPriceWithoutDiscount = datas.data.reduce(
-      (total, item) => total + item.quantity * item.product_price,
-      0
-    );
+    const totalPriceWithoutDiscount = Array.isArray(datas.data)
+      ? datas.data.reduce(
+          (total, item) =>
+            total + (item.quantity || 0) * (item.product_price || 0),
+          0
+        )
+      : 0;
 
-    return useVoucher
-      ? selectedVoucher
-        ? totalPriceWithoutDiscount - selectedVoucher.discount
-        : totalPriceWithoutDiscount
-      : totalPriceWithoutDiscount;
+    return useVoucher && selectedVoucher
+      ? Math.max(totalPriceWithoutDiscount - (selectedVoucher.discount || 0), 0)
+      : Math.max(totalPriceWithoutDiscount, 0);
   };
 
   return (
@@ -141,7 +153,7 @@ function Cart() {
       </Button>
 
       <div className="mt-3 mx-8 justify-center">
-        {datas.data.map((item, index) => (
+        {productCart.map((item, index) => (
           <div key={index} className="flex items-center">
             <img
               src={item.product_image}
