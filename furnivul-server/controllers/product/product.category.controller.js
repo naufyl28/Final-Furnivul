@@ -4,6 +4,7 @@ const {
   sendErrorResponse,
 } = require("../../helpers/response.helper");
 const Role = require("../../models/role/role");
+const Product = require("../../models/product/product");
 
 module.exports = {
   getAllData: async (req, res) => {
@@ -71,8 +72,26 @@ module.exports = {
         );
       }
 
-      const productCategory = await ProductCategory.findById(id);
-      sendSuccessResponse(res, 200, "Success", productCategory);
+      const products = await Product.find({ _categoryId: id });
+      if (products.length === 0) {
+        return sendSuccessResponse(
+          res,
+          200,
+          "Success",
+          "Product category is empty"
+        );
+      }
+
+      if (!products) {
+        return sendErrorResponse(
+          res,
+          404,
+          "Not found",
+          new Error("Product category not found")
+        );
+      }
+
+      sendSuccessResponse(res, 200, "Success", products);
     } catch (error) {
       sendErrorResponse(res, 500, "Internal server error", error);
     }
