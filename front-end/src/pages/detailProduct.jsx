@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { Breadcrumb, Button } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import { Breadcrumb, Button, Modal } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
+import { NavLink, useNavigate, useParams, Link } from "react-router-dom"; // Import Link
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
-import { FaBeer } from "react-icons/fa";
+import { Button as FlowbiteButton } from "flowbite-react";
 
 function DetailProduct() {
+  const navigate = useNavigate(); // Use useNavigate here
   const { productId } = useParams();
   const [productData, setProductData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [activeTab, setActiveTab] = useState("description");
   const [discusses, setDiscusses] = useState([]);
+  const [addToCartSuccess, setAddToCartSuccess] = useState(false); // Track successful addition to cart
 
   const Avatar = JSON.parse(localStorage.getItem("image"));
 
   useEffect(() => {
-    // Fetch product data
     axios(
       `https://furnivul-web-app-production.up.railway.app/products/${productId}`
     )
@@ -26,7 +27,6 @@ function DetailProduct() {
         console.error("Error fetching product data:", error);
       });
 
-    // Fetch reviews data
     axios(`https://furnivul-web-app-production.up.railway.app/reviews`)
       .then((result) => {
         setReviews(result.data.data);
@@ -35,7 +35,7 @@ function DetailProduct() {
         console.error("Error fetching reviews:", error);
       });
 
-    // Fetch discusses data
+  
     axios(`https://furnivul-web-app-production.up.railway.app/discusses`)
       .then((result) => {
         setDiscusses(result.data.data);
@@ -49,41 +49,56 @@ function DetailProduct() {
     setActiveTab(tab);
   };
 
+  const handleAddToCart = (product) => {
+    
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+    const updatedCart = [...existingCart, product];
+
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    setAddToCartSuccess(true); 
+    setTimeout(() => {
+      setAddToCartSuccess(false);
+    }, 3000);
+  };
+
   return (
     <>
       <Breadcrumb
-        aria-label="Solid background breadcrumb example"
+        aria-label="Breadcrumb contoh dengan latar belakang solid"
         className="bg-gray-50 ml-3 px-5 py-3 dark:bg-gray-800"
       >
         <Breadcrumb.Item href="/" icon={FaCartShopping}>
           Home
         </Breadcrumb.Item>
-        <Breadcrumb.Item href="/category-product">Category</Breadcrumb.Item>
+        <Breadcrumb.Item href="/category-product">Kategori</Breadcrumb.Item>
         <Breadcrumb.Item href="/category-product/list-product">
-          List Product
+          Daftar Produk
         </Breadcrumb.Item>
-        <Breadcrumb.Item>Detail Product</Breadcrumb.Item>
+        <Breadcrumb.Item>Detail Produk</Breadcrumb.Item>
       </Breadcrumb>
-      <div className="mx-6  ">
+      <div className="mx-6">
         {productData ? (
           <div className="flex mt-6 mx-4">
             <div className="w-1/2">
               <h1 className="text-3xl font-bold mb-4">
                 {productData.product_name}
               </h1>
-              <p className="mb-2 text-lg">Rating: {productData.product_rate}</p>
-              <p className="mb-2 text-lg">Sold: {productData.product_sold}</p>
+              <p className="mb-2 text-lg">Rate: {productData.product_rate}</p>
+              <p className="mb-2 text-lg">
+                sold: {productData.product_sold}
+              </p>
 
               <p className="mb-4 text-2xl font-bold">
                 Price: Rp {productData.product_price.toLocaleString()},-
               </p>
               <Link to={`/cart`}>
                 {" "}
-                <Button>
-                  Checkout &nbsp;
+                <button onClick={() => handleAddToCart(productData)}>
+                  Add to cart &nbsp;
                   <FaCartShopping />
-                </Button>
+                </button>
               </Link>
+
 
               {/* Button.Group and Buttons */}
               <div className="mt-6 w-full ">
@@ -110,7 +125,7 @@ function DetailProduct() {
               </div>
               {/* End of Button.Group and Buttons */}
 
-              {/* Content based on activeTab */}
+              {/* Konten berdasarkan activeTab */}
               <div className="mt-4">
                 {activeTab === "description" && (
                   <div className="">
@@ -121,7 +136,7 @@ function DetailProduct() {
                     <p className="mt-1 mb-2">
                       {productData.product_description}
                     </p>
-                    <div className="font-bold"> Material:</div>
+                    <div className="font-bold">Material:</div>
                     <p className=" mb-4">{productData.product_material}</p>
                   </div>
                 )}
@@ -129,7 +144,7 @@ function DetailProduct() {
                 {activeTab === "review" && (
                   <div>
                     <h1 className="mt-6 mb-2 font-bold">Ulasan</h1>
-                    {/* Display reviews here */}
+                    {/* Tampilkan ulasan di sini */}
                     {reviews.map((review) => (
                       <div key={review.id} className="mt-1 mb-2 space-y-2">
                         <div className="flex items-center gap-2">
@@ -159,12 +174,12 @@ function DetailProduct() {
             </div>
           </div>
         ) : (
-          <p>Loading...</p>
+          <p>Mengambil data...</p>
         )}
         {activeTab === "discussion" && (
           <div className="mx-4 mb-8">
             <h1 className=" mb-2  font-bold">Diskusi</h1>
-            {/* Display reviews here */}
+            {}
             {discusses.map((discusses) => (
               <div key={discusses.id} className=" mb-2">
                 <p>Anonim "{discusses.comment}"</p>

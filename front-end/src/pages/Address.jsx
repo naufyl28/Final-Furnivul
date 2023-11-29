@@ -5,21 +5,25 @@ import { Link, NavLink } from "react-router-dom";
 import axios from "axios";
 
 function Address() {
-  const [datas, setData] = useState([]);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    axios("https://clever-gray-pocketbook.cyclic.app/users").then((result) => {
-      setData(result.data.address);
-    });
-  }, []);
+    // Simulasikan ID pengguna yang login (ganti dengan cara yang sesuai di aplikasi Anda)
+    const userId = "65637386175952881b8a0e78";
 
-  console.log(datas);
+    // Panggil API sesuai ID pengguna
+    axios(`https://furnivul-web-app-production.up.railway.app/users/${userId}`)
+      .then((result) => {
+        setUserData(result.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  }, []);
 
   return (
     <>
-      <div className="mx-auto overflow-hidden">
-        {/* Tampilkan data di sini */}
-      </div>
+      <div className="mx-auto overflow-hidden">{/* Tampilkan data di sini */}</div>
 
       <div className="p-8">
         <a

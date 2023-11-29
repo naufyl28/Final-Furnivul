@@ -37,8 +37,8 @@ const isAdmin = async (req, res, next) => {
   try {
     const role = req.payload.role;
     const adminRole = await Role.findById(role);
-    console.log(adminRole._id, role);
-    if (adminRole._id.toString() !== role) {
+    console.log(adminRole._id.toString(), role._id);
+    if (adminRole._id.toString() !== role._id.toString()) {
       return sendErrorResponse(
         res,
         403,
