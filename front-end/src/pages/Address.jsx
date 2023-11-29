@@ -8,10 +8,10 @@ function Address() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    // Simulasikan ID pengguna yang login (ganti dengan cara yang sesuai di aplikasi Anda)
+
     const userId = "65637386175952881b8a0e78";
 
-    // Panggil API sesuai ID pengguna
+   
     axios(`https://furnivul-web-app-production.up.railway.app/users/${userId}`)
       .then((result) => {
         setUserData(result.data);
