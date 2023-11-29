@@ -15,9 +15,7 @@ function Checkout() {
       "https://furnivul-web-app-production.up.railway.app/courier-services",
       {
         headers: {
-
           Authorization: `Bearer ${token}`,
-
         },
       }
     )
@@ -84,9 +82,11 @@ function Checkout() {
               faktor. Dengan menggunakan autentikasi dua faktor dapat memberikan
               proteksi terhadap akun anda. Untuk lebih lengkapnya klik disini!.
             </p>
-            <Button className="w-[10%]" onClick={() => setOpenModal(true)}>
-              Mengerti
-            </Button>{" "}
+            <diV>
+              <Button className="" onClick={() => setOpenModal(true)}>
+                Mengerti
+              </Button>{" "}
+            </diV>
           </Card>
 
           <h1 className="text-2xl font-semibold">Address</h1>
@@ -114,14 +114,18 @@ function Checkout() {
               ))}
             </Select>
           </div>
-          <div>
-            Total: <span className="font-semibold">Rp. 100.000</span>
-          </div>
-          <Button className="w-[20%]">
-            <NavLink to={"payment"}>
-              <span>payment</span>
-            </NavLink>
-          </Button>
+          <Card className="mt-3">
+            <div>
+              Total: <span className="font-semibold">Rp. 100.000</span>
+            </div>
+            <div>
+              <Button className="">
+                <NavLink to={"payment"}>
+                  <span>payment</span>
+                </NavLink>
+              </Button>
+            </div>
+          </Card>
         </Card>
       </div>
     </div>

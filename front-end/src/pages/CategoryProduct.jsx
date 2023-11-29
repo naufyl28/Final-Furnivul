@@ -15,14 +15,12 @@ function CategoryProduct() {
       "https://furnivul-web-app-production.up.railway.app/product-categories"
     ).then((result) => {
       setData(result.data.data);
-
-
     });
   }, []);
 
-const handleListingProduct = () => {
-  navigate(`/category-product/list-product`);
-};
+  const handleListingProduct = () => {
+    navigate(`/category-product/list-product`);
+  };
 
   return (
     <div className="">
