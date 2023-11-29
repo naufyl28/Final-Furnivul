@@ -29,6 +29,7 @@ import Product from "./pages/detailProduct.jsx";
 // Checkout system route
 import Cart from "./pages/Cart.jsx";
 import Address from "./pages/Address.jsx";
+import AddAddress from "./pages/AddAddress.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Payment from "./pages/Payment.jsx";
 
@@ -53,15 +54,22 @@ const router = createBrowserRouter(
           element={<ListingProduct />}
         />
         <Route
-          path="/category-product/list-product/detail-product"
+          path="/category-product/list-product/detail-product/:productId"
           element={<Product />}
         />
 
         {/* routing checkout system */}
         <Route path="/cart" element={<Cart />} />
         <Route path="/cart/address" element={<Address />} />
-        <Route path="/cart/address/checkout" element={<Checkout />} />
-        <Route path="/cart/address/checkout/payment" element={<Payment />} />
+        <Route path="/cart/address/add-address" element={<AddAddress />} />
+        <Route
+          path="/cart/address/add-address/checkout"
+          element={<Checkout />}
+        />
+        <Route
+          path="/cart/address/add-address/checkout/payment"
+          element={<Payment />}
+        />
       </Route>
     </>
   )

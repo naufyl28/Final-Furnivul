@@ -58,17 +58,7 @@ module.exports = {
   },
   getDatabyID: async (req, res) => {
     try {
-      const role = req.payload.role;
-
-      const checkRole = await Role.findById(role);
-      if (checkRole.role !== "admin") {
-        return sendErrorResponse(
-          res,
-          401,
-          "Unauthorized",
-          new Error("You are not admin")
-        );
-      }
+      const userId = req.payload.id;
 
       const { id } = req.params;
 
@@ -81,8 +71,22 @@ module.exports = {
         );
       }
 
+      if (userId !== id) {
+        return sendErrorResponse(
+          res,
+          401,
+          "Unauthorized",
+          new Error("You are not authorized to access this data")
+        );
+      }
+
       const user = await User.findById(id);
-      sendSuccessResponse(res, 200, "Get user by id success", user);
+      sendSuccessResponse(
+        res,
+        200,
+        "Get user by id success " + user.fullname,
+        user
+      );
     } catch (error) {
       sendErrorResponse(res, 500, "Error get user by id", error);
     }

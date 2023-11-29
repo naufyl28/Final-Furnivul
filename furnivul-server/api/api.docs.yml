@@ -14,7 +14,9 @@ servers:
   - url: http://localhost:3000/
     description: Local Server
   - url: https://clever-gray-pocketbook.cyclic.app/
-    description: Cyclic App
+    description: Cyclic App (Deprecated)
+  - url: https://furnivul-web-app-production.up.railway.app/
+    description: Railway App
 paths:
   /auth/login:
     post:
@@ -140,7 +142,7 @@ paths:
   /users/{id}:
     get:
       tags:
-        - User (Admin)
+        - User
       security:
         - bearerAuth: []
       summary: Get User

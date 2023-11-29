@@ -5,7 +5,7 @@ import { Breadcrumb } from "flowbite-react";
 import { HiHome } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Article() {
   const [datas, setData] = useState([]);
@@ -58,7 +58,7 @@ function Article() {
           {/* article axios */}
 
           {datas.map((datas, index) => (
-            <div>
+            <div key={index}>
               <Card
                 className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mt-4 h-full"
                 renderImage={() => (
@@ -78,7 +78,10 @@ function Article() {
                 </p>
                 <div className="flex flex-end">
                   <NavLink to={"/article/detail-article"}>
-                    <Button> DetailArticle </Button>
+                    <Button>
+                      {" "}
+                      <span>DetailArticle</span>{" "}
+                    </Button>
                   </NavLink>
                 </div>
               </Card>

@@ -3,81 +3,182 @@ import { Breadcrumb, Button, Modal } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
+import { Button as FlowbiteButton } from "flowbite-react";
 
 function Cart() {
   const [datas, setData] = useState({ message: "", data: [] });
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [voucherModal, setVoucherModal] = useState(false);
+  const [selectedVoucher, setSelectedVoucher] = useState(null);
+  const [voucherData, setVoucherData] = useState(null);
+  const [useVoucher, setUseVoucher] = useState(false);
 
-  useEffect(() => {
-    axios("https://clever-gray-pocketbook.cyclic.app/products")
+  const productCart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  const token = JSON.parse(localStorage.getItem("token"));
+
+  const fetchVoucherData = () => {
+    return axios
+      .get("https://furnivul-web-app-production.up.railway.app/voucher", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((result) => {
-        if (Array.isArray(result.data.data)) {
-          const initialData = result.data.data.map((item) => ({
-            ...item,
-            quantity: 1,
-          }));
-          setData({ message: "", data: initialData });
-        } else {
-          console.error("API response data is not an array:", result.data.data);
-        }
+        setVoucherData(result.data);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error("Error mengambil data voucher:", error);
+        if (error.response) {
+          console.error("Detail respons:", error.response.data);
+        }
+        return Promise.reject(error);
       });
-  }, []);
-
-  const handleIncrement = (index) => {
-    const updatedData = [...datas.data];
-    updatedData[index].quantity = (updatedData[index].quantity || 0) + 1;
-    setData({ ...datas, data: updatedData });
   };
 
-  const handleDecrement = (index) => {
-    const updatedData = [...datas.data];
+useEffect(() => {
+  fetchVoucherData();
 
-    if ((updatedData[index].quantity || 0) === 1) {
-      setDeleteIndex(index);
+  // Perbarui state datas.data dari localStorage saat komponen dimuat
+  setData({ ...datas, data: productCart });
+}, []);
+
+const handleIncrement = (index) => {
+  const updatedData = [...datas.data];
+  const product = updatedData[index];
+
+  const existingProductIndex = productCart.findIndex(
+    (item) => item.product_id === (product && product.product_id)
+  );
+
+  if (existingProductIndex !== -1) {
+    // Produk sudah ada di keranjang, tambahkan kuantitas
+    productCart[existingProductIndex].quantity += 1;
+    setData({
+      ...datas,
+      data: updatedData.map((item, i) =>
+        item.product_id === productCart[existingProductIndex].product_id
+          ? { ...item, quantity: productCart[existingProductIndex].quantity }
+          : item
+      ),
+    });
+  } else {
+    // Produk belum ada di keranjang, tambahkan baru
+    const newProduct = { ...product, quantity: 1 };
+    productCart.push(newProduct);
+    setData({
+      ...datas,
+      data: [...productCart],
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(productCart));
+  fetchVoucherData();
+};
+
+
+// ...
+
+const handleDecrement = (index) => {
+  const updatedData = [...datas.data];
+  const product = updatedData[index];
+
+  const existingProductIndex = productCart.findIndex(
+    (item) => item.product_id === (product && product.product_id)
+  );
+
+  if (existingProductIndex !== -1) {
+    if (productCart[existingProductIndex].quantity > 1) {
+      // Produk sudah ada di keranjang, kurangi kuantitas
+      productCart[existingProductIndex].quantity -= 1;
+      setData({
+        ...datas,
+        data: updatedData.map((item, i) =>
+          item.product_id === productCart[existingProductIndex].product_id
+            ? { ...item, quantity: productCart[existingProductIndex].quantity }
+            : item
+        ),
+      });
     } else {
-      updatedData[index].quantity = Math.max(
-        (updatedData[index].quantity || 0) - 1,
+      // Set deleteIndex ke nilai yang sesuai
+      setDeleteIndex(existingProductIndex);
+      setOpenModal(true);
+      return;
+    }
+  }
+
+  localStorage.setItem("cart", JSON.stringify(productCart));
+  fetchVoucherData();
+};
+
+
+
+const handleDeleteItem = () => {
+  if (deleteIndex !== null) {
+    const updatedData = datas.data.filter((_, index) => index !== deleteIndex);
+    setData({ ...datas, data: updatedData });
+    setDeleteIndex(null);
+    setOpenModal(false);
+
+    // Perbarui localStorage setelah menghapus item
+    const updatedCart = [...productCart];
+    updatedCart.splice(deleteIndex, 1);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    fetchVoucherData();
+  }
+};
+
+  const handleVoucherSelect = (voucher) => {
+    setSelectedVoucher(voucher);
+    setVoucherModal(false);
+  };
+
+  const handleVoucherCheckbox = () => {
+    setUseVoucher(!useVoucher);
+    setSelectedVoucher(null);
+  };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(value);
+  };
+
+const calculateTotalPrice = () => {
+  const totalPriceWithoutDiscount = Array.isArray(datas.data)
+    ? datas.data.reduce(
+        (total, item) =>
+          total + (item.quantity || 0) * (item.product_price || 0),
         0
-      );
-      setData({ ...datas, data: updatedData });
-    }
-  };
+      )
+    : 0;
 
-  const handleDeleteItem = () => {
-    console.log("Delete Item Function");
-    if (deleteIndex !== null) {
-      const updatedData = datas.data.filter(
-        (_, index) => index !== deleteIndex
-      );
-      setData({ ...datas, data: updatedData });
-      setDeleteIndex(null);
-      setOpenModal(false);
-    }
-  };
-
+  return useVoucher && selectedVoucher
+    ? Math.max(totalPriceWithoutDiscount - (selectedVoucher.discount || 0), 0)
+    : Math.max(totalPriceWithoutDiscount, 0);
+};
   return (
     <>
       <Breadcrumb
-        aria-label="Solid background breadcrumb example"
+        aria-label="Contoh breadcrumb dengan latar belakang solid"
         className="bg-gray-50 px-5 py-3 dark:bg-gray-800"
       >
         <Breadcrumb.Item key="home" href="/" icon={FaCartShopping}>
-          Home
+          Beranda
         </Breadcrumb.Item>
         <Breadcrumb.Item key="cart" href="#" className="">
-          Cart
+          Keranjang
         </Breadcrumb.Item>
       </Breadcrumb>
+
       <Button className="">
-        <NavLink to={"address"}> Address </NavLink>
+        <NavLink to={"address"}> Alamat </NavLink>
       </Button>
 
       <div className="mt-3 mx-8 justify-center">
-        {datas.data.map((item, index) => (
+        {productCart.map((item, index) => (
           <div key={index} className="flex items-center">
             <img
               src={item.product_image}
@@ -112,7 +213,7 @@ function Cart() {
                 <p>{item.product_category}</p>
               </div>
               <div className="mt-3 ">
-                <p>Rp {item.product_price},-</p>
+                <p> {formatCurrency(item.product_price)},-</p>
                 <span
                   className="mx-2 font-bold flex items-center mt-6 "
                   style={{ fontSize: "1.2em" }}
@@ -125,22 +226,81 @@ function Cart() {
         ))}
       </div>
 
+      <Modal show={voucherModal} onClose={() => setVoucherModal(false)}>
+        <Modal.Header>Pilih Voucher</Modal.Header>
+        <Modal.Body>
+          {voucherData && voucherData.data && voucherData.data.length > 0 ? (
+            <>
+              <ul>
+                {voucherData.data.map((voucher) => (
+                  <li key={voucher.code}>
+                    <label>
+                      <input
+                        type="radio"
+                        name="voucher"
+                        onChange={() => handleVoucherSelect(voucher)}
+                      />
+                      {voucher.name} - Diskon {formatCurrency(voucher.discount)}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p>Data voucher kosong atau tidak valid.</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <FlowbiteButton onClick={() => setVoucherModal(false)}>
+            Tutup
+          </FlowbiteButton>
+        </Modal.Footer>
+      </Modal>
+
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-8">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           {/* ... */}
         </table>
 
-        <div className="flex flex-wrap justify-between p-3 px-8">
-          <form>{/* ... */}</form>
-          <div className="checkout-container">
-            <button
-              type="button"
-              className="text-black custom-background font-semibold bg-yellow-300 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
-              id="checkout-button"
-            >
-              <a href="cart/address">Checkout</a>
-            </button>
+        <div className="mb-4 text-3xl font-bold text-center">
+          Total: {formatCurrency(calculateTotalPrice())}
+        </div>
+
+        {useVoucher && selectedVoucher && (
+          <div className="text-center text-green-500">
+            Anda telah menggunakan voucher "{selectedVoucher.name}" dengan
+            diskon {formatCurrency(selectedVoucher.discount)}.
           </div>
+        )}
+
+        <div className="flex flex-wrap justify-between p-3 px-8">
+          <div className="checkout-container">
+            <label>
+              <input
+                type="checkbox"
+                checked={useVoucher}
+                onChange={handleVoucherCheckbox}
+              />
+              Gunakan Voucher
+            </label>
+            <br /> {/* Add a line break */}
+            <FlowbiteButton
+              type="button"
+              className="mt-4 text-black custom-background font-semibold bg-blue-500 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
+              id="voucher-button"
+              onClick={() => setVoucherModal(true)}
+              disabled={!useVoucher}
+            >
+              Pilih Voucher
+            </FlowbiteButton>
+          </div>
+          <FlowbiteButton
+            type="button"
+            className="text-black custom-background font-semibold bg-yellow-300 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
+            id="checkout-button"
+          >
+            <a href="cart/address">Checkout</a>
+          </FlowbiteButton>
         </div>
       </div>
 
@@ -151,19 +311,16 @@ function Cart() {
           setDeleteIndex(null);
         }}
       >
-        <Modal.Header>Delete Item</Modal.Header>
+        <Modal.Header>Hapus Item</Modal.Header>
         <Modal.Body>
           {deleteIndex !== null ? (
-            <p>Are you sure you want to delete this item?</p>
+            <p>Apakah Anda yakin ingin menghapus item ini?</p>
           ) : (
-            <p>Quantity will be reduced to 0. Are you sure?</p>
+            <p>Jumlah akan dikurangi menjadi 0. Apakah Anda yakin?</p>
           )}
         </Modal.Body>
-        <Modal.Footer >
-          <Button onClick={handleDeleteItem}>Yes</Button>
-          {/* <Button type="button" onClick={() => setOpenModal(false)}>
-            No
-          </Button> */}
+        <Modal.Footer>
+          <FlowbiteButton onClick={handleDeleteItem}>Ya</FlowbiteButton>
         </Modal.Footer>
       </Modal>
     </>
