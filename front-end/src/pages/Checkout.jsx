@@ -15,7 +15,9 @@ function Checkout() {
       "https://furnivul-web-app-production.up.railway.app/courier-services",
       {
         headers: {
+
           Authorization: `Bearer ${token}`,
+
         },
       }
     )
