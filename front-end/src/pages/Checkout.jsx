@@ -13,8 +13,7 @@ function Checkout() {
       "https://furnivul-web-app-production.up.railway.app/courier-services",
       {
         headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjM3Mzg2MTc1OTUyODgxYjhhMGU3OCIsInJvbGUiOnsiX2lkIjoiNjU1ZDc5OTMyMjZhNTZmMWU0ZDY2ODgzIiwicm9sZSI6InVzZXIiLCJfX3YiOjAsImNyZWF0ZWRBdCI6IjIwMjMtMTEtMjJUMDM6NDY6MjcuMzI0WiIsInVwZGF0ZWRBdCI6IjIwMjMtMTEtMjJUMDM6NDY6MjcuMzI0WiJ9LCJpYXQiOjE3MDEyNDUyNDgsImV4cCI6MTcwMTI4MTI0OH0.loGfPP9Hd9UEOeWxAqT6blu2jfF4rn9ZfE7zhxe9vtU",
+          Authorization: `${localStorage.getItem("token")}`,
         },
       }
     )
