@@ -18,6 +18,7 @@ function DetailProduct() {
   const Avatar = JSON.parse(localStorage.getItem("image"));
 
   useEffect(() => {
+   
     axios(
       `https://furnivul-web-app-production.up.railway.app/products/${productId}`
     )
