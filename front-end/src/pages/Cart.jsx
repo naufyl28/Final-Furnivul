@@ -11,13 +11,16 @@ function Cart() {
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [voucherModal, setVoucherModal] = useState(false);
+  const [selectedVoucher, setSelectedVoucher] = useState(null);
   const [voucherData, setVoucherData] = useState(null);
+  const [useVoucher, setUseVoucher] = useState(false);
 
   const fetchVoucherData = () => {
-    axios
+    return axios
       .get("https://furnivul-web-app-production.up.railway.app/voucher", {
         headers: {
-          Authorization: "Bearer YOUR_ACCESS_TOKEN",
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjM3Mzg2MTc1OTUyODgxYjhhMGU3OCIsInJvbGUiOnsiX2lkIjoiNjU1ZDc5OTMyMjZhNTZmMWU0ZDY2ODgzIiwicm9sZSI6InVzZXIiLCJfX3YiOjAsImNyZWF0ZWRBdCI6IjIwMjMtMTEtMjJUMDM6NDY6MjcuMzI0WiIsInVwZGF0ZWRBdCI6IjIwMjMtMTEtMjJUMDM6NDY6MjcuMzI0WiJ9LCJpYXQiOjE3MDEyNDUyNDgsImV4cCI6MTcwMTI4MTI0OH0.loGfPP9Hd9UEOeWxAqT6blu2jfF4rn9ZfE7zhxe9vtU",
         },
       })
       .then((result) => {
@@ -29,6 +32,7 @@ function Cart() {
         if (error.response) {
           console.error("Detail respons:", error.response.data);
         }
+        return Promise.reject(error);
       });
   };
 
@@ -85,7 +89,17 @@ function Cart() {
   };
 
   const handleVoucherClick = () => {
-    setVoucherModal(!voucherModal);
+    setVoucherModal(true);
+  };
+
+  const handleVoucherSelect = (voucher) => {
+    setSelectedVoucher(voucher);
+    setVoucherModal(false);
+  };
+
+  const handleVoucherCheckbox = () => {
+    setUseVoucher(!useVoucher);
+    setSelectedVoucher(null);
   };
 
   const formatCurrency = (value) => {
@@ -96,15 +110,20 @@ function Cart() {
   };
 
   const calculateTotalPrice = () => {
-    return datas.data.reduce(
+    const totalPriceWithoutDiscount = datas.data.reduce(
       (total, item) => total + item.quantity * item.product_price,
       0
     );
+
+    return useVoucher
+      ? selectedVoucher
+        ? totalPriceWithoutDiscount - selectedVoucher.discount
+        : totalPriceWithoutDiscount
+      : totalPriceWithoutDiscount;
   };
 
   return (
     <>
-      {/* Breadcrumb */}
       <Breadcrumb
         aria-label="Contoh breadcrumb dengan latar belakang solid"
         className="bg-gray-50 px-5 py-3 dark:bg-gray-800"
@@ -117,12 +136,10 @@ function Cart() {
         </Breadcrumb.Item>
       </Breadcrumb>
 
-      {/* Tombol Alamat */}
       <Button className="">
         <NavLink to={"address"}> Alamat </NavLink>
       </Button>
 
-      {/* Daftar Produk */}
       <div className="mt-3 mx-8 justify-center">
         {datas.data.map((item, index) => (
           <div key={index} className="flex items-center">
@@ -172,53 +189,74 @@ function Cart() {
         ))}
       </div>
 
-      {/* Modal Voucher */}
       <Modal show={voucherModal} onClose={() => setVoucherModal(false)}>
-        <Modal.Header>Voucher </Modal.Header>
+        <Modal.Header>Pilih Voucher</Modal.Header>
         <Modal.Body>
-          {/* Tampilkan data voucher */}
-          {voucherData ? (
+          {voucherData && voucherData.data && voucherData.data.length > 0 ? (
             <>
-              <p>Kode Voucher: {voucherData.code}</p>
-              <p>Diskon: {voucherData.discount}</p>
+              <ul>
+                {voucherData.data.map((voucher) => (
+                  <li key={voucher.code}>
+                    <label>
+                      <input
+                        type="radio"
+                        name="voucher"
+                        onChange={() => handleVoucherSelect(voucher)}
+                      />
+                      {voucher.name} - Diskon {formatCurrency(voucher.discount)}
+                    </label>
+                  </li>
+                ))}
+              </ul>
             </>
           ) : (
-            <p>Mengambil data voucher...</p>
+            <p>Data voucher kosong atau tidak valid.</p>
           )}
         </Modal.Body>
         <Modal.Footer>
-          {/* Tombol modal voucher */}
           <FlowbiteButton onClick={() => setVoucherModal(false)}>
             Tutup
           </FlowbiteButton>
         </Modal.Footer>
       </Modal>
 
-      {/* Bagian Checkout */}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-8">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           {/* ... */}
         </table>
 
-        {/* Tampilan Total */}
         <div className="mb-4 text-3xl font-bold text-center">
           Total: {formatCurrency(calculateTotalPrice())}
         </div>
 
-        {/* Tombol Checkout */}
+        {useVoucher && selectedVoucher && (
+          <div className="text-center text-green-500">
+            Anda telah menggunakan voucher "{selectedVoucher.name}" dengan
+            diskon {formatCurrency(selectedVoucher.discount)}.
+          </div>
+        )}
+
         <div className="flex flex-wrap justify-between p-3 px-8">
-          {/* Tombol Voucher */}
           <div className="checkout-container">
+            <label>
+              <input
+                type="checkbox"
+                checked={useVoucher}
+                onChange={handleVoucherCheckbox}
+              />
+              Gunakan Voucher
+            </label>
+            <br /> {/* Add a line break */}
             <FlowbiteButton
               type="button"
-              className="text-black custom-background font-semibold bg-blue-500 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
+              className="mt-4 text-black custom-background font-semibold bg-blue-500 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
               id="voucher-button"
-              onClick={handleVoucherClick}
+              onClick={() => setVoucherModal(true)}
+              disabled={!useVoucher}
             >
-              Voucher
+              Pilih Voucher
             </FlowbiteButton>
           </div>
-          {/* Tombol Checkout */}
           <FlowbiteButton
             type="button"
             className="text-black custom-background font-semibold bg-yellow-300 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
@@ -229,7 +267,6 @@ function Cart() {
         </div>
       </div>
 
-      {/* Modal Hapus Item */}
       <Modal
         show={openModal || deleteIndex !== null}
         onClose={() => {

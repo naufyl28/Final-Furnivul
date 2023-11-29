@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button, Card, Label, Select } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
-import { NavLink } from "react-router-dom"; // Tambahkan baris ini
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 
 function Checkout() {
@@ -9,12 +9,21 @@ function Checkout() {
   const [selectedCourier, setSelectedCourier] = useState("");
 
   useEffect(() => {
-    axios("https://furnivul-web-app-production.up.railway.app/courier-services")
+    axios(
+      "https://furnivul-web-app-production.up.railway.app/courier-services",
+      {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjM3Mzg2MTc1OTUyODgxYjhhMGU3OCIsInJvbGUiOnsiX2lkIjoiNjU1ZDc5OTMyMjZhNTZmMWU0ZDY2ODgzIiwicm9sZSI6InVzZXIiLCJfX3YiOjAsImNyZWF0ZWRBdCI6IjIwMjMtMTEtMjJUMDM6NDY6MjcuMzI0WiIsInVwZGF0ZWRBdCI6IjIwMjMtMTEtMjJUMDM6NDY6MjcuMzI0WiJ9LCJpYXQiOjE3MDEyNDUyNDgsImV4cCI6MTcwMTI4MTI0OH0.loGfPP9Hd9UEOeWxAqT6blu2jfF4rn9ZfE7zhxe9vtU",
+        },
+      }
+    )
       .then((result) => {
         setCourierData(result.data.data);
       })
       .catch((error) => {
         console.error("Error fetching courier data:", error);
+        console.log("Error response data:", error.response.data);
       });
   }, []);
 
@@ -62,7 +71,7 @@ function Checkout() {
               </option>
               {courierData.map((data) => (
                 <option key={data._id} value={data.name}>
-                  {data.name}
+                  {`${data.name} - ${data.description} (${data.etd}, Cost: ${data.cost})`}
                 </option>
               ))}
             </Select>
