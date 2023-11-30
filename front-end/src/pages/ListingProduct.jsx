@@ -1,17 +1,33 @@
+import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
 import axios from "axios";
 
 function ListingProduct() {
   const [datas, setData] = useState([]);
+  const [sortOrder, setSortOrder] = useState("asc"); // "asc" for ascending, "desc" for descending
 
   useEffect(() => {
-    axios("https://furnivul-web-app-production.up.railway.app/products").then(
-      (result) => setData(result.data.data)
-    );
+    axios("https://furnivul-web-app-production.up.railway.app/products")
+      .then((result) => setData(result.data.data))
+      .catch((error) => console.error("Error fetching products:", error));
   }, []);
+
+  const handleSort = () => {
+    setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
+  };
+
+  const sortedDatas = datas.slice().sort((a, b) => {
+    const priceA = a.product_price;
+    const priceB = b.product_price;
+
+    if (sortOrder === "asc") {
+      return priceA - priceB;
+    } else {
+      return priceB - priceA;
+    }
+  });
 
   return (
     <>
@@ -27,9 +43,7 @@ function ListingProduct() {
           <Breadcrumb.Item>List Product</Breadcrumb.Item>
         </Breadcrumb>
         <div>
-          {/* button dropdown */}
           <div className="mt-8"></div>
-
           <section className="flex gap-4 mb-4 mx-8 ">
             <div className="justify-start align-center w-full ">
               <h3>Temukan produk yang sesuai dengan kebutuhan Anda!</h3>
@@ -41,51 +55,26 @@ function ListingProduct() {
               <Button
                 id="dropdownDefaultButton"
                 data-dropdown-toggle="dropdown"
+                onClick={handleSort}
                 className="text-black bg-yellow-300 border border-gray-800 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 type="button"
               >
-                Termurah
-                <svg
-                  className="w-2.5 h-2.5 ml-2.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 10 6"
-                >
-                  <path stroke="currentColor" d="m1 1 4 4 4-4" />
-                </svg>
-              </Button>
-
-              <Button
-                id="dropdownDefaultButton"
-                data-dropdown-toggle="dropdown"
-                className=" text-black bg-yellow-300 border border-gray-800 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                type="button"
-              >
-                Terdekat
-                <svg
-                  className="w-2.5 h-2.5 ml-2.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 10 6"
-                >
-                  <path stroke="currentColor" d="m1 1 4 4 4-4" />
-                </svg>
+                {`Ter${sortOrder === "asc" ? "murah" : "mahal"} ${
+                  sortOrder === "asc" ? "↓" : "↑"
+                }`}
               </Button>
             </div>
           </section>
 
-          {/* card lisitng product */}
           <div>
-            {datas.map((item) => (
+            {sortedDatas.map((item) => (
               <div
                 key={item._id}
                 className="border-2 rounded-xl mt-3 mx-8 justify-center lg:flex lg:flex-row gap-8 p-4 md:flex-row sm:flex-col sm:gap-4 sm:p-2"
               >
                 <img
                   src={item.product_image}
-                  style={{ height: 400, width: 600 }}
+                  style={{ maxWidth: "100%", height: "auto" }}
                   alt=""
                 />
                 <div className="text-2xl mt-8 mb-8 ml-8">
@@ -112,13 +101,10 @@ function ListingProduct() {
               </div>
             ))}
           </div>
-          {/* ==================================== */}
-        </div>
-        <div>
-          <h1>ListingProduct</h1>
         </div>
       </div>
     </>
   );
 }
+
 export default ListingProduct;
