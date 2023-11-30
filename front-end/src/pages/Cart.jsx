@@ -175,7 +175,9 @@ function Cart() {
         </Breadcrumb.Item>
       </Breadcrumb>
 
-
+      <Button className="">
+        <NavLink to={"address"}> Alamat </NavLink>
+      </Button>
 
       <div className="mt-3 mx-8 justify-center">
         {productCart.map((item, index) => (
