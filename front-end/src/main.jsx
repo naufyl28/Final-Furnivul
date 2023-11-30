@@ -32,6 +32,7 @@ import Address from "./pages/Address.jsx";
 import AddAddress from "./pages/AddAddress.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Payment from "./pages/Payment.jsx";
+import TransactionStatus from "./pages/TransactionStatus.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -70,6 +71,10 @@ const router = createBrowserRouter(
         <Route
           path="/cart/address/add-address/checkout/payment"
           element={<Payment />}
+        />
+        <Route
+          path="/cart/address/add-address/checkout/payment/transaction-status"
+          element={<TransactionStatus />}
         />
       </Route>
     </>
