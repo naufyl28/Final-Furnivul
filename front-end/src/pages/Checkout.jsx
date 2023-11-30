@@ -24,18 +24,11 @@ function Checkout(props) {
   const subdistrict = localStorage.getItem("subdistrict") || "";
   const zipcode = localStorage.getItem("zipcode") || "";
 
-  //manggil product data dari local storage
+  // Manggil product data dari local storage
   const productData = JSON.parse(localStorage.getItem("cart")) || [];
 
-  //manggil data price dari local storage
-  const totalPrice = JSON.parse(localStorage.getItem("totalPrice")) || [];
-
-  const formatCurrency = (totalPrice) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-    }).format(totalPrice);
-  };
+  // Manggil data price dari local storage
+  const totalPrice = JSON.parse(localStorage.getItem("totalPrice")) || 0;
 
   useEffect(() => {
     axios(
@@ -49,7 +42,6 @@ function Checkout(props) {
       .then((result) => {
         setCourierData(result.data.data);
       })
-
       .catch((error) => {
         console.error("Error fetching courier data:", error);
         console.log("Error response data:", error.response.data);
@@ -62,11 +54,13 @@ function Checkout(props) {
       0
     );
 
-    const courierCost = selectedCourier
-      ? courierData.find((data) => data.name === selectedCourier)?.cost || 0
-      : 0;
+    const courierCost =
+      selectedCourier &&
+      courierData.find((data) => data._id === selectedCourier)?.cost;
 
-    return totalPriceWithoutCourier + courierCost;
+    const totalPrice = totalPriceWithoutCourier + (courierCost || 0);
+
+    return totalPrice;
   };
 
   const selectCourier = (event) => {
@@ -74,10 +68,10 @@ function Checkout(props) {
     setSelectedCourier(selectedCourierValue);
 
     // Recalculate total price based on the selected courier
-    const totalPrice = calculateTotalPrice();
+    const newTotalPrice = calculateTotalPrice();
 
     localStorage.setItem("priceCourier", JSON.stringify(selectedCourierValue));
-    localStorage.setItem("totalPrice", JSON.stringify(totalPrice));
+    localStorage.setItem("totalPrice", JSON.stringify(newTotalPrice));
   };
 
   return (
@@ -180,8 +174,10 @@ function Checkout(props) {
               Select your courier
             </option>
             {courierData.map((data) => (
-              <option key={data._id} value={data.name}>
-                {`${data.name} - ${data.description} (${data.etd}, Cost: ${data.cost})`}
+              <option key={data._id} value={data._id}>
+                {`${data.name} - ${data.description} (${
+                  data.etd
+                }, Cost: ${formatCurrency(data.cost)})`}
               </option>
             ))}
           </Select>
@@ -189,7 +185,10 @@ function Checkout(props) {
 
         <Card className="mt-3">
           <div>
-            Total: <span className="font-semibold">{totalPrice}</span>
+            Total:{" "}
+            <span className="font-semibold">
+              {formatCurrency(calculateTotalPrice())}
+            </span>
           </div>
           <div>
             <Button className="">

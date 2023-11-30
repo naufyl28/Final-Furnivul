@@ -56,7 +56,7 @@ function Address() {
           <div className=" mr-10 ">
             <Button>
               <NavLink to={"/cart/address/add-address/checkout"}>
-                <span>payment</span>
+                <span> Select </span>
               </NavLink>
             </Button>
           </div>
