@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Breadcrumb, Button, Modal } from "flowbite-react";
+import { Breadcrumb, Button, Card, Modal, Radio } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
@@ -175,56 +175,54 @@ function Cart() {
         </Breadcrumb.Item>
       </Breadcrumb>
 
-      <Button className="">
-        <NavLink to={"address"}> Alamat </NavLink>
-      </Button>
-
       <div className="mt-3 mx-8 justify-center">
         {productCart.map((item, index) => (
-          <div key={index} className="flex items-center">
-            <img
-              src={item.product_image}
-              style={{ height: 200, width: 200 }}
-              alt=""
-            />
-            <div className="text-1xl ml-2 flex-grow">
-              <div className="flex justify-between items-center">
-                <p className="font-bold">{item.product_name}</p>
-                <div className="flex items-center">
-                  <button
-                    style={{ fontSize: "1.5em", padding: "0.2em 0.5em" }}
-                    onClick={() => handleDecrement(index)}
-                  >
-                    -
-                  </button>
+          <Card className="flex flex-col mt-2  ">
+            <div key={index} className="flex items-center ">
+              <img
+                src={item.product_image}
+                style={{ height: 200, width: 200 }}
+                alt=""
+              />
+              <div className="text-1xl ml-2 flex-grow">
+                <div className="flex justify-between items-center">
+                  <p className="font-bold">{item.product_name}</p>
+                  <div className="flex items-center">
+                    <button
+                      style={{ fontSize: "1.5em", padding: "0.2em 0.5em" }}
+                      onClick={() => handleDecrement(index)}
+                    >
+                      -
+                    </button>
+                    <span
+                      className="mx-2 font-bold"
+                      style={{ fontSize: "1.2em" }}
+                    >
+                      {item.quantity || 0}
+                    </span>
+                    <button
+                      style={{ fontSize: "1.5em", padding: "0.2em 0.5em" }}
+                      onClick={() => handleIncrement(index)}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <p>{item.product_category}</p>
+                </div>
+                <div className="mt-3 ">
+                  <p> {formatCurrency(item.product_price)},-</p>
                   <span
-                    className="mx-2 font-bold"
+                    className="mx-2 font-bold flex items-center mt-6 "
                     style={{ fontSize: "1.2em" }}
                   >
-                    {item.quantity || 0}
+                    {item.quantity || 0} <p className="ml-3"> Barang </p>
                   </span>
-                  <button
-                    style={{ fontSize: "1.5em", padding: "0.2em 0.5em" }}
-                    onClick={() => handleIncrement(index)}
-                  >
-                    +
-                  </button>
                 </div>
               </div>
-              <div className="mt-3">
-                <p>{item.product_category}</p>
-              </div>
-              <div className="mt-3 ">
-                <p> {formatCurrency(item.product_price)},-</p>
-                <span
-                  className="mx-2 font-bold flex items-center mt-6 "
-                  style={{ fontSize: "1.2em" }}
-                >
-                  {item.quantity || 0} <p className="ml-3"> Barang </p>
-                </span>
-              </div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
 
@@ -259,51 +257,54 @@ function Cart() {
         </Modal.Footer>
       </Modal>
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-8">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          {/* ... */}
-        </table>
-
-        <div className="mb-4 text-3xl font-bold text-center">
-          Total: {formatCurrency(calculateTotalPrice())}
-        </div>
-
+      <div className="  sm:rounded-lg mt-2 mx-8">
         {useVoucher && selectedVoucher && (
-          <div className="text-center text-green-500">
-            Anda telah menggunakan voucher "{selectedVoucher.name}" dengan
-            diskon {formatCurrency(selectedVoucher.discount)}.
-          </div>
+          <Card className="flex  ">
+            <div className="text-center text-green-500">
+              Anda Mendapatkan "{selectedVoucher.name}" dengan diskon{" "}
+              {formatCurrency(selectedVoucher.discount)}.
+            </div>
+          </Card>
         )}
-
-        <div className="flex flex-wrap justify-between p-3 px-8">
-          <div className="checkout-container">
-            <label>
-              <input
-                type="checkbox"
-                checked={useVoucher}
-                onChange={handleVoucherCheckbox}
-              />
-              Gunakan Voucher
-            </label>
-            <br /> {/* Add a line break */}
-            <FlowbiteButton
-              type="button"
-              className="mt-4 text-black custom-background font-semibold bg-blue-500 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
-              id="voucher-button"
-              onClick={() => setVoucherModal(true)}
-              disabled={!useVoucher}
-            >
-              Pilih Voucher
-            </FlowbiteButton>
+        <Card>
+          <div className="justify-between gap-8 mx-8 grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2  ">
+            <div>
+              <Card className=" flex w-fit">
+                <div className="flex gap-2 w-fit">
+                  <label className="text-xl mt-2">
+                    <Radio
+                      type="checkbox"
+                      checked={useVoucher}
+                      onChange={handleVoucherCheckbox}
+                    />
+                    {"  "}
+                    Gunakan Voucher
+                  </label>
+                  <br /> {/* Add a line break */}
+                  <Button
+                    type="button"
+                    className=""
+                    id="voucher-button"
+                    onClick={() => setVoucherModal(true)}
+                    disabled={!useVoucher}
+                  >
+                    Pilih Voucher
+                  </Button>
+                </div>
+              </Card>
+            </div>
+            <div className="   w-full flex-end">
+              <Card className=" ">
+                <div className="mb-4 text-3xl font-bold text-center">
+                  Total: {formatCurrency(calculateTotalPrice())}
+                </div>
+                <Button href="cart/address" className="">
+                  Checkout
+                </Button>
+              </Card>
+            </div>
           </div>
-          <FlowbiteButton
-            type="button"
-            className="text-black custom-background font-semibold bg-yellow-300 hover-bg-blue-800 focus-ring-4 focus-outline-none focus-ring-blue-300 rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800"
-            id="checkout-button"
-          >
-            <a href="cart/address">Checkout</a>
-          </FlowbiteButton>
-        </div>
+        </Card>
       </div>
 
       <Modal
