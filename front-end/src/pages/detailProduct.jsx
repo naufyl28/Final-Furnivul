@@ -81,6 +81,7 @@ function DetailProduct() {
       }, 3000);
     };
 
+
   return (
     <>
       <Breadcrumb
