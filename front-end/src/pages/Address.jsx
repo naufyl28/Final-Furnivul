@@ -27,18 +27,33 @@ function Address() {
         </a>
       </div>
       <div>
-        <div className="my-4 flex items-center max-w-screen-xl mx-auto p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover-bg-gray-700">
+        <div className="my-4 flex items-center justify-between max-w-screen-xl mx-auto p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover-bg-gray-700">
           {/* Tampilkan data di sini */}
-          <div>
-            <div className="text-2xl">Data Resi anda : </div>
-            <div>{name}</div>
-            <div>{phone}</div>
-            <div>{province}</div>
-            <div>{district}</div>
-            <div>{subdistrict}</div>
-            <div>{zipcode}</div>
+          <div className="flex flex-col">
+            <div className="text-2xl font-bold mb-4"> ALAMAT ANDA : </div>
+            <div className="flex flex-col">
+              <div className="flex items-between mb-2">
+                <span className="font-semibold">Name   : </span> {name}
+              </div>
+              <div className="flex items-between mb-2">
+                <span className="font-semibold">Phone   : </span> {phone}
+              </div>
+              <div className="flex items-between mb-2">
+                <span className="font-semibold">Province   : </span> {province}
+              </div>
+              <div className="flex items-between mb-2">
+                <span className="font-semibold">District     :  </span> {district}
+              </div>
+              <div className="flex items-between mb-2">
+                <span className="font-semibold">Subdistrict   :  </span>{" "}
+                {subdistrict}
+              </div>
+              <div className="flex items-between mb-2">
+                <span className="font-semibold">Zipcode    :  </span> {zipcode}
+              </div>
+            </div>
           </div>
-          <div className="">
+          <div className=" mr-10 ">
             <Button>
               <NavLink to={"/cart/address/add-address/checkout"}>
                 <span>payment</span>
@@ -48,37 +63,7 @@ function Address() {
         </div>
       </div>
 
-      <div>
-        <div className="my-4 flex items-center max-w-screen-xl mx-auto p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover-bg-gray-700">
-          {/* Tampilkan data di sini */}
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <button
-          type="button"
-          className="justify-center items-center text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:focus:ring-yellow-900"
-        >
-          <a href="address/checkout">Checkout</a>
-        </button>
-      </div>
-
-      <div className="flex justify-center items-center">
-        <button
-          id="verifikasiButton"
-          type="button"
-          className="mt-10 text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Verifikasi Pembayaran
-        </button>
-      </div>
+      
     </>
   );
 }
@@ -96,13 +81,7 @@ function AddressPage() {
         <Breadcrumb.Item href="#">Cart</Breadcrumb.Item>
         <Breadcrumb.Item href="#">Address</Breadcrumb.Item>
       </Breadcrumb>
-      <h1>Address</h1>
-      <Button className="max-w-screen-xl">
-        <NavLink to={"/cart/address/add-address/checkout"}>
-          {" "}
-          <span>payment</span>
-        </NavLink>
-      </Button>
+      
       <Address />
     </div>
   );

@@ -18,13 +18,11 @@ function Checkout(props) {
   const token = JSON.parse(localStorage.getItem("token"));
 
   // Additional data from localStorage
-  const phone = JSON.parse(localStorage.getItem("phone"));
-  const province = JSON.parse(localStorage.getItem("province"));
-  const district = JSON.parse(localStorage.getItem("district"));
-  const subdistrict = JSON.parse(localStorage.getItem("subdistrict"));
-  const zipcode = JSON.parse(localStorage.getItem("zipcode"));
-
-  // Additional product data from localStorage
+  const phone = localStorage.getItem("phone") || "";
+  const province = localStorage.getItem("province") || "";
+  const district = localStorage.getItem("district") || "";
+  const subdistrict = localStorage.getItem("subdistrict") || "";
+  const zipcode = localStorage.getItem("zipcode") || "";
   const productData = props?.location?.state?.cart || [];
 
   useEffect(() => {
@@ -39,19 +37,19 @@ function Checkout(props) {
       .then((result) => {
         setCourierData(result.data.data);
       })
+      
       .catch((error) => {
         console.error("Error fetching courier data:", error);
         console.log("Error response data:", error.response.data);
       });
+      const productData = props?.location?.state?.cart || [];
+      console.log("Product Data from props:", productData);
   }, [token]);
 
+  
   const selectCourier = (event) => {
     setSelectedCourier(event.target.value);
   };
-
-  // Log productData and the first item
-  console.log("Product Data:", productData);
-  console.log("First Product:", productData[0]);
 
   return (
     <div>
@@ -80,6 +78,7 @@ function Checkout(props) {
           </Button>
         </Modal.Footer>
       </Modal>
+
       <Card className="w-full">
         <Card>
           <h1 className="text-2xl font-semibold">
