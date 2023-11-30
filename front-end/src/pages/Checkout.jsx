@@ -23,7 +23,19 @@ function Checkout(props) {
   const district = localStorage.getItem("district") || "";
   const subdistrict = localStorage.getItem("subdistrict") || "";
   const zipcode = localStorage.getItem("zipcode") || "";
-  const productData = props?.location?.state?.cart || [];
+
+  //manggil product data dari local storage
+  const productData = JSON.parse(localStorage.getItem("cart")) || [];
+
+  //manggil data price dari local storage
+  const totalPrice = JSON.parse(localStorage.getItem("totalPrice")) || [];
+
+  const formatCurrency = (totalPrice) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(totalPrice);
+  };
 
   useEffect(() => {
     axios(
@@ -37,18 +49,35 @@ function Checkout(props) {
       .then((result) => {
         setCourierData(result.data.data);
       })
-      
+
       .catch((error) => {
         console.error("Error fetching courier data:", error);
         console.log("Error response data:", error.response.data);
       });
-      const productData = props?.location?.state?.cart || [];
-      console.log("Product Data from props:", productData);
   }, [token]);
 
-  
+  const calculateTotalPrice = () => {
+    const totalPriceWithoutCourier = productData.reduce(
+      (total, item) => total + (item.quantity || 0) * (item.product_price || 0),
+      0
+    );
+
+    const courierCost = selectedCourier
+      ? courierData.find((data) => data.name === selectedCourier)?.cost || 0
+      : 0;
+
+    return totalPriceWithoutCourier + courierCost;
+  };
+
   const selectCourier = (event) => {
-    setSelectedCourier(event.target.value);
+    const selectedCourierValue = event.target.value;
+    setSelectedCourier(selectedCourierValue);
+
+    // Recalculate total price based on the selected courier
+    const totalPrice = calculateTotalPrice();
+
+    localStorage.setItem("priceCourier", JSON.stringify(selectedCourierValue));
+    localStorage.setItem("totalPrice", JSON.stringify(totalPrice));
   };
 
   return (
@@ -160,12 +189,12 @@ function Checkout(props) {
 
         <Card className="mt-3">
           <div>
-            Total: <span className="font-semibold">Rp. 100.000</span>
+            Total: <span className="font-semibold">{totalPrice}</span>
           </div>
           <div>
             <Button className="">
               <NavLink to={"payment"}>
-                <span>payment</span>
+                <span>Payment</span>
               </NavLink>
             </Button>
           </div>

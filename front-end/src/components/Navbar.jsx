@@ -2,11 +2,13 @@ import { Avatar, Button, Card, Dropdown, Navbar } from "flowbite-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../assets/images/logo.png";
 
-function navbar() {
-  const isLoggedIn = JSON.parse(localStorage.getItem("idUser")); // // true or false
-  const profileUser = JSON.parse(localStorage.getItem("image")); // // true or false
-  const nameUser = JSON.parse(localStorage.getItem("name")); // // true or false
-  const emailUser = JSON.parse(localStorage.getItem("email")); // // true or false
+// ... (your existing imports)
+
+function NavbarComponent() {
+  const isLoggedIn = JSON.parse(localStorage.getItem("idUser"));
+  const profileUser = JSON.parse(localStorage.getItem("image"));
+  const nameUser = JSON.parse(localStorage.getItem("name"));
+  const emailUser = JSON.parse(localStorage.getItem("email"));
 
   const navigate = useNavigate();
 
@@ -83,26 +85,24 @@ function navbar() {
         <Navbar.Collapse className="">
           <NavLink to={"/"} className="mt-1">
             <Navbar.Link>
-              {" "}
-              <a>Home</a>
+              <span>Home</span>
             </Navbar.Link>
-          </NavLink>{" "}
+          </NavLink>
           <NavLink to={"/category-product"} className="mt-1">
             <Navbar.Link>
-              <a>Category</a>{" "}
+              <span>Category</span>
             </Navbar.Link>
           </NavLink>
           <NavLink to={"/our-business"} className="mt-1">
-            {" "}
             <Navbar.Link>
-              <a>Our Business</a>{" "}
+              <span>Our Business</span>
             </Navbar.Link>
           </NavLink>
           <NavLink to={"/article"} className="mt-1">
             <Navbar.Link>
-              <a>Article </a>{" "}
+              <span>Article</span>
             </Navbar.Link>
-          </NavLink>{" "}
+          </NavLink>
         </Navbar.Collapse>
 
         <div className="">{component}</div>
@@ -113,4 +113,4 @@ function navbar() {
   );
 }
 
-export default navbar;
+export default NavbarComponent;

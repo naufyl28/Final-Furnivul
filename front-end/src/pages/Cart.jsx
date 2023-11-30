@@ -161,6 +161,9 @@ function Cart() {
       ? Math.max(totalPriceWithoutDiscount - (selectedVoucher.discount || 0), 0)
       : Math.max(totalPriceWithoutDiscount, 0);
   };
+
+  localStorage.setItem("totalPrice", calculateTotalPrice());
+
   return (
     <>
       <Breadcrumb
