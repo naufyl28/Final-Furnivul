@@ -52,34 +52,35 @@ function DetailProduct() {
     setActiveTab(tab);
   };
 
-  const handleAddToCart = (product) => {
-    Swal.fire({
-      icon: "success",
-      title: "Success! Added to cart",
-      text: "Your product has been added to the cart.",
-      timer: 3000,
-    });
+    const handleAddToCart = (product) => {
+      Swal.fire({
+        icon: "success",
+        title: "Success! Added to cart",
+        text: "Your product has been added to the cart.",
+        timer: 3000,
+      });
 
-    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const existingProductIndex = existingCart.findIndex(
-      (item) => item._id === product._id
-    );
+      const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existingProductIndex = existingCart.findIndex(
+        (item) => item._id === product._id
+      );
 
-    if (existingProductIndex !== -1) {
-      // Product with the same ID is already in the cart, increase its quantity
-      existingCart[existingProductIndex].quantity += 1;
-    } else {
-      // Product is not in the cart, add it with quantity 1
-      const newProduct = { ...product, quantity: 1 };
-      existingCart.push(newProduct);
-    }
+      if (existingProductIndex !== -1) {
+        // Product with the same ID is already in the cart, increase its quantity
+        existingCart[existingProductIndex].quantity += 1;
+      } else {
+        // Product is not in the cart, add it with quantity 1
+        const newProduct = { ...product, quantity: 1 };
+        existingCart.push(newProduct);
+      }
 
-    localStorage.setItem("cart", JSON.stringify(existingCart));
-    setAddToCartSuccess(true);
-    setTimeout(() => {
-      setAddToCartSuccess(false);
-    }, 3000);
-  };
+      localStorage.setItem("cart", JSON.stringify(existingCart));
+      setAddToCartSuccess(true);
+      setTimeout(() => {
+        setAddToCartSuccess(false);
+      }, 3000);
+    };
+
 
   return (
     <>

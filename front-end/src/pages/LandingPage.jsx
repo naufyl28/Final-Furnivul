@@ -55,7 +55,8 @@ function LandingPage() {
       </div>
       <div className="container-fluid lg:flex justify-between lg:px-28 m-10 lg:mx-auto lg:my-10 gap-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
         <div className="flex flex-col lg:flex-row mx-auto lg:gap-[120px]">
-          <img className="lg:rounded-l-lg" src={about} alt="" />
+          <img className="rounded-t-lg  " src={about} alt="" />
+
           <div className="flex flex-col font-semibold lg:p-20 p-4">
             <p className="text-justify tracking-wide">
               <span className="text-[#ffb703]">Furnivul</span> berdiri sejak
