@@ -15,7 +15,6 @@ import NotFound from "./pages/NotFound";
 
 // import outlet pages
 import LandingPage from "./pages/LandingPage.jsx";
-import OurBusiness from "./pages/OurBusiness.jsx";
 
 // import Article pages
 import Article from "./pages/Article.jsx";
@@ -42,7 +41,6 @@ const router = createBrowserRouter(
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/our-business" element={<OurBusiness />} />
 
         {/* routing article pages */}
         <Route path="/article" element={<Article />} />

@@ -11,7 +11,7 @@ import { Button } from "flowbite-react";
 
 function LandingPage() {
   return (
-    <div className="container-fluid overflow-hidden mx-4">
+    <div className="container-fluid overflow-hidden mx-8">
       <div className=" lg:flex justify-center m-10 lg:mx-auto lg:my-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
         <div className="flex gap-20">
           <div className="relative">
@@ -33,12 +33,12 @@ function LandingPage() {
             <div className="flex items-center justify-center">
               <img src={lowfi1} className="rounded-md" alt="" />
               <div className="absolute flex flex-col justify-center mx-4">
-                <h1 className="text-3xl my-4 px-4 mx-5 text-white font-bold tracking-widest leading-loose">
+                <h1 className="text-4xl my-4 px-4 mx-5 text-white font-bold leading-loose">
                   Temukan <br />
                   inspirasimu <br />
                   dirumah
                 </h1>
-                <h2 className="font-semibold text-sm my-4 px-4 mx-5 text-[#ffb703]">
+                <h2 className="font-semibold text-md my-4 px-4 mx-5 text-[#ffb703]">
                   Promo khusus untuk member Furnivul, <br />
                   Daftar sekarang!
                 </h2>
@@ -98,10 +98,10 @@ function LandingPage() {
         </div>
       </div>
       {/* Categ */}
-      <div className="container-fluid overflow-x-hidden lg:flex lg:flex-col m-10 lg:mx-auto lg:my-10 gap-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
-        <div className="flex flex-col gap-10">
+      <div className="flex flex-col lg:flex-row justify-between lg:mx-28 lg:my-10 gap-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
+        <div className="flex flex-col ">
           <div className=" mx-4 p-4 lg:mx-56">
-            <h1 className="font-semibold text-2xl p-4 mx-auto lg:text-5xl">
+            <h1 className="font-semibold text-2xl p-4  lg:text-5xl">
               Produk Teratas
             </h1>
             <a href="#" className="text-blue-500 p-4 hover:text-blue-700">

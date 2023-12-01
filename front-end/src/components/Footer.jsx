@@ -46,10 +46,10 @@ function Component() {
               </Footer.LinkGroup>
             </div>
             <div>
-              <Footer.Title title="Our Business" />
+              <Footer.Title title="Utilities" />
               <Footer.LinkGroup col>
                 <Footer.Link href="#">Article</Footer.Link>
-                <Footer.Link href="#">Investment</Footer.Link>
+                <Footer.Link href="#">Category</Footer.Link>
                 <Footer.Link href="#">Privacy Policy</Footer.Link>
                 <Footer.Link href="#">Terms &amp; Conditions</Footer.Link>
               </Footer.LinkGroup>
@@ -60,7 +60,7 @@ function Component() {
         <div className="w-full sm:flex justify-center gap-4 sm:items-center sm:flex-end">
           <Footer.Copyright
             href="#"
-            by="Furnivul™  - 3rd Team @Skilvul 2023. All rights reserved"
+            by="Furnivul™ All rights reserved"
             year={2023}
           />
           <div className="mt-4  flex gap-2 sm:mt-0 sm:justify-center">

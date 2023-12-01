@@ -99,51 +99,65 @@ function DetailProduct() {
       <div className="mx-6">
         {productData ? (
           <div className="flex mt-6 mx-4">
-            <div className="w-1/2">
-              <h1 className="text-3xl font-bold mb-4">
-                {productData.product_name}
-              </h1>
-              <p className="mb-2 text-lg">Rate: {productData.product_rate}</p>
-              <p className="mb-2 text-lg">sold: {productData.product_sold}</p>
-
-              <p className="mb-4 text-2xl font-bold">
-                Price: Rp {productData.product_price.toLocaleString()},-
-              </p>
-              <Link to={`/cart`}>
-                {" "}
-                <Button onClick={() => handleAddToCart(productData)}>
-                  Add to cart &nbsp;
-                  <FaCartShopping />
-                </Button>
-              </Link>
-
+            <div className="">
+              <div className="flex sm:flex-col lg:flex-row ">
+                <div className="">
+                  <h1 className="text-3xl font-bold mb-4">
+                    {productData.product_name}
+                  </h1>
+                  <p className="mb-2 text-lg">
+                    Rate: {productData.product_rate}
+                  </p>
+                  <p className="mb-2 text-lg">
+                    sold: {productData.product_sold}
+                  </p>
+                  <p className="mb-4 text-2xl font-bold">
+                    Price: Rp {productData.product_price.toLocaleString()},-
+                  </p>{" "}
+                  <Button
+                    className="mt-8 text-black bg-yellow-300 border border-gray-800 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    onClick={() => handleAddToCart(productData)}
+                  >
+                    Add to cart &nbsp;
+                    <FaCartShopping />
+                  </Button>
+                </div>
+                <div className="mx-auto ">
+                  <img
+                    src={productData.product_image}
+                    alt={productData.product_name}
+                    className="w-full h-auto rounded-lg shadow-lg"
+                  />
+                </div>
+              </div>
               {/* Button.Group and Buttons */}
-              <div className="mt-6 w-full ">
-                <Button.Group>
-                  <Button
-                    color={activeTab === "description" ? "blue" : "gray"}
-                    onClick={() => handleTabChange("description")}
-                  >
-                    Deskripsi
-                  </Button>
-                  <Button
-                    color={activeTab === "review" ? "blue" : "gray"}
-                    onClick={() => handleTabChange("review")}
-                  >
-                    Ulasan
-                  </Button>
-                  <Button
-                    color={activeTab === "discussion" ? "blue" : "gray"}
-                    onClick={() => handleTabChange("discussion")}
-                  >
-                    Diskusi
-                  </Button>
-                </Button.Group>
+              <div className="w-full bg-blue-700 rounded-xl">
+                <div className="mt-6 w-full">
+                  <Button.Group>
+                    <Button
+                      color={activeTab === "description" ? "blue" : "gray"}
+                      onClick={() => handleTabChange("description")}
+                    >
+                      Deskripsi
+                    </Button>
+                    <Button
+                      color={activeTab === "review" ? "blue" : "gray"}
+                      onClick={() => handleTabChange("review")}
+                    >
+                      Ulasan
+                    </Button>
+                    <Button
+                      color={activeTab === "discussion" ? "blue" : "gray"}
+                      onClick={() => handleTabChange("discussion")}
+                    >
+                      Diskusi
+                    </Button>
+                  </Button.Group>
+                </div>
               </div>
               {/* End of Button.Group and Buttons */}
-
               {/* Konten berdasarkan activeTab */}
-              <div className="mt-4">
+              <div className="mt-4 w-full">
                 {activeTab === "description" && (
                   <div className="">
                     <h1 className="mt-6 mb-2 font-bold ">
@@ -157,44 +171,31 @@ function DetailProduct() {
                     <p className=" mb-4">{productData.product_material}</p>
                   </div>
                 )}
-
-                {activeTab === "review" && (
-                  <div>
-                    <h1 className="mt-6 mb-2 font-bold">Ulasan</h1>
-                    {/* Tampilkan ulasan di sini */}
-                    {reviews.map((review) => (
-                      <div key={review.id} className="mt-1 mb-2 space-y-2">
-                        <div className="flex items-center gap-2">
-                          {" "}
-                          <img
-                            src={Avatar}
-                            className="w-10 h-10 rounded-full"
-                          />
-                          {review._userId.fullname}
-                        </div>
-                        <p>Rating: {review.rating}</p>
-                        <p>Ulasan: {review.comment}</p>
+              </div>
+              {activeTab === "review" && (
+                <div>
+                  <h1 className="mt-6 mb-2 font-bold">Ulasan</h1>
+                  {/* Tampilkan ulasan di sini */}
+                  {reviews.map((review) => (
+                    <div key={review.id} className="mt-1 mb-2 space-y-2 ">
+                      <div className="flex items-center gap-2">
+                        {" "}
+                        <img src={Avatar} className="w-10 h-10 rounded-full" />
+                        {review._userId.fullname}
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="w-1/2">
-              <div className="w-2/3 mx-auto ">
-                <img
-                  src={productData.product_image}
-                  alt={productData.product_name}
-                  className="w-full h-auto rounded-lg"
-                />
-              </div>
+                      <p>Rating: {review.rating}</p>
+                      <p>Ulasan: {review.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ) : (
           <p>Mengambil data...</p>
         )}
         {activeTab === "discussion" && (
-          <div className="mx-4 mb-8">
+          <div className="mx-4 mb-8 w-full">
             <h1 className=" mb-2  font-bold">Diskusi</h1>
             {}
             {discusses.map((discusses) => (

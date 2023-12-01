@@ -13,7 +13,7 @@ function NavbarComponent() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("idUser");
+    localStorage.clear();
     window.location.reload();
   };
 
@@ -23,7 +23,7 @@ function NavbarComponent() {
       <>
         {" "}
         <div className="flex">
-          <div className="mt-2 mr-3 ">{nameUser}</div>
+          <div className="mt-2 mx-3 ">{nameUser}</div>
           <Dropdown
             arrowIcon={false}
             inline
@@ -93,11 +93,7 @@ function NavbarComponent() {
               <span>Category</span>
             </Navbar.Link>
           </NavLink>
-          <NavLink to={"/our-business"} className="mt-1">
-            <Navbar.Link>
-              <span>Our Business</span>
-            </Navbar.Link>
-          </NavLink>
+
           <NavLink to={"/article"} className="mt-1">
             <Navbar.Link>
               <span>Article</span>
