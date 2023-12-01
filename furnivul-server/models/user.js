@@ -20,6 +20,11 @@ const userSchema = new Schema(
     district: String,
     subdistrict: String,
     zipcode: String,
+    _idRole: {
+      type: Schema.Types.ObjectId,
+      ref: "Role",
+    },
+    image_url: String,
   },
   {
     timestamps: true,

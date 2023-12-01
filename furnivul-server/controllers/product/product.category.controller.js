@@ -1,6 +1,10 @@
 const ProductCategory = require("../../models/product/product.category");
-const sendErrorResponse = require("../../handlers/error.handler");
-const sendSuccessResponse = require("../../handlers/success.handler");
+const {
+  sendSuccessResponse,
+  sendErrorResponse,
+} = require("../../helpers/response.helper");
+const Role = require("../../models/role/role");
+const Product = require("../../models/product/product");
 
 module.exports = {
   getAllData: async (req, res) => {
@@ -10,12 +14,16 @@ module.exports = {
       const limit = parseInt(req.query.limit);
 
       if (!page || !limit) {
-        sendSuccessResponse(
-          res,
-          200,
-          "Get all product categories success",
-          productCategories
-        );
+        if (productCategories.length === 0) {
+          return sendSuccessResponse(
+            res,
+            200,
+            "Success",
+            "Product category is empty"
+          );
+        }
+
+        sendSuccessResponse(res, 200, "Success", productCategories);
       } else {
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
@@ -34,7 +42,10 @@ module.exports = {
             limit: limit,
           };
         }
-        result.productCategories = productCategories.slice(startIndex, endIndex);
+        result.productCategories = productCategories.slice(
+          startIndex,
+          endIndex
+        );
 
         sendSuccessResponse(
           res,
@@ -43,9 +54,8 @@ module.exports = {
           result
         );
       }
-      
     } catch (error) {
-      sendErrorResponse(res, 500, "Error get all product categories", error);
+      sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 
@@ -57,32 +67,57 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Id not found",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
 
-      const productCategory = await ProductCategory.findById(id);
-      sendSuccessResponse(
-        res,
-        200,
-        "Get product category by id success",
-        productCategory
-      );
+      const products = await Product.find({ _categoryId: id });
+      if (products.length === 0) {
+        return sendSuccessResponse(
+          res,
+          200,
+          "Success",
+          "Product category is empty"
+        );
+      }
+
+      if (!products) {
+        return sendErrorResponse(
+          res,
+          404,
+          "Not found",
+          new Error("Product category not found")
+        );
+      }
+
+      sendSuccessResponse(res, 200, "Success", products);
     } catch (error) {
-      sendErrorResponse(res, 500, "Error get product category by id", error);
+      sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 
   updateData: async (req, res) => {
     try {
+      const role = req.payload.role;
+
+      const checkRole = await Role.findById(role);
+      if (checkRole.role !== "admin") {
+        return sendErrorResponse(
+          res,
+          401,
+          "Unauthorized",
+          new Error("You are not admin")
+        );
+      }
+
       let { id } = req.params;
 
       if (!id) {
         return sendErrorResponse(
           res,
           400,
-          "Id not found",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
@@ -92,7 +127,7 @@ module.exports = {
         return sendErrorResponse(
           res,
           400,
-          "Category and description required",
+          "Bad request",
           new Error("Category and description must be not empty")
         );
       }
@@ -102,26 +137,43 @@ module.exports = {
         { category, description },
         { new: true }
       );
-      sendSuccessResponse(
-        res,
-        200,
-        "Update product category success",
-        updateProductCategory
-      );
+
+      if (!updateProductCategory) {
+        return sendErrorResponse(
+          res,
+          404,
+          "Not found",
+          new Error("Product category not found")
+        );
+      }
+
+      sendSuccessResponse(res, 200, "Success", updateProductCategory);
     } catch (error) {
-      sendErrorResponse(res, 500, "Error update product category", error);
+      sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 
   deleteData: async (req, res) => {
     try {
+      const role = req.payload.role;
+
+      const checkRole = await Role.findById(role);
+      if (checkRole.role !== "admin") {
+        return sendErrorResponse(
+          res,
+          401,
+          "Unauthorized",
+          new Error("You are not admin")
+        );
+      }
+
       const { id } = req.params;
 
       if (!id) {
         return sendErrorResponse(
           res,
           400,
-          "Id not found",
+          "Bad request",
           new Error("Id not found or empty")
         );
       }
@@ -130,26 +182,48 @@ module.exports = {
       if (!productCategory) {
         return sendErrorResponse(
           res,
-          400,
-          "Product category not found",
+          404,
+          "Not found",
           new Error("Product category not found")
         );
       }
-      sendSuccessResponse(res, 200, "Delete product category success");
+      sendSuccessResponse(res, 200, "Success");
     } catch (error) {
-      sendErrorResponse(res, 500, "Error delete product category", error);
+      sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 
   addData: async (req, res) => {
     try {
+      const role = req.payload.role;
+
+      const checkRole = await Role.findById(role);
+      if (checkRole.role !== "admin") {
+        return sendErrorResponse(
+          res,
+          401,
+          "Unauthorized",
+          new Error("You are not admin")
+        );
+      }
+
       let { category, description } = req.body;
       if (!category || !description) {
         return sendErrorResponse(
           res,
           400,
-          "Category and description required",
+          "Bad request",
           new Error("Category and description must be not empty")
+        );
+      }
+
+      const checkCategory = await ProductCategory.find({ category });
+      if (checkCategory.length > 0) {
+        return sendErrorResponse(
+          res,
+          400,
+          "Bad request",
+          new Error("Category already exist")
         );
       }
 
@@ -157,14 +231,9 @@ module.exports = {
         category,
         description,
       });
-      sendSuccessResponse(
-        res,
-        200,
-        "Add product category success",
-        {_id : newProductCategory._id, ...newProductCategory._doc}
-      );
+      sendSuccessResponse(res, 200, "Success", newProductCategory);
     } catch (error) {
-      sendErrorResponse(res, 500, "Error add product category", error);
+      sendErrorResponse(res, 500, "Internal server error", error);
     }
   },
 };

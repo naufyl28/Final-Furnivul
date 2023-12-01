@@ -15,10 +15,23 @@ import NotFound from "./pages/NotFound";
 
 // import outlet pages
 import LandingPage from "./pages/LandingPage.jsx";
-import CategoryProduct from "./pages/CategoryProduct.jsx";
-import OurBusiness from "./pages/OurBusiness.jsx";
+
+// import Article pages
 import Article from "./pages/Article.jsx";
+import DetailArticle from "./pages/detailArticle.jsx";
+
+// End-to-end test shopping
+import CategoryProduct from "./pages/CategoryProduct.jsx";
 import ListingProduct from "./pages/ListingProduct.jsx";
+import Product from "./pages/detailProduct.jsx";
+
+// Checkout system route
+import Cart from "./pages/Cart.jsx";
+import Address from "./pages/Address.jsx";
+import AddAddress from "./pages/AddAddress.jsx";
+import Checkout from "./pages/Checkout.jsx";
+import Payment from "./pages/Payment.jsx";
+import TransactionStatus from "./pages/TransactionStatus.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,8 +41,10 @@ const router = createBrowserRouter(
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/our-business" element={<OurBusiness />} />
+
+        {/* routing article pages */}
         <Route path="/article" element={<Article />} />
+        <Route path="/article/detail-article" element={<DetailArticle />} />
 
         {/* routing outlet pages product */}
         <Route path="/category-product" element={<CategoryProduct />} />
@@ -37,13 +52,35 @@ const router = createBrowserRouter(
           path="/category-product/list-product"
           element={<ListingProduct />}
         />
+        <Route
+          path="/category-product/list-product/detail-product/:productId"
+          element={<Product />}
+        />
+
+        {/* routing checkout system */}
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/cart/address" element={<Address />} />
+        <Route path="/cart/address/add-address" element={<AddAddress />} />
+        <Route
+          path="/cart/address/add-address/checkout"
+          element={<Checkout />}
+        />
+        <Route path="/cart/address/checkout" element={<Checkout />} />
+        <Route
+          path="/cart/address/add-address/checkout/payment"
+          element={<Payment />}
+        />
+        <Route
+          path="/cart/address/add-address/checkout/payment/transaction-status"
+          element={<TransactionStatus />}
+        />
       </Route>
     </>
   )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  // <React.StrictMode>
+  <RouterProvider router={router} />
+  // </React.StrictMode>
 );
