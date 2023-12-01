@@ -13,7 +13,7 @@ function NavbarComponent() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("idUser");
+    localStorage.clear();
     window.location.reload();
   };
 
@@ -93,11 +93,7 @@ function NavbarComponent() {
               <span>Category</span>
             </Navbar.Link>
           </NavLink>
-          <NavLink to={"/our-business"} className="mt-1">
-            <Navbar.Link>
-              <span>Our Business</span>
-            </Navbar.Link>
-          </NavLink>
+
           <NavLink to={"/article"} className="mt-1">
             <Navbar.Link>
               <span>Article</span>
