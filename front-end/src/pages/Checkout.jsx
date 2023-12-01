@@ -18,11 +18,12 @@ function Checkout(props) {
   const token = JSON.parse(localStorage.getItem("token"));
 
   // Additional data from localStorage
-  const phone = localStorage.getItem("phone") || "";
-  const province = localStorage.getItem("province") || "";
-  const district = localStorage.getItem("district") || "";
-  const subdistrict = localStorage.getItem("subdistrict") || "";
-  const zipcode = localStorage.getItem("zipcode") || "";
+  const name = JSON.parse(localStorage.getItem("name")) || "";
+  const phone = JSON.parse(localStorage.getItem("phone")) || "";
+  const province = JSON.parse(localStorage.getItem("province")) || "";
+  const district = JSON.parse(localStorage.getItem("district")) || "";
+  const subdistrict = JSON.parse(localStorage.getItem("subdistrict")) || "";
+  const zipcode = JSON.parse(localStorage.getItem("zipcode")) || "";
 
   // Manggil product data dari local storage
   const productData = JSON.parse(localStorage.getItem("cart")) || [];
@@ -119,19 +120,21 @@ function Checkout(props) {
           </div>
         </Card>
 
-        <h1 className="text-2xl font-semibold">Address</h1>
-
         {/* Display additional data from localStorage */}
-        <div className="text-md font-semibold my-3 space-y-3">
-          <p>Phone: {phone}</p>
-          <p>Province: {province}</p>
-          <p>District: {district}</p>
-          <p>Subdistrict: {subdistrict}</p>
-          <p>Zipcode: {zipcode}</p>
+        <div className="text-md font-semibold my-3">
+          <Card className="w-full">
+            <h1 className="text-2xl font-semibold">Address</h1>
+            <p>Name : {name}</p>
+            <p>Phone : {phone}</p>
+            <p>
+              Address : {province}&nbsp; {district}&nbsp;
+              {subdistrict} &nbsp;{zipcode}
+            </p>
+          </Card>
         </div>
 
         {/* Display product data */}
-        <div className="mt-3 mx-8 justify-center">
+        <Card className="mt-3 justify-center">
           {productData.map((item, index) => (
             <div key={index} className="flex items-center">
               <img
@@ -158,7 +161,7 @@ function Checkout(props) {
               </div>
             </div>
           ))}
-        </div>
+        </Card>
 
         <div className="max-w-sm">
           <div className="mb-2 block">

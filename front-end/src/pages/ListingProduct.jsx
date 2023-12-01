@@ -94,7 +94,7 @@ function ListingProduct() {
                     <NavLink
                       to={`/category-product/list-product/detail-product/${item._id}`}
                     >
-                      <span> DetailProduct</span>
+                      <span> Detail Product</span>
                     </NavLink>
                   </Button>
                 </div>

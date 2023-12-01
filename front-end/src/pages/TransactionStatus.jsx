@@ -46,9 +46,7 @@ function TransactionStatus() {
                 </p>
               </div>
               <div className="flex justify-center gap-3">
-                <Button href="/" color="blue" hoverColor="darkgreen">
-                  Back to Home
-                </Button>
+                <Button href="/">Back to Home</Button>
                 {/* <Button color="blue">Download Receipt</Button> */}
               </div>
             </div>
