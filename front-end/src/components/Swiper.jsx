@@ -36,13 +36,11 @@ export default () => {
     data &&
     data.length > 0 && (
       <Swiper
-        modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
-        spaceBetween={0}
-        slidesPerView={1}
+        modules={[Navigation, A11y, Autoplay]}
+        spaceBetween={5}
+        slidesPerView={5}
         loop={true}
         navigation
-        // pagination={{ clickable: true }}
-        scrollbar={{ draggable: true }}
         autoplay={{
           delay: 3000,
           disableOnInteraction: false,
@@ -50,19 +48,19 @@ export default () => {
         breakpoints={{
           320: {
             slidesPerView: 1,
-            spaceBetween: 10,
+            spaceBetween: 5,
           },
-          640: {
+          620: {
             slidesPerView: 2,
-            spaceBetween: 20,
+            spaceBetween: 5,
           },
           768: {
-            slidesPerView: 2,
-            spaceBetween: 30,
+            slidesPerView: 3,
+            spaceBetween: 100,
           },
           1024: {
-            slidesPerView: 4,
-            spaceBetween: 1,
+            slidesPerView: 5,
+            spaceBetween: 100,
           },
         }}
       >
@@ -75,7 +73,7 @@ export default () => {
           return (
             <SwiperSlide key={index}>
               <div className="swiper-slide ">
-                <div className="flex lg:flex-col flex-col p-4 bg-[#023047] border border-black rounded-lg mx-auto my-2 w-[300px] lg:w-[350px] mx-8">
+                <div className=" p-4 bg-[#023047] border border-black rounded-lg  my-2 w-[300px] lg:w-[350px] mx-8">
                   <div className="my-2 text-white p-3">
                     <img
                       src={item.product_image}

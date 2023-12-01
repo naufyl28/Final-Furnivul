@@ -11,7 +11,7 @@ import { Button } from "flowbite-react";
 
 function LandingPage() {
   return (
-    <div className="container-fluid overflow-hidden mx-8">
+    <div className="container-fluid overflow-hidden lg:mx-8 md:mx-8">
       <div className=" lg:flex justify-center m-10 lg:mx-auto lg:my-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
         <div className="flex gap-20">
           <div className="relative">
@@ -98,9 +98,9 @@ function LandingPage() {
         </div>
       </div>
       {/* Categ */}
-      <div className="flex flex-col lg:flex-row justify-between lg:mx-28 lg:my-10 gap-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
+      <div className="flex flex-col lg:flex-row justify-between lg:mx-4 lg:my-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
         <div className="flex flex-col ">
-          <div className=" mx-4 p-4 lg:mx-56">
+          <div className="p-4 ">
             <h1 className="font-semibold text-2xl p-4  lg:text-5xl">
               Produk Teratas
             </h1>
