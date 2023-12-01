@@ -23,7 +23,7 @@ function NavbarComponent() {
       <>
         {" "}
         <div className="flex">
-          <div className="mt-2 mr-3 ">{nameUser}</div>
+          <div className="mt-2 mx-3 ">{nameUser}</div>
           <Dropdown
             arrowIcon={false}
             inline
