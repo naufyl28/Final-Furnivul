@@ -11,11 +11,10 @@ function Article() {
   const [datas, setData] = useState([]);
 
   useEffect(() => {
-    axios(
-      "https://gnews.io/api/v4/search?q=example&lang=en&country=us&max=10&apikey=99cd5eb29a226d7c17e913aefc809d9a"
-    )
+    axios("https://64e224b4ab0037358818bf67.mockapi.io/articleFurniture")
       .then((result) => {
-        setData(result.data.articles);
+        // console.log("success fetching :", result.data);
+        setData(result.data);
       })
       .catch((error) => {
         console.log("failed fetching :", error);
@@ -61,27 +60,27 @@ function Article() {
         <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3 mx-8 ">
           {/* article axios */}
 
-          {datas.map((datas, index) => (
-            <div key={index}>
+          {datas.map((datas) => (
+            <div key={datas.id}>
               <Card
                 className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mt-4 h-full"
                 renderImage={() => (
                   <img
                     width={1000}
                     height={350}
-                    src={datas.image}
+                    src={datas.image_article}
                     alt="image 1"
                   />
                 )}
               >
                 <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                  {datas.title}
+                  {datas.title_article}
                 </h5>
                 <p className="font-normal text-gray-700 dark:text-gray-400">
-                  {datas.description}
+                  {datas.desc_title}
                 </p>
                 <div className="flex flex-end">
-                  <NavLink to={`/article/detail-article/${index}`}>
+                  <NavLink to={`/article/detail-article/${datas.id}`}>
                     <Button>
                       {" "}
                       <span>DetailArticle</span>{" "}

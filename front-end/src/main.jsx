@@ -46,7 +46,7 @@ const router = createBrowserRouter(
         {/* Routing article pages */}
         <Route path="/article" element={<Article />} />
         <Route
-          path="/article/detail-article/:title"
+          path="/article/detail-article/:index"
           element={<DetailArticle />}
         />
 

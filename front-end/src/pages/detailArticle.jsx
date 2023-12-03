@@ -2,18 +2,21 @@ import { Breadcrumb, Card } from "flowbite-react";
 import { HiHome } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom"; // Assuming you use react-router-dom for routing
 
 function DetailArticle() {
-  const [datas, setData] = useState([]);
+  const { articleId } = useParams();
+  const [data, setData] = useState(null);
 
   useEffect(() => {
-    axios(`
-      https://gnews.io/api/v4/search?q=example&lang=en&country=us&max=10&apikey=99cd5eb29a226d7c17e913aefc809d9a`).then(
-      (result) => {
-        setData(result.data.articles);
-      }
-    );
-  }, []);
+    axios(`https://furnivul-web-app-production.up.railway.app/articles/${id}`)
+      .then((result) => {
+        setData(result.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [articleId]);
 
   return (
     <>
@@ -29,46 +32,35 @@ function DetailArticle() {
         <Breadcrumb.Item>Detail</Breadcrumb.Item>
       </Breadcrumb>
 
-      <div>
-        {datas.map((datas, index) => {
-          if (index) {
-            return;
-          }
-          return (
-            <>
-              <Card key={index} className="text-3xl font-semibold mt-4 mx-5">
-                <p>{datas.title}</p>
+      <Card className="text-3xl font-semibold mt-4 mx-5">
+        <p>{data.title_article}</p>
 
-                <div className=" rounded-md mt-4 mb-2">
-                  <img
-                    className="rounded-md"
-                    width={450}
-                    height={350}
-                    src={datas.image}
-                    alt="image 1"
-                  />
-                </div>
-                <div className="text-sm font-semibold mt-4 ">
-                  <p>{datas.description}</p>
-                </div>
-                <div className="text-sm font-semibold mt-4 ">
-                  <p>{datas.content}</p>
-                </div>
-                <div className="text-sm font-semibold mt-4 ">
-                  <p>{datas.publishedAt}</p>
-                </div>
+        <div className=" rounded-md mt-4 mb-2">
+          <img
+            className="rounded-md"
+            width={450}
+            height={350}
+            src={image_article}
+            alt="image 1"
+          />
+        </div>
+        <div className="text-sm font-semibold mt-4">
+          <p>{data.desc_title}</p>
+        </div>
+        <div className="text-sm font-semibold mt-4">
+          <p>{data.content_article}</p>
+        </div>
+        <div className="text-sm font-semibold mt-4">
+          <p>{data.creatAt}</p>
+        </div>
 
-                <div className="text-sm font-semibold mt-4 ">
-                  <p>{datas.url}</p>
-                </div>
-                <div className="text-sm font-semibold mt-4 ">
-                  <p>{datas.author}</p>
-                </div>
-              </Card>
-            </>
-          );
-        })}
-      </div>
+        <div className="text-sm font-semibold mt-4">
+          <p>{data.docs}</p>
+        </div>
+        <div className="text-sm font-semibold mt-4">
+          <p>{data.author}</p>
+        </div>
+      </Card>
     </>
   );
 }
