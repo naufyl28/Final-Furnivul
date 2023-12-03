@@ -8,6 +8,7 @@ import lowfi2 from "../assets/images/Low-Fi Placeholder 2.png";
 import Swiper from "../components/Swiper";
 import React from "react";
 import { Button } from "flowbite-react";
+import "./style/landing.css";
 
 function LandingPage() {
   return (
@@ -53,9 +54,9 @@ function LandingPage() {
           </div>
         </div>
       </div>
-      <div className="container-fluid lg:flex justify-between lg:px-28 m-10 lg:mx-auto lg:my-10 gap-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
-        <div className="flex flex-col lg:flex-row mx-auto lg:gap-[120px]">
-          <img className="rounded-t-lg  " src={about} alt="" />
+      <div className="container-fluid lg:flex justify-between lg:px-10 m-10 lg:mx-auto lg:my-10 gap-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
+        <div className="flex flex-col lg:flex-row mx-auto gap-8">
+          <img className="rounded-lg xl:w-[550px] " src={about} alt="" />
 
           <div className="flex flex-col font-semibold lg:p-20 p-4">
             <p className="text-justify tracking-wide">
@@ -98,17 +99,17 @@ function LandingPage() {
         </div>
       </div>
       {/* Categ */}
-      <div className="flex flex-col lg:flex-row justify-between lg:mx-4 lg:my-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
-        <div className="flex flex-col ">
-          <div className="p-4 ">
+      <div className=" lg:mx- lg:mb-5 xl:mx-8 xl:px-8 ">
+        <div className="    lg:mb-5 xl:mx-8 xl:px-8">
+          <div className="sm:mx-8 lg:mx-8 lg:mb-5 xl:mx-8 xl:px-8 xl:px-8  lg:mx-8 lg:mb-5 xl:mx-8 mb-3   ">
             <h1 className="font-semibold text-2xl p-4  lg:text-5xl">
               Produk Teratas
             </h1>
-            <a href="#" className="text-blue-500 p-4 hover:text-blue-700">
+            <a href="#" className="text-blue-500 p-4 hover:text-blue-700 ">
               Lihat Selengkapnya &gt;
             </a>
           </div>
-          <div className="swiper-container ">
+          <div className="swiper-container  lg:mx- lg:mb-5 xl:mx-8 xl:px-8  ">
             <Swiper />
           </div>
         </div>
