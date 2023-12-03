@@ -57,7 +57,7 @@ function Article() {
         <Breadcrumb.Item href="#">Articles</Breadcrumb.Item>
       </Breadcrumb>
       <div>
-        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3 mx-8 ">
+        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3 mx-8 mb-8 ">
           {/* article axios */}
 
           {datas.map((datas) => (
@@ -66,10 +66,9 @@ function Article() {
                 className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mt-4 h-full"
                 renderImage={() => (
                   <img
-                    width={1000}
-                    height={350}
                     src={datas.image_article}
                     alt="image 1"
+                    className="w-full h-40"
                   />
                 )}
               >

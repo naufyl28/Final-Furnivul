@@ -53,9 +53,13 @@ function LandingPage() {
           </div>
         </div>
       </div>
-      <div className="container-fluid lg:flex justify-between lg:px-28 m-10 lg:mx-auto lg:my-10 gap-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
-        <div className="flex flex-col lg:flex-row mx-auto lg:gap-[120px]">
-          <img className="rounded-t-lg  " src={about} alt="" />
+      <div className="container-fluid mx-8 lg:flex  lg:mx-auto  md:mx-8 sm:mx-8">
+        <div className="flex flex-col lg:flex-row mx-auto lg:gap-[40px]">
+          <img
+            className="sm:rounded-t-lg  rounded-lg mx-4 "
+            src={about}
+            alt=""
+          />
 
           <div className="flex flex-col font-semibold lg:p-20 p-4">
             <p className="text-justify tracking-wide">
@@ -98,17 +102,20 @@ function LandingPage() {
         </div>
       </div>
       {/* Categ */}
-      <div className="">
-        <div className="flex flex-col ">
-          <div className="p-4 ">
-            <h1 className="font-semibold text-2xl p-4  lg:text-5xl">
+      <div className="xl:mx-8 lg:mx-8 px-8 sm:mx-0 sm:px-0">
+        <div className="xl:mx-8 lg:mx-8 sm-mx-0 ">
+          <div className="p-4 xl:mx-8 lg:mx-8  md:mx-0 sm:mx-0 lg,md,xl:px-8 ">
+            <h1 className="font-semibold text-2xl p-4  lg:text-5xl xl:px-8 xl:mx-8 sm:mx-0  ">
               Produk Teratas
             </h1>
-            <a href="#" className="text-blue-500 p-4 hover:text-blue-700">
+            <a
+              href="category-product"
+              className="text-blue-500 p-4 hover:text-blue-700  xl:px-8 xl:mx-8 sm:mx-0 "
+            >
               Lihat Selengkapnya &gt;
             </a>
           </div>
-          <div className="swiper-container ">
+          <div className="swiper-container xl:px-8 md:mx-8 sm:px-0 sm:mx-8 ">
             <Swiper />
           </div>
         </div>

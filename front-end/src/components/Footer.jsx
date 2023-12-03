@@ -35,16 +35,28 @@ function Component() {
             <div>
               <Footer.Title title="Home" className="text-white" />
               <Footer.LinkGroup col>
-                <Footer.Link href="#" className="text-white">
+                <Footer.Link
+                  href="category-product/list-product/655a2f5d7b4f6c96f968e716"
+                  className="text-white"
+                >
                   Kitchen
                 </Footer.Link>
-                <Footer.Link href="#" className="text-white">
+                <Footer.Link
+                  href="category-product/list-product/6553eeb0d3596984234008c1"
+                  className="text-white"
+                >
                   Bed Room
                 </Footer.Link>
-                <Footer.Link href="#" className="text-white">
+                <Footer.Link
+                  href="category-product/list-product/6553b0d780fad5b839ade6e0"
+                  className="text-white"
+                >
                   Living Room
                 </Footer.Link>
-                <Footer.Link href="#" className="text-white">
+                <Footer.Link
+                  href="category-product/list-product/655a2f6d7b4f6c96f968e718"
+                  className="text-white"
+                >
                   Dining Room
                 </Footer.Link>
               </Footer.LinkGroup>
@@ -52,16 +64,19 @@ function Component() {
             <div>
               <Footer.Title title="Category" className="text-white" />
               <Footer.LinkGroup col>
-                <Footer.Link href="#" className="text-white">
+                <Footer.Link
+                  href="category-product/list-product/655a2f4f7b4f6c96f968e714"
+                  className="text-white"
+                >
                   Work Space
                 </Footer.Link>
-                <Footer.Link href="#" className="text-white">
+                <Footer.Link href="category-product" className="text-white">
                   OutDoor
                 </Footer.Link>
-                <Footer.Link href="#" className="text-white">
+                <Footer.Link href="category-product" className="text-white">
                   Child Room
                 </Footer.Link>
-                <Footer.Link href="#" className="text-white">
+                <Footer.Link href="category-product" className="text-white">
                   Accesories
                 </Footer.Link>
               </Footer.LinkGroup>
@@ -69,10 +84,10 @@ function Component() {
             <div>
               <Footer.Title title="Utilities" className="text-white" />
               <Footer.LinkGroup col>
-                <Footer.Link href="#" className="text-white">
+                <Footer.Link href="article" className="text-white">
                   Article
                 </Footer.Link>
-                <Footer.Link href="#" className="text-white">
+                <Footer.Link href="category-product" className="text-white">
                   Category
                 </Footer.Link>
                 <Footer.Link href="#" className="text-white">
