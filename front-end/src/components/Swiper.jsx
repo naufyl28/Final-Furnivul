@@ -56,11 +56,11 @@ export default () => {
           },
           768: {
             slidesPerView: 3,
-            spaceBetween: 100,
+            spaceBetween: 10,
           },
           1024: {
-            slidesPerView: 5,
-            spaceBetween: 100,
+            slidesPerView: 4,
+            spaceBetween: 10,
           },
         }}
       >
@@ -72,8 +72,8 @@ export default () => {
           });
           return (
             <SwiperSlide key={index}>
-              <div className="swiper-slide ">
-                <div className=" p-4 bg-[#023047] border border-black rounded-lg  my-2 w-[300px] lg:w-[350px] mx-8">
+              <div className="swiper-slide mx-4 ">
+                <div className="flex lg:flex-col flex-col p-4 bg-[#023047] border border-black rounded-lg  my-2 w-[300px] lg:w-[350px] mx-8">
                   <div className="my-2 text-white p-3">
                     <img
                       src={item.product_image}
