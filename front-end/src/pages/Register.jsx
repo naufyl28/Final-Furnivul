@@ -55,9 +55,7 @@ const Register = () => {
       <div className="justify-center py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:gap-8 ">
         <div className=" pt-2 mb-8">
           <div className="w-full mb-6 lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800 mt-8 pt-8 justify-center">
-            <div className="flex gap-4 mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white text-center justify-center">
-              <img src="../assets/logo-login.svg" alt="" />
-            </div>
+            <div className="flex gap-4 mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white text-center justify-center"></div>
             <form className="" onSubmit={handleRegister}>
               <div>
                 <Label
