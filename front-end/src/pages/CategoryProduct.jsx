@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Breadcrumb } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 function CategoryProduct() {
@@ -19,10 +19,6 @@ function CategoryProduct() {
         setData(result.data.data);
       });
   }, []);
-
-const handleListingProduct = (categoryId) => {
-  navigate(`/category-product/list-product/${categoryId}`);
-};
 
   return (
     <div>
@@ -54,11 +50,12 @@ const handleListingProduct = (categoryId) => {
             <div>
               <p>{data.description}</p>
             </div>
-            <div>
-              <Button onClick={() => handleListingProduct(data._id)}>
-                <a>List Product</a>
-              </Button>
-            </div>
+            <Link
+              to={`/category-product/list-product/${data._id}`}
+              categoryId={data._id}
+            >
+              <Button className="mt-3">Lihat Produk</Button>
+            </Link>
           </Card>
         ))}
       </div>

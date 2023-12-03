@@ -8,11 +8,11 @@ function ListingProduct() {
   const [datas, setData] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc"); // Declare sortOrder here
   const { categoryId } = useParams();
-
+  console.log(categoryId);
   useEffect(() => {
     axios
       .get(
-        `https://furnivul-web-app-production.up.railway.app/products?category=${categoryId}`
+        `https://furnivul-web-app-production.up.railway.app/product-categories/${categoryId}`
       )
       .then((result) => setData(result.data.data))
       .catch((error) => console.error("Error fetching products:", error));
@@ -111,5 +111,4 @@ function ListingProduct() {
     </>
   );
 }
-
 export default ListingProduct;

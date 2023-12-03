@@ -50,7 +50,7 @@ const router = createBrowserRouter(
         {/* Routing outlet pages product */}
         <Route path="/category-product" element={<CategoryProduct />} />
         <Route
-          path="/category-product/list-product/:productId"
+          path="/category-product/list-product/:categoryId"
           element={<ListingProduct />}
         />
         <Route
