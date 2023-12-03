@@ -1,9 +1,9 @@
-import { Button, Card } from "flowbite-react";
-import { Breadcrumb } from "flowbite-react";
+// CategoryProduct.jsx
+import React, { useEffect, useState } from "react";
+import { Button, Card, Breadcrumb } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 function CategoryProduct() {
   const [datas, setData] = useState([]);
@@ -11,19 +11,21 @@ function CategoryProduct() {
   const { categoryId } = useParams();
 
   useEffect(() => {
-    axios(
-      "https://furnivul-web-app-production.up.railway.app/product-categories"
-    ).then((result) => {
-      setData(result.data.data);
-    });
+    axios
+      .get(
+        "https://furnivul-web-app-production.up.railway.app/product-categories"
+      )
+      .then((result) => {
+        setData(result.data.data);
+      });
   }, []);
 
-  const handleListingProduct = () => {
-    navigate(`/category-product/list-product`);
-  };
+const handleListingProduct = (categoryId) => {
+  navigate(`/category-product/list-product/${categoryId}`);
+};
 
   return (
-    <div className="">
+    <div>
       <Breadcrumb
         aria-label="Breadcrumb dengan latar belakang solid"
         className="bg-gray-50 px-5 py-3 dark:bg-gray-800 ml-1"
@@ -35,7 +37,7 @@ function CategoryProduct() {
       </Breadcrumb>
 
       <div className="my-3 ml-6 text-3xl font-semibold">
-        <h1>category product </h1>
+        <h1>Category Product</h1>
       </div>
       <div className="grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mx-4 mb-4">
         {datas.map((data) => (

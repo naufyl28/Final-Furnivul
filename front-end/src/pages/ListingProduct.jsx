@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
-import { NavLink } from "react-router-dom";
+import { useParams, NavLink } from "react-router-dom"; // Add this line
 import axios from "axios";
 
 function ListingProduct() {
   const [datas, setData] = useState([]);
-  const [sortOrder, setSortOrder] = useState("asc"); // "asc" for ascending, "desc" for descending
+  const [sortOrder, setSortOrder] = useState("asc"); // Declare sortOrder here
+  const { categoryId } = useParams();
 
   useEffect(() => {
-    axios("https://furnivul-web-app-production.up.railway.app/products")
+    axios
+      .get(
+        `https://furnivul-web-app-production.up.railway.app/products?category=${categoryId}`
+      )
       .then((result) => setData(result.data.data))
       .catch((error) => console.error("Error fetching products:", error));
-  }, []);
+  }, [categoryId]);
 
   const handleSort = () => {
     setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
@@ -91,6 +95,7 @@ function ListingProduct() {
                     <p>Rp {item.product_price.toLocaleString()},-</p>
                   </div>
                   <Button className="mt-8 text-black bg-yellow-300 border border-gray-800 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    {/* Use NavLink instead of a */}
                     <NavLink
                       to={`/category-product/list-product/detail-product/${item._id}`}
                     >
