@@ -20,9 +20,9 @@ function CategoryProduct() {
       });
   }, []);
 
-const handleListingProduct = (categoryId) => {
-  navigate(`/category-product/list-product/${categoryId}`);
-};
+  const handleListingProduct = (categoryId) => {
+    navigate(`/category-product/list-product/${categoryId}`);
+  };
 
   return (
     <div>

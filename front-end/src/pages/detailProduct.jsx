@@ -131,12 +131,13 @@ function DetailProduct() {
                 </div>
               </div>
               {/* Button.Group and Buttons */}
-              <div className="w-full bg-blue-700 rounded-xl">
+              <div className="w-full bg-blue-500 rounded-xl">
                 <div className="mt-6 w-full">
                   <Button.Group>
                     <Button
                       color={activeTab === "description" ? "blue" : "gray"}
                       onClick={() => handleTabChange("description")}
+                      className=""
                     >
                       Deskripsi
                     </Button>
