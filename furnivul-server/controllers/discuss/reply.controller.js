@@ -120,7 +120,7 @@ module.exports = {
         );
       }
 
-      const reply = await Reply.findById(id)
+      const reply = await Reply.find({ _discussId: id })
         .populate("_discussId")
         .populate("_userId");
 

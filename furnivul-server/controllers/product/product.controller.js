@@ -14,6 +14,7 @@ module.exports = {
 
       const page = parseInt(req.query.page);
       const limit = parseInt(req.query.limit);
+      const totalPage = Math.ceil(products.length / limit);
 
       if (!page || !limit) {
         if (products.length === 0) {
@@ -40,7 +41,8 @@ module.exports = {
           };
         }
         result.products = products.slice(startIndex, endIndex);
-
+        result.totalPage = totalPage;
+        result.totalProduct = products.length;
         sendSuccessResponse(res, 200, "Get all products page " + page, result);
       }
     } catch (error) {
