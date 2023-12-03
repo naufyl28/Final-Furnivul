@@ -7,11 +7,12 @@ function DetailArticle() {
   const [datas, setData] = useState([]);
 
   useEffect(() => {
-    axios(
-      "https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=6b7134c9f303460892979d4632931405"
-    ).then((result) => {
-      setData(result.data.articles);
-    });
+    axios(`
+      https://gnews.io/api/v4/search?q=example&lang=en&country=us&max=10&apikey=99cd5eb29a226d7c17e913aefc809d9a`).then(
+      (result) => {
+        setData(result.data.articles);
+      }
+    );
   }, []);
 
   return (
@@ -30,7 +31,7 @@ function DetailArticle() {
 
       <div>
         {datas.map((datas, index) => {
-          if (index >= 11) {
+          if (index) {
             return;
           }
           return (
@@ -43,7 +44,7 @@ function DetailArticle() {
                     className="rounded-md"
                     width={450}
                     height={350}
-                    src={datas.urlToImage}
+                    src={datas.image}
                     alt="image 1"
                   />
                 </div>

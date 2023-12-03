@@ -12,10 +12,14 @@ function Article() {
 
   useEffect(() => {
     axios(
-      "https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=6b7134c9f303460892979d4632931405"
-    ).then((result) => {
-      setData(result.data.articles);
-    });
+      "https://gnews.io/api/v4/search?q=example&lang=en&country=us&max=10&apikey=99cd5eb29a226d7c17e913aefc809d9a"
+    )
+      .then((result) => {
+        setData(result.data.articles);
+      })
+      .catch((error) => {
+        console.log("failed fetching :", error);
+      });
   }, []);
 
   return (
@@ -65,7 +69,7 @@ function Article() {
                   <img
                     width={1000}
                     height={350}
-                    src={datas.urlToImage}
+                    src={datas.image}
                     alt="image 1"
                   />
                 )}
@@ -77,7 +81,7 @@ function Article() {
                   {datas.description}
                 </p>
                 <div className="flex flex-end">
-                  <NavLink to={"/article/detail-article"}>
+                  <NavLink to={`/article/detail-article/${index}`}>
                     <Button>
                       {" "}
                       <span>DetailArticle</span>{" "}
