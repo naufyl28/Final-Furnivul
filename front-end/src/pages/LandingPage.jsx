@@ -98,7 +98,7 @@ function LandingPage() {
         </div>
       </div>
       {/* Categ */}
-      <div className="flex flex-col lg:flex-row justify-between lg:mx-4 lg:my-10 lg:rounded-none lg:shadow-none rounded-lg shadow">
+      <div className="">
         <div className="flex flex-col ">
           <div className="p-4 ">
             <h1 className="font-semibold text-2xl p-4  lg:text-5xl">

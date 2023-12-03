@@ -5,18 +5,18 @@ import axios from "axios";
 import { useParams } from "react-router-dom"; // Assuming you use react-router-dom for routing
 
 function DetailArticle() {
-  const { articleId } = useParams();
-  const [data, setData] = useState(null);
+  const { id } = useParams();
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios(`https://furnivul-web-app-production.up.railway.app/articles/${id}`)
+    axios(`https://64e224b4ab0037358818bf67.mockapi.io/articleFurniture/${id}`)
       .then((result) => {
-        setData(result.data.data);
+        setData(result.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [articleId]);
+  }, []);
 
   return (
     <>
@@ -40,7 +40,7 @@ function DetailArticle() {
             className="rounded-md"
             width={450}
             height={350}
-            src={image_article}
+            src={data.image_article}
             alt="image 1"
           />
         </div>
