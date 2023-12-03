@@ -114,7 +114,7 @@ module.exports = {
         );
       }
 
-      const review = await Review.findById(id)
+      const review = await Review.find({ _productId: id })
         .populate("_userId")
         .populate("_productId");
 
@@ -198,17 +198,6 @@ module.exports = {
 
   deleteData: async (req, res) => {
     try {
-      const role = req.payload.role;
-
-      const checkRole = await Role.findById(role);
-      if (checkRole.role !== "admin") {
-        return sendErrorResponse(
-          res,
-          401,
-          "Unauthorized",
-          new Error("You are not admin")
-        );
-      }
       const { id } = req.params;
 
       if (!id) {
