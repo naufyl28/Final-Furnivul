@@ -5,7 +5,7 @@ const discussController = require("../../controllers/discuss/discuss.controller.
 const { auth } = require("../../middleware/auth");
 
 router.get("/", discussController.getAllData);
-router.get("/:id", auth, discussController.getDatabyID);
+router.get("/:id", discussController.getDatabyID);
 router.put("/:id", auth, discussController.updateData);
 router.delete("/:id", auth, discussController.deleteData);
 router.post("/", auth, discussController.addData);

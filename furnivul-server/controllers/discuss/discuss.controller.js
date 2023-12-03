@@ -61,11 +61,19 @@ module.exports = {
         );
       }
 
-      const discuss = await Discuss.findById(id)
-        .populate("_productId")
-        .populate("_userId");
+      const discuss = await Discuss.find({ _productId: id })
+        .populate("_userId")
+        .populate("_productId");
 
-      console.log(discuss._userId);
+      if (discuss.length === 0) {
+        return sendErrorResponse(
+          res,
+          200,
+          "Get discuss by id success",
+          "Discuss is empty"
+        );
+      }
+
       sendSuccessResponse(res, 200, "Get discuss by id success", discuss);
     } catch (error) {
       sendErrorResponse(res, 500, "Error get discuss by id", error);
@@ -131,17 +139,6 @@ module.exports = {
 
   deleteData: async (req, res) => {
     try {
-      const role = req.payload.role;
-
-      const checkRole = await Role.findById(role);
-      if (checkRole.role !== "admin") {
-        return sendErrorResponse(
-          res,
-          401,
-          "Unauthorized",
-          new Error("You are not admin")
-        );
-      }
       const { id } = req.params;
 
       if (!id) {

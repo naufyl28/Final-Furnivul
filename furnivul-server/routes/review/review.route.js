@@ -6,7 +6,7 @@ const { auth, isAdmin } = require("../../middleware/auth");
 
 router.get("/data", auth, isAdmin, reviewController.getReviewData);
 router.get("/", reviewController.getAllData);
-router.get("/:id", auth, reviewController.getDatabyID);
+router.get("/:id", reviewController.getDatabyID);
 router.put("/:id", auth, reviewController.updateData);
 router.delete("/:id", auth, reviewController.deleteData);
 router.post("/", auth, reviewController.addData);

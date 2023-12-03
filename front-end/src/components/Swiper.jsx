@@ -17,6 +17,7 @@ import "swiper/css/autoplay";
 import axios from "axios";
 import arrowright from "../assets/svg/arrow-right.svg";
 import { Button } from "flowbite-react";
+import { Link } from "react-router-dom";
 export default () => {
   const [data, setData] = useState([]);
 
@@ -94,13 +95,17 @@ export default () => {
                       Tersedia banyak pilihan
                     </p>
                     {/* Atur disini */}
-                    <Button
-                      href="#"
-                      className="bg-[#ffb703] mt-8 py-2 px-4 rounded-xl border border-black text-black shadow w-max flex items-center gap-6 ml-auto"
+                    <Link
+                      to={`/category-product/list-product/detail-product/${item._id}`}
                     >
-                      <span className="text-lg">Detail Product </span> &nbsp;
-                      <img src={arrowright} alt="" />
-                    </Button>
+                      <Button
+                        href="#"
+                        className="bg-[#ffb703] mt-8 py-2 px-4 rounded-xl border border-black text-black shadow w-max flex items-center gap-6 ml-auto"
+                      >
+                        <span className="text-lg">Detail Product </span> &nbsp;
+                        <img src={arrowright} alt="" />
+                      </Button>
+                    </Link>
                     {/* Batas */}
                   </div>
                 </div>
