@@ -68,7 +68,7 @@ function Article() {
                   <img
                     src={datas.image_article}
                     alt="image 1"
-                    className="w-full h-40"
+                    className="w-full h-56 object-cover"
                   />
                 )}
               >
