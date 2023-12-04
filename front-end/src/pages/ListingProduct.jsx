@@ -8,7 +8,7 @@ function ListingProduct() {
   const [datas, setData] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc"); // Declare sortOrder here
   const { categoryId } = useParams();
-  console.log(categoryId);
+  // console.log(categoryId);
   useEffect(() => {
     axios
       .get(

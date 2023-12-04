@@ -102,20 +102,20 @@ function LandingPage() {
         </div>
       </div>
       {/* Categ */}
-      <div className="xl:mx-8 lg:mx-8 px-8 sm:mx-0 sm:px-0">
+      <div className="xl:mx-8 lg:mx-8 px-8 ">
         <div className="xl:mx-8 lg:mx-8 sm-mx-0 ">
-          <div className="p-4 xl:mx-8 lg:mx-8  md:mx-0 sm:mx-0 lg,md,xl:px-8 ">
+          <div className="p-8 xl:mx-8 lg:mx-8  md:mx-0 sm:mx-0 lg,md,xl:px-8 ">
             <h1 className="font-semibold text-2xl p-4  lg:text-5xl xl:px-8 xl:mx-8 sm:mx-0  ">
               Produk Teratas
             </h1>
             <a
               href="category-product"
-              className="text-blue-500 p-4 hover:text-blue-700  xl:px-8 xl:mx-8 sm:mx-0 "
+              className="text-blue-500 hover:text-blue-700  xl:px-8 xl:mx-8 sm:mx-8 mx-4 "
             >
               Lihat Selengkapnya &gt;
             </a>
           </div>
-          <div className="swiper-container xl:px-8 md:mx-8 sm:px-0 sm:mx-8 ">
+          <div className="swiper-container px-8 mx-8 mb-8 pb-b">
             <Swiper />
           </div>
         </div>

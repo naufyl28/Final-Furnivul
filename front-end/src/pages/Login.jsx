@@ -23,7 +23,7 @@ const Login = () => {
         password: password,
       })
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         const token = result.data.data.token;
         const decoded = jwtDecode(token);
         localStorage.setItem("token", JSON.stringify(token));
@@ -41,18 +41,23 @@ const Login = () => {
         );
       })
       .catch((error) => {
-        console.log(error);
-        new Swal("Oops Sorry!", "failed login.", "error", {
-          error,
-        });
+        // console.log(error);
+        new Swal(
+          "Opps Sorry!",
+          "your account has been failed login.",
+          "error",
+          {
+            error,
+          }
+        );
       });
   };
 
   const pushDataUser = async () => {
     const id = JSON.parse(localStorage.getItem("idUser"));
     const token = JSON.parse(localStorage.getItem("token"));
-    console.log(id);
-    console.log(token);
+    // console.log(id);
+    // console.log(token);
     await axios
       .get(`https://furnivul-web-app-production.up.railway.app/users/${id}`, {
         headers: {
@@ -60,7 +65,7 @@ const Login = () => {
         },
       })
       .then((result) => {
-        console.log(result.data.data);
+        // console.log(result.data.data);
         localStorage.setItem("name", JSON.stringify(result.data.data.fullname));
         localStorage.setItem("email", JSON.stringify(result.data.data.email));
 
