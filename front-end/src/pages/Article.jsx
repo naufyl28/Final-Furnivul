@@ -31,7 +31,7 @@ function Article() {
               <span className="[&_p]:inline">
                 &nbsp; Lihat apa saja yang baru dari Furnivul&nbsp;
                 <a
-                  href="https://flowbite.com"
+                  href="/category-product"
                   className="decoration-600 dark:decoration-500 inline font-medium text-cyan-600 underline decoration-solid underline-offset-2 hover:no-underline dark:text-cyan-500"
                 >
                   di sini
