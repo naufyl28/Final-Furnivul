@@ -29,8 +29,6 @@ function Payment() {
       if (result.isConfirmed) {
         window.location.href =
           "/cart/address/add-address/checkout/payment/transaction-status";
-        localStorage.removeItem("cart");
-        localStorage.removeItem("totalPrice");
       }
     });
   };

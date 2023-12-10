@@ -12,7 +12,9 @@ import Layout from "./pages/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register.jsx";
 import NotFound from "./pages/NotFound";
-
+import Dashboard from "./pages/dashboard.jsx";
+import Status from "./pages/status.jsx";
+import Mystore from "./pages/mystore.jsx"
 // Import outlet pages
 import LandingPage from "./pages/LandingPage.jsx";
 
@@ -46,6 +48,7 @@ const router = createBrowserRouter(
         {/* Routing article pages */}
         <Route path="/article" element={<Article />} />
         <Route path="/article/detail-article/:id" element={<DetailArticle />} />
+        <Route path="/mystore" element={<Mystore />} caseSensitive={false} />
 
         {/* Routing outlet pages product */}
         <Route path="/category-product" element={<CategoryProduct />} />
@@ -57,6 +60,12 @@ const router = createBrowserRouter(
           path="/category-product/list-product/detail-product/:productId"
           element={<Product />}
         />
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+          caseSensitive={false}
+        />
+        <Route path="/status" element={<Status />} caseSensitive={false} />
 
         {/* Routing checkout system */}
         <Route path="/cart" element={<Cart />} />

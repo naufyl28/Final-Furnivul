@@ -12,7 +12,7 @@ function Component() {
   return (
     <Footer
       container
-      fluid
+       fluid="true"
       style={{ backgroundColor: "#023047", color: "#ffffff" }}
     >
       <div className="w-full h-full">

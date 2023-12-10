@@ -2,8 +2,96 @@ import { Breadcrumb, Button, Card } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
 import { useNavigate } from "react-router";
 
-function TransactionStatus() {
+const sendTransactionToMockAPI = async (transactionData) => {
+  try {
+    const response = await fetch(
+      "https://65312ee04d4c2e3f333c9120.mockapi.io/Transcationdetails",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(transactionData),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to send transaction to mock API");
+    }
+
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.error("Error sending transaction to mock API:", error);
+    throw error;
+  }
+};
+
+const TransactionStatus = () => {
   const navigate = useNavigate();
+
+  const handleDownloadReceipt = async () => {
+    const name = JSON.parse(localStorage.getItem("name")) || "";
+    const province = JSON.parse(localStorage.getItem("province")) || "";
+    const subdistrict = JSON.parse(localStorage.getItem("subdistrict")) || "";
+    const phone = JSON.parse(localStorage.getItem("phone")) || "";
+    const zipcode = JSON.parse(localStorage.getItem("zipcode")) || "";
+    const district = JSON.parse(localStorage.getItem("district")) || "";
+    const productData = JSON.parse(localStorage.getItem("cart")) || [];
+    const totalPrice = JSON.parse(localStorage.getItem("totalPrice")) || 0;
+
+    const transactionData = {
+      name,
+      province,
+      subdistrict,
+      phone,
+      zipcode,
+      district,
+      products: productData.map((item) => ({
+        name: item.product_name,
+        quantity: item.quantity,
+      })),
+      totalPrice,
+    };
+
+    const receiptText = `
+     Nama: ${name}
+     Provinsi: ${province}
+     Kecamatan: ${subdistrict}
+     Nomor Telepon: ${phone}
+     Kode Pos: ${zipcode}
+     Kota/Kabupaten: ${district}
+     
+     Produk: 
+     ${productData
+       .map((item) => `${item.product_name} (${item.quantity} pcs)`)
+       .join("\n")}
+     
+     Total Pembayaran: Rp ${totalPrice.toLocaleString("id-ID")}
+   `;
+
+    // Download receipt
+    const blob = new Blob([receiptText], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "receipt.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Kirim data transaksi ke mock API
+    try {
+      const response = await sendTransactionToMockAPI(transactionData);
+      console.log("Transaction sent to mock API:", response);
+    } catch (error) {
+      console.error("Error handling download receipt:", error);
+    }
+
+localStorage.removeItem("cart");
+localStorage.removeItem("totalPrice");
+  };
 
   return (
     <div className="mx-7">
@@ -47,7 +135,12 @@ function TransactionStatus() {
               </div>
               <div className="flex justify-center gap-3">
                 <Button href="/">Back to Home</Button>
-                {/* <Button color="blue">Download Receipt</Button> */}
+                {}
+                <div className="flex justify-center gap-3">
+                  <Button color="blue" onClick={handleDownloadReceipt}>
+                    Download Receipt
+                  </Button>
+                </div>
               </div>
             </div>
           </Card>
@@ -56,5 +149,7 @@ function TransactionStatus() {
     </div>
   );
 }
+
+
 
 export default TransactionStatus;
