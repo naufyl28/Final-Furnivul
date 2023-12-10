@@ -43,7 +43,7 @@ function LandingPage() {
                   Daftar sekarang!
                 </h2>
                 <a
-                  href="/register"
+                  href="/category-product"
                   className="text-3xl my-4 px-4 mx-auto text-white tracking-wide"
                 >
                   <img src={vector} alt="" />
@@ -63,12 +63,13 @@ function LandingPage() {
 
           <div className="flex flex-col font-semibold lg:p-20 p-4">
             <p className="text-justify tracking-wide">
-              <span className="text-[#ffb703]">Furnivul</span> berdiri sejak
-              nenek moyang telah lahir menggunakan goresan
+              <span className="text-[#ffb703]">Furnivul</span> adalah web
+              penjualan khusus furniture untuk membantu UMKM
               <br />
-              tangan sesepuh, dengan kearifan lokal yang mendunia disamping
+              di indonesia, dengan ini furniture khas kearifan lokal dari para
+              UMKM
               <br />
-              keadaan manusia yang telah berprasangka baik ke semua.
+              Furniture di indonesia bisa bersaing dengan furniture luar negeri.
             </p>
             <Button
               href="category-product"

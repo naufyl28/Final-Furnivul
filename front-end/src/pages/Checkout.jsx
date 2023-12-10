@@ -47,19 +47,28 @@ function Checkout(props) {
         console.error("Error fetching courier data:", error);
         console.log("Error response data:", error.response.data);
       });
+
+    // Mengambil total harga dari localStorage
+    const storedTotalPrice =
+      JSON.parse(localStorage.getItem("totalPrice")) || 0;
+    setSelectedCourier(JSON.parse(localStorage.getItem("priceCourier")) || "");
+    localStorage.setItem("totalPrice", JSON.stringify(storedTotalPrice));
   }, [token]);
 
   const calculateTotalPrice = () => {
-    const totalPriceWithoutCourier = productData.reduce(
-      (total, item) => total + (item.quantity || 0) * (item.product_price || 0),
-      0
-    );
+    // Mengambil total harga dari localStorage
+    const totalPriceWithoutCourier =
+      productData.reduce(
+        (acc, item) => acc + item.product_price * (item.quantity || 1),
+        0
+      ) - (JSON.parse(localStorage.getItem("voucherDiscount")) || 0);
 
     const courierCost =
-      selectedCourier &&
-      courierData.find((data) => data._id === selectedCourier)?.cost;
+      (selectedCourier &&
+        courierData.find((data) => data._id === selectedCourier)?.cost) ||
+      0;
 
-    const totalPrice = totalPriceWithoutCourier + (courierCost || 0);
+    const totalPrice = totalPriceWithoutCourier + courierCost;
 
     return totalPrice;
   };
@@ -151,11 +160,19 @@ function Checkout(props) {
                 </div>
                 <div className="mt-3">
                   <p>{formatCurrency(item.product_price)},-</p>
+                  <div>
+                    - Voucher:{" "}
+                    <span className="font-semibold">
+                      {formatCurrency(
+                        JSON.parse(localStorage.getItem("voucherDiscount")) || 0
+                      )}
+                    </span>
+                  </div>
                   <span
                     className="mx-2 font-bold flex items-center mt-6"
                     style={{ fontSize: "1.2em" }}
                   >
-                    {item.quantity || 0} <p className="ml-3"> Barang </p>
+                    {item.quantity || 0} <p className="ml-3"> PCS </p>
                   </span>
                 </div>
               </div>

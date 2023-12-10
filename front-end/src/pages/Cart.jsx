@@ -131,10 +131,13 @@ function Cart() {
     }
   };
 
-  const handleVoucherSelect = (voucher) => {
-    setSelectedVoucher(voucher);
-    setVoucherModal(false);
-  };
+const handleVoucherSelect = (voucher) => {
+  setSelectedVoucher(voucher);
+  setVoucherModal(false);
+
+  // Menyimpan harga voucher ke localStorage
+  localStorage.setItem("voucherDiscount", JSON.stringify(voucher.discount));
+};
 
   const handleVoucherCheckbox = () => {
     setUseVoucher(!useVoucher);
@@ -148,19 +151,23 @@ function Cart() {
     }).format(value);
   };
 
-  const calculateTotalPrice = () => {
-    const totalPriceWithoutDiscount = Array.isArray(datas.data)
-      ? datas.data.reduce(
-          (total, item) =>
-            total + (item.quantity || 0) * (item.product_price || 0),
-          0
-        )
-      : 0;
+const calculateTotalPrice = () => {
+  const totalPriceWithoutDiscount = Array.isArray(datas.data)
+    ? datas.data.reduce(
+        (total, item) =>
+          total + (item.quantity || 0) * (item.product_price || 0),
+        0
+      )
+    : 0;
 
-    return useVoucher && selectedVoucher
-      ? Math.max(totalPriceWithoutDiscount - (selectedVoucher.discount || 0), 0)
-      : Math.max(totalPriceWithoutDiscount, 0);
-  };
+  const voucherDiscount =
+    JSON.parse(localStorage.getItem("voucherDiscount")) || 0;
+
+  return useVoucher
+    ? Math.max(totalPriceWithoutDiscount - voucherDiscount, 0)
+    : Math.max(totalPriceWithoutDiscount, 0);
+};
+
 
   localStorage.setItem("totalPrice", calculateTotalPrice());
 
