@@ -123,7 +123,6 @@ function Cart() {
       setDeleteIndex(null);
       setOpenModal(false);
 
-      // Perbarui localStorage setelah menghapus item
       const updatedCart = [...productCart];
       updatedCart.splice(deleteIndex, 1);
       localStorage.setItem("cart", JSON.stringify(updatedCart));
