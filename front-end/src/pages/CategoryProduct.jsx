@@ -1,4 +1,3 @@
-// CategoryProduct.jsx
 import React, { useEffect, useState } from "react";
 import { Button, Card, Breadcrumb } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";

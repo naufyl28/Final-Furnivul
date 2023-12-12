@@ -13,7 +13,6 @@ function Article() {
   useEffect(() => {
     axios("https://64e224b4ab0037358818bf67.mockapi.io/articleFurniture")
       .then((result) => {
-        // console.log("success fetching :", result.data);
         setData(result.data);
       })
       .catch((error) => {
@@ -58,7 +57,7 @@ function Article() {
       </Breadcrumb>
       <div>
         <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-3 mx-8 mb-8 ">
-          {/* article axios */}
+          {}
 
           {datas.map((datas) => (
             <div key={datas.id}>

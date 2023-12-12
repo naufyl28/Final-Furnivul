@@ -1,4 +1,3 @@
-// AddAddress.jsx
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button, Card, TextInput } from "flowbite-react";
 import { FaCartShopping } from "react-icons/fa6";
@@ -39,7 +38,6 @@ function AddAddress() {
       );
       navigate("/cart/address");
 
-      // kirim ke localstorage
       localStorage.setItem("phone", JSON.stringify(phone));
       localStorage.setItem("province", JSON.stringify(province));
       localStorage.setItem("district", JSON.stringify(district));

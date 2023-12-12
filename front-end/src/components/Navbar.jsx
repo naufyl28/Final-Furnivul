@@ -79,7 +79,6 @@ if (isLoggedIn) {
       </Button>
     </div>
   );
-  // Hide category and cart options for not logged-in users
 }
   return (
     <div className="my-0 mx-0">

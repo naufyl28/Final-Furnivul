@@ -39,8 +39,6 @@ function Cart() {
 
   useEffect(() => {
     fetchVoucherData();
-
-    // Perbarui state datas.data dari localStorage saat komponen dimuat
     setData({ ...datas, data: productCart });
   }, []);
 
@@ -53,7 +51,6 @@ function Cart() {
     );
 
     if (existingProductIndex !== -1) {
-      // Produk sudah ada di keranjang, tambahkan kuantitas
       productCart[existingProductIndex].quantity += 1;
       setData({
         ...datas,
@@ -64,7 +61,6 @@ function Cart() {
         ),
       });
     } else {
-      // Produk belum ada di keranjang, tambahkan baru
       const newProduct = { ...product, quantity: 1 };
       productCart.push(newProduct);
       setData({
@@ -77,7 +73,6 @@ function Cart() {
     fetchVoucherData();
   };
 
-  // ...
 
   const handleDecrement = (index) => {
     const updatedData = [...datas.data];
@@ -89,7 +84,6 @@ function Cart() {
 
     if (existingProductIndex !== -1) {
       if (productCart[existingProductIndex].quantity > 1) {
-        // Produk sudah ada di keranjang, kurangi kuantitas
         productCart[existingProductIndex].quantity -= 1;
         setData({
           ...datas,
@@ -103,7 +97,6 @@ function Cart() {
           ),
         });
       } else {
-        // Set deleteIndex ke nilai yang sesuai
         setDeleteIndex(existingProductIndex);
         setOpenModal(true);
         return;
@@ -134,7 +127,6 @@ const handleVoucherSelect = (voucher) => {
   setSelectedVoucher(voucher);
   setVoucherModal(false);
 
-  // Menyimpan harga voucher ke localStorage
   localStorage.setItem("voucherDiscount", JSON.stringify(voucher.discount));
 };
 
@@ -289,7 +281,7 @@ const calculateTotalPrice = () => {
                     {"  "}
                     Gunakan Voucher
                   </label>
-                  <br /> {/* Add a line break */}
+                  <br /> {}
                   <Button
                     type="button"
                     className=""

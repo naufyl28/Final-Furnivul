@@ -16,7 +16,6 @@ const Dashboard = () => {
 
         const transactionsData = await response.json();
 
-        // Add an "id" property to each transaction using the index
         const transactionsWithId = transactionsData.map(
           (transaction, index) => ({
             ...transaction,
@@ -36,16 +35,13 @@ const Dashboard = () => {
 
   const handleStatusChange = async (index, selectedStatus) => {
     try {
-      // Update status in the local state
       const updatedTransactions = [...transactions];
       updatedTransactions[index].status = selectedStatus;
       setTransactions(updatedTransactions);
 
-      // Extract the transaction ID (using the type property for now)
       const transactionId = transactions[index].type;
       console.log("Transaction ID:", transactionId);
 
-      // Send updated status to mock API
       const response = await fetch(
         `https://65312ee04d4c2e3f333c9120.mockapi.io/Transcationdetails/${transactionId}`,
         {
