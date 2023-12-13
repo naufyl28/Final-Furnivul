@@ -41,7 +41,6 @@ const Login = () => {
         );
       })
       .catch((error) => {
-        // console.log(error);
         new Swal(
           "Opps Sorry!",
           "your account has been failed login.",
@@ -56,8 +55,7 @@ const Login = () => {
   const pushDataUser = async () => {
     const id = JSON.parse(localStorage.getItem("idUser"));
     const token = JSON.parse(localStorage.getItem("token"));
-    // console.log(id);
-    // console.log(token);
+
     await axios
       .get(`https://furnivul-web-app-production.up.railway.app/users/${id}`, {
         headers: {
@@ -65,7 +63,6 @@ const Login = () => {
         },
       })
       .then((result) => {
-        // console.log(result.data.data);
         localStorage.setItem("name", JSON.stringify(result.data.data.fullname));
         localStorage.setItem("email", JSON.stringify(result.data.data.email));
 

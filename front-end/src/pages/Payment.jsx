@@ -55,7 +55,7 @@ function Payment() {
         aria-label="Solid background breadcrumb example"
         className="bg-gray-50 py-3 dark:bg-gray-800"
       >
-        {/* Breadcrumb items */}
+        {}
       </Breadcrumb>
 
       <h1 className="flex items-center justify-center text-3xl font-bold">

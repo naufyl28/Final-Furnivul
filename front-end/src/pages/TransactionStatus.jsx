@@ -70,7 +70,6 @@ const TransactionStatus = () => {
      Total Pembayaran: Rp ${totalPrice.toLocaleString("id-ID")}
    `;
 
-    // Download receipt
     const blob = new Blob([receiptText], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -81,7 +80,6 @@ const TransactionStatus = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    // Kirim data transaksi ke mock API
     try {
       const response = await sendTransactionToMockAPI(transactionData);
       console.log("Transaction sent to mock API:", response);

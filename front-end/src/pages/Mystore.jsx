@@ -159,7 +159,6 @@ const handleAddProduct = async () => {
       return;
     }
 
-    // Tambahkan log untuk menampilkan data yang dikirim
     console.log("Data yang dikirim:", newProduct);
 
     const response = await fetch(
