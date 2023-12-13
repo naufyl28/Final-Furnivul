@@ -71,16 +71,7 @@ function Address() {
 function AddressPage() {
   return (
     <div className="">
-      <Breadcrumb
-        aria-label="Solid background breadcrumb example"
-        className="bg-gray-50 px-5 py-3 dark:bg-gray-800"
-      >
-        <Breadcrumb.Item href="#" icon={FaCartShopping}>
-          Home
-        </Breadcrumb.Item>
-        <Breadcrumb.Item href="#">Cart</Breadcrumb.Item>
-        <Breadcrumb.Item href="#">Address</Breadcrumb.Item>
-      </Breadcrumb>
+
       
       <Address />
     </div>

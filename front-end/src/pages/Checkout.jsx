@@ -107,21 +107,7 @@ function Checkout(props) {
       </Modal>
 
       <Card className="w-full">
-        <Card>
-          <h1 className="text-2xl font-semibold">
-            Tingkatkan keamanan akun anda!
-          </h1>
-          <p>
-            Tingkatkan keamanan akun anda dengan mengaktifkan autentikasi dua
-            faktor. Dengan menggunakan autentikasi dua faktor dapat memberikan
-            proteksi terhadap akun anda. Untuk lebih lengkapnya klik disini!.
-          </p>
-          <div>
-            <Button className="" onClick={() => setOpenModal(true)}>
-              Mengerti
-            </Button>{" "}
-          </div>
-        </Card>
+  
 
         <div className="text-md font-semibold my-3">
           <Card className="w-full">
@@ -135,7 +121,7 @@ function Checkout(props) {
           </Card>
         </div>
 
-        {/* Display product data */}
+        {}
         <Card className="mt-3 justify-center">
           {productData.map((item, index) => (
             <div key={index} className="flex items-center">
